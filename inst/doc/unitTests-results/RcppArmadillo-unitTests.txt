@@ -1,0 +1,28 @@
+RUNIT TEST PROTOCOL -- Thu Mar 11 11:28:49 2010 
+*********************************************** 
+Number of test functions: 7 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+RcppArmadillo unit testing - 7 test functions, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: RcppArmadillo unit testing 
+Test function regexp: ^test.+ 
+Test file regexp: ^runit.+\.[rR]$ 
+Involved directory: 
+/tmp/Rinst3019828468/RcppArmadillo/unitTests 
+--------------------------- 
+Test file: /tmp/Rinst3019828468/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
+test.as.Col: (1 checks) ... OK (0 seconds)
+test.as.Mat: (1 checks) ... OK (0 seconds)
+test.as.Row: (1 checks) ... OK (0 seconds)
+test.fastLm: (2 checks) ... OK (0.04 seconds)
+test.wrap.Glue: (1 checks) ... OK (0 seconds)
+test.wrap.Op: (1 checks) ... OK (0 seconds)
+test.wrap.R: (10 checks) ... OK (0.01 seconds)
