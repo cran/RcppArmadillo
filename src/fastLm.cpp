@@ -2,7 +2,7 @@
 //
 // fastLm.cpp: Rcpp/Armadillo glue example of a simple lm() alternative
 //
-// Copyright (C)  2010 Dirk Eddelbuettel and Romain Francois
+// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -23,32 +23,35 @@
 
 extern "C" SEXP fastLm(SEXP ys, SEXP Xs) {
 
-    Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
-    Rcpp::NumericMatrix Xr(Xs);			// creates Rcpp matrix from SEXP
-    int n = Xr.nrow(), k = Xr.ncol();
+    try {
+	Rcpp::NumericVector yr(ys);			// creates Rcpp vector from SEXP
+	Rcpp::NumericMatrix Xr(Xs);			// creates Rcpp matrix from SEXP
+	int n = Xr.nrow(), k = Xr.ncol();
 
-#if ARMA_VERSION_GE_090
-    arma::mat X(Xr.begin(), n, k, false);   	// reuses memory and avoids extra copy
-    arma::colvec y(yr.begin(), yr.size(), false);
-#else
-    arma::mat X(Xr.begin(), n, k);
-    arma::colvec y(yr.begin(), yr.size());
-#endif
+	arma::mat X(Xr.begin(), n, k, false);   	// reuses memory and avoids extra copy
+	arma::colvec y(yr.begin(), yr.size(), false);
 
-    arma::colvec coef = solve(X, y);            // fit model y ~ X
+	arma::colvec coef = arma::solve(X, y);      	// fit model y ~ X
+	arma::colvec res = y - X*coef;			// residuals
 
-    arma::colvec resid = y - X*coef; 		// residuals
+	double s2 = std::inner_product(res.begin(), res.end(), res.begin(), double())/(n - k);
+							// std.errors of coefficients
+	arma::colvec stderr = arma::sqrt(s2 * arma::diagvec( arma::inv(arma::trans(X)*X) ));	
 
-#if ARMA_VERSION_GE_090
-    double sig2 = arma::as_scalar( trans(resid)*resid/(n-k) );
-#else
-    double sig2 = ( trans(resid)*resid/(n-k) );
-#endif
-    						// std.error of estimate 
-    arma::colvec stderrest = sqrt( sig2 * diagvec( arma::inv(arma::trans(X)*X)) );
+	return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
+				  Rcpp::Named("stderr")       = stderr,
+				  Rcpp::Named("df")           = n - k
+				  );
 
-    Rcpp::Pairlist res(Rcpp::Named( "coefficients", coef),
-                       Rcpp::Named( "stderr", stderrest));
-    return res;
+    } catch( std::exception &ex ) {
+	forward_exception_to_r( ex );
+    } catch(...) { 
+	::Rf_error( "c++ exception (unknown reason)" ); 
+    }
+    return R_NilValue; // -Wall
 }
+
+
+
+
 

@@ -1,11 +1,11 @@
 Package: RcppArmadillo
 Type: Package
-Title: Rcpp/Armadillo translation layer
-Version: 0.1.0
-Date: $Date: 2010-03-11 11:24:54 -0600 (Thu, 11 Mar 2010) $
-Author: Romain Francois and Dirk Eddelbuettel
-Maintainer: Dirk Eddelbuettel and Romain Francois
-        <RomainAndDirk@r-enthusiasts.com>
+Title: Rcpp/Armadillo bridge
+Version: 0.2.0
+Date: $Date: 2010-05-17 20:27:00 -0500 (Mon, 17 May 2010) $
+Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
+Maintainer: Romain, Dirk and Doug
+        <RcppArmadillo-authors@r-enthusiasts.com>
 Description: R and Armadillo integration using Rcpp Armadillo is a C++
         linear algebra library aiming towards a good balance between
         speed and ease of use. Integer, floating point and complex
@@ -23,16 +23,20 @@ Description: R and Armadillo integration using Rcpp Armadillo is a C++
         choice (due to speed and/or integration capabilities), rather
         than another language.
  .
+ The RcppArmadillo package includes the header from the templated
+        Armadillo library.
+ .
  This Armadillo / C integration provides a nice illustration of the
         capabilities of the Rcpp package for seamless R and C++
         integration/
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: Rcpp (>= 0.7.8)
-SystemRequirements: Armadillo (>= 0.6.10)
+Depends: R (>= 2.10.0), Rcpp (>= 0.8.0)
+LinkingTo: Rcpp
+SystemRequirements: GNU make
 URL: http://arma.sourceforge.net/,
-        http://cran.r-project.org/package=RcppArmadillo
-OS_type: unix
-Packaged: 2010-03-11 17:28:51 UTC; edd
+        http://dirk.eddelbuettel.com/code/rcpp.html,
+        http://romainfrancois.blog.free.fr/index.php?category/R-package/RcppArmadillo
+Packaged: 2010-05-18 19:40:57 UTC; edd
 Repository: CRAN
-Date/Publication: 2010-03-11 20:23:27
+Date/Publication: 2010-05-18 19:51:19
