@@ -1,3 +1,71 @@
+2010-05-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.0
+
+2010-05-18  Douglas Bates  <bates@stat.wisc.edu>
+
+	* man/fastLm/Rd: Added rank-deficient example to illustrate possible
+	problems with fastLmPure() and fastLm()
+
+	* src/fastLm/cpp: Compute sig2 via std::inner_product
+
+2010-05-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: updated to Armadillo 0.9.8
+
+2010-05-17   Romain Francois <romain@r-enthusiasts.com>
+
+	* inst/include/RcppArmadillo.h: workaround for win64
+
+2010-05-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/fastLm.R: fastLm() is now generic and has a formula interface as
+	well as methods for print, summary, predict to behave like a standard
+	model fitting function
+
+	* R/fastLm.Rd: Added documentation for new methods
+
+	* src/fastLm.cpp: Small additions to returned parameters to support
+	new functionality
+
+2010-05-04   Romain Francois <romain@r-enthusiasts.com>
+
+	* R/RcppArmadillo.package.skeleton.R: new package skeleton function
+	similar to Rcpp::Rcpp.package.skeleton but targetting use of
+	RcppArmadillo
+
+	* README: removed and promoted to additional documentation in
+	?RcppArmadillo
+
+2010-05-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/* : updated to armadillo 0.9.6
+
+2010-04-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Remove OS_type restriction now that RcppArmadillo
+	  includes Armadillo headers, add Doug to Authors and Maintainers
+
+2010-04-03  Douglas Bates  <bates@stat.wisc.edu>
+
+	* inst/include/armadillo: Added the armadillo headers and the
+	armadillo_bits directory.  This is from the armadillo sources with
+	only the armadillo_bits/config.hpp file modified.
+
+	* configure: and many other configuration files.  Removed the
+	foo.in files, modified cleanup not to remove the target files.
+
+2010-03-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/fastLm.cpp: Small fix for Armadillo 0.8.2
+
+2010-03-17   Romain Francois <romain@r-enthusiasts.com>
+
+	* src/fastLm.cpp: added some arma:: prefix
+
+	* src/RcppArmadillo.cpp: update examples to use make_list and showcase
+	various ways to use them : Named(.)=., _[.] = , Named( ., . )
+
 2010-03-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.1.0 and initial CRAN upload
@@ -17,7 +85,7 @@
 
 	* src/RcppArmadillo.cpp : fix a runtime error uisng the SCALAR macro
 
-2010-03-02  Dirk Eddelbuettel  <edd@dexter>
+2010-03-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppArmadillo.cpp: Added bare-bones 'fastLm' function
 	* R/fastLm.R: Added fastLm R wrapper for C++ fastLm
