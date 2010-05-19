@@ -1,8 +1,8 @@
 Package: RcppArmadillo
 Type: Package
 Title: Rcpp/Armadillo bridge
-Version: 0.2.0
-Date: $Date: 2010-05-17 20:27:00 -0500 (Mon, 17 May 2010) $
+Version: 0.2.1
+Date: $Date: 2010-05-19 09:27:56 +0200 (Mer, 19 mai 2010) $
 Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
 Maintainer: Romain, Dirk and Doug
         <RcppArmadillo-authors@r-enthusiasts.com>
@@ -37,6 +37,6 @@ SystemRequirements: GNU make
 URL: http://arma.sourceforge.net/,
         http://dirk.eddelbuettel.com/code/rcpp.html,
         http://romainfrancois.blog.free.fr/index.php?category/R-package/RcppArmadillo
-Packaged: 2010-05-18 19:40:57 UTC; edd
+Packaged: 2010-05-19 07:30:16 UTC; romain
 Repository: CRAN
-Date/Publication: 2010-05-18 19:51:19
+Date/Publication: 2010-05-19 08:12:34
