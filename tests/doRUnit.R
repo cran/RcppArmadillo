@@ -13,15 +13,21 @@
 ## ----> put the bulk of the code e.g. in  ../inst/unitTests/runTests.R :
 
 if(require("RUnit", quietly = TRUE)) {
-  pkg <- "RcppArmadillo"
+    pkg <- "RcppArmadillo"
 
-  require( pkg, character.only=TRUE)
+    require( pkg, character.only=TRUE)
 
-  path <- system.file("unitTests", package = pkg)
+    path <- system.file("unitTests", package = pkg)
 
-  stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
+    stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
 
-  source(file.path(path, "runTests.R"), echo = TRUE)
+    ## without this, we get unit test failures
+    Sys.setenv( R_TESTS = "" )
+
+    Rcpp.unit.test.output.dir <- getwd()
+
+    source(file.path(path, "runTests.R"), echo = TRUE)
+
 } else {
-	print( "package RUnit not available, cannot run unit tests" )
+    print( "package RUnit not available, cannot run unit tests" )
 }
