@@ -23,7 +23,7 @@ class eglue_plus : public eglue_core<eglue_plus>
   {
   public:
   
-  inline static const char* id() { return "matrix addition"; }
+  inline static const char* text() { return "matrix addition"; }
   };
 
 
@@ -32,7 +32,7 @@ class eglue_minus : public eglue_core<eglue_minus>
   {
   public:
   
-  inline static const char* id() { return "matrix subtraction"; }
+  inline static const char* text() { return "matrix subtraction"; }
   };
 
 
@@ -41,7 +41,7 @@ class eglue_div : public eglue_core<eglue_div>
   {
   public:
   
-  inline static const char* id() { return "element-wise matrix division"; }
+  inline static const char* text() { return "element-wise matrix division"; }
   };
 
 
@@ -50,7 +50,7 @@ class eglue_schur : public eglue_core<eglue_schur>
   {
   public:
   
-  inline static const char* id() { return "element-wise matrix multiplication"; }
+  inline static const char* text() { return "element-wise matrix multiplication"; }
   };
 
 
