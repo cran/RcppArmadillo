@@ -27,5 +27,18 @@
 #undef ARMA_HAVE_STD_SNPRINTF
 #endif
 
+/* 
+   suncc does not have std::isfinite (which is not standard)
+   so we tell armadillo not to use it, and comment out a few 
+   others while we are at it
+*/
+#if defined(__SUNPRO_CC)
+#undef ARMA_HAVE_STD_ISFINITE
+#undef ARMA_HAVE_STD_SNPRINTF
+#undef ARMA_HAVE_LOG1P
+#undef ARMA_HAVE_STD_ISINF
+#undef ARMA_HAVE_STD_ISNAN
+#endif
+
 #endif
 
