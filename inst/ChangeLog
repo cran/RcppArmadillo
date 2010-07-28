@@ -1,3 +1,22 @@
+2010-07-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.4
+
+	* inst/include/armadillo_bits: Added small patch to not use asinh,
+	acosh and atanh on win32 as the (older) MinGW compiler cannot cope.
+	This problem will go away once R 2.12 is released as it requires
+	gcc / g++ 4.5.
+
+2010-07-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/* : upgrade to armadillo 0.9.52 "Monkey Wrench"
+
+	* src/fastLm.cpp: Switch from inv() (which now throws a warning on
+	(near) singular matrices and returns an empty matrix) to the
+	Moore-Penrose pseudo-inverse pinv() which allows us to continue
+	the example from the manual page. Of course, for standard use inv() is
+	doing the right thing by issueing the warning.
+
 2010-06-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.3
