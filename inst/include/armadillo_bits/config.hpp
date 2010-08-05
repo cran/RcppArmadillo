@@ -13,15 +13,14 @@
 // of the License or (at your option) any later version.
 // (see http://www.opensource.org/licenses for more info)
 
-// RcppArmadillo: add the R defines
-#include <Rconfig.h>
+
 
 #if !defined(ARMA_USE_LAPACK)
-#define ARMA_USE_LAPACK
+// #define ARMA_USE_LAPACK
 #endif
 
 #if !defined(ARMA_USE_BLAS)
-#define ARMA_USE_BLAS
+// #define ARMA_USE_BLAS
 #endif
 
 // #define ARMA_USE_ATLAS
@@ -33,16 +32,13 @@
 // #define ARMA_USE_BOOST
 // #define ARMA_USE_BOOST_DATE
 
-#define ARMA_HAVE_STD_ISFINITE
-#define ARMA_HAVE_STD_ISINF
-#define ARMA_HAVE_STD_ISNAN
-#define ARMA_HAVE_STD_SNPRINTF
+// #define ARMA_HAVE_STD_ISFINITE
+// #define ARMA_HAVE_STD_ISINF
+// #define ARMA_HAVE_STD_ISNAN
+// #define ARMA_HAVE_STD_SNPRINTF
 
-#define ARMA_HAVE_LOG1P
-#define ARMA_HAVE_GETTIMEOFDAY
+// #define ARMA_HAVE_LOG1P
+// #define ARMA_HAVE_GETTIMEOFDAY
 
 // #define ARMA_EXTRA_DEBUG
 // #define ARMA_NO_DEBUG
-
-// RcppArmadillo: add the RcppArmadillo configuration
-#include <RcppArmadilloConfig.h>
