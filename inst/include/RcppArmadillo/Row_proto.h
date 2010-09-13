@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// RcppArmadillo.h: Rcpp/Armadillo glue
+// Row_proto.h: Rcpp/Armadillo glue
 //
 // Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
@@ -19,13 +19,14 @@
 // You should have received a copy of the GNU General Public License
 // along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef RcppArmadillo__RcppArmadillo__h
-#define RcppArmadillo__RcppArmadillo__h
 
-#include <RcppArmadilloForward.h>
-#include <Rcpp.h>
-#include <RcppArmadilloWrap.h>
-#include <RcppArmadilloSugar.h>
+#ifndef RCPPARMADILLO_ROW_PROTO_H
+#define RCPPARMADILLO_ROW_PROTO_H
+
+template <int RTYPE, bool NA, typename VECTOR>
+inline Row( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X ) ;
+
+template <int RTYPE, bool NA, typename VECTOR>
+inline Row( const Rcpp::MatrixBase<RTYPE,NA,VECTOR>& X ) ;
 
 #endif
-

@@ -239,3 +239,89 @@ test.mtGlue <- function(){
 }
 
 
+test.sugar <- function(){
+
+	fx <- cxxfunction( signature(x= "numeric") , '
+	NumericVector xx(x) ;
+	arma::mat m = forward( xx + xx ) ; 
+    return wrap( m ) ;
+    
+	', plugin = "RcppArmadillo" )
+	checkEquals( fx(1:10), 
+		matrix( 2*(1:10), nrow = 10 ) , 
+		msg = "RcppArmadillo and sugar" )
+	
+}
+
+test.sugar.cplx <- function(){
+
+	fx <- cxxfunction( signature(x= "complex") , '
+	ComplexVector xx(x) ;
+	arma::cx_mat m = forward( exp( xx ) ) ; 
+	
+    return wrap( m ) ;
+    
+	', plugin = "RcppArmadillo" )
+	x <- 1:10*(1+1i) 
+	checkEquals( fx(x), 
+		matrix( exp(x), nrow = 10 ) , 
+		msg = "RcppArmadillo and sugar (complex)" )
+	
+}
+
+test.armadillo.sugar.ctor <- function(){
+
+	fx <- cxxfunction( signature(x= "numeric") , '
+	NumericVector xx(x) ;
+	arma::mat m = xx + xx ;
+	arma::colvec co = xx ;
+	arma::rowvec ro = xx ;
+    return List::create( 
+    	_["mat"] = m + m, 
+    	_["rowvec"] = ro, 
+    	_["colvec"] = co 
+    ); 
+    ', plugin = "RcppArmadillo" )
+	checkEquals( fx(1:10), 
+		list( 
+			mat = matrix( 4*(1:10), nrow = 10 ), 
+			rowvec = matrix( 1:10, nrow = 1 ), 
+			colvec = matrix( 1:10, ncol = 1 )
+			)
+		, 
+		msg = "Mat( sugar expression )" )
+	
+}
+
+
+test.armadillo.sugar.matrix.ctor <- function(){
+
+	inc <- '
+	double norm( double x, double y){
+		return ::sqrt( x*x + y*y );
+	}
+	'
+	fx <- cxxfunction( signature(x= "numeric") , '
+	NumericVector xx(x) ;
+	NumericVector yy = NumericVector::create( 1 ) ;
+	arma::mat m = diag( xx ) ; 
+	arma::colvec co = outer( xx, yy, ::norm ) ;
+	arma::rowvec ro = outer( yy, xx, ::norm ) ;
+    return List::create( 
+    	_["mat"] = m + m , 
+    	_["rowvec"] = ro, 
+    	_["colvec"] = co 
+    ); 
+    ', plugin = "RcppArmadillo", includes = inc )
+	res <- fx(1:10)    
+	norm <- function(x, y) sqrt( x*x + y*y )
+	checkEquals( res, 
+		list( 
+			mat = diag(2*(1:10)), 
+			rowvec = outer( 1, 1:10, norm ), 
+			colvec = outer( 1:10, 1, norm )
+		), 
+		msg = "Mat( sugar expression )" )
+	
+}
+
