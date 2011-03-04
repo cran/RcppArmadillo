@@ -1,3 +1,17 @@
+2011-03-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_stat
+	* inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_stat
+
+2011-02-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/doc/Makefile: Call R and Rscript relative to R_HOME/bin
+
+2011-02-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/fastLm.cpp (fastLm): Further simplified and shortened by using
+	Rcpp::as<arma::mat>() on the input data
+
 2011-02-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.13
