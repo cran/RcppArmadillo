@@ -1,7 +1,17 @@
+2011-03-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.15
+
+	* inst/include/*: Updated to Armadillo 1.1.6 “Baby Carpet Shark”
+
 2011-03-02  Dirk Eddelbuettel  <edd@debian.org>
 
-	* inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_stat
-	* inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_stat
+	* DESCRIPTION: Release 0.2.14
+
+	* inst/include/RcppArmadillo/Row_meat.h: Support RTTI via vec_state
+	* inst/include/RcppArmadillo/Col_meat.h: Support RTTI via vec_state
+
+	* inst/unitTests/runit.RcppArmadillo.R: Added unit test for above
 
 2011-02-28  Dirk Eddelbuettel  <edd@debian.org>
 
