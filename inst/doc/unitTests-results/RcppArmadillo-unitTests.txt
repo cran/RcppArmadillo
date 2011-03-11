@@ -1,4 +1,4 @@
-RUNIT TEST PROTOCOL -- Fri Mar  4 07:30:55 2011 
+RUNIT TEST PROTOCOL -- Thu Mar 10 12:55:14 2011 
 *********************************************** 
 Number of test functions: 16 
 Number of errors: 0 
@@ -16,24 +16,24 @@ Test Suite: RcppArmadillo unit testing
 Test function regexp: ^test.+ 
 Test file regexp: ^runit.+\.[rR]$ 
 Involved directory: 
-/tmp/Rtmp65jpkH/Rinst279f2c72/RcppArmadillo/unitTests 
+/tmp/Rtmp9Tpwdb/Rinst32b97c34/RcppArmadillo/unitTests 
 --------------------------- 
-Test file: /tmp/Rtmp65jpkH/Rinst279f2c72/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
-test.armadillo.rtti.check: (1 checks) ... OK (2.8 seconds)
-test.armadillo.sugar.ctor: (1 checks) ... OK (3.32 seconds)
-test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (3.05 seconds)
-test.as.Col: (1 checks) ... OK (2.9 seconds)
-test.as.Mat: (1 checks) ... OK (2.9 seconds)
-test.as.Row: (1 checks) ... OK (2.93 seconds)
-test.cxmat: (1 checks) ... OK (2.84 seconds)
-test.mtGlue: (1 checks) ... OK (2.8 seconds)
-test.mtOp: (1 checks) ... OK (2.78 seconds)
-test.sugar: (1 checks) ... OK (2.73 seconds)
-test.sugar.cplx: (1 checks) ... OK (2.73 seconds)
-test.wrap.Glue: (1 checks) ... OK (2.88 seconds)
-test.wrap.Op: (1 checks) ... OK (2.77 seconds)
-test.wrap.R: (10 checks) ... OK (3.86 seconds)
+Test file: /tmp/Rtmp9Tpwdb/Rinst32b97c34/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
+test.armadillo.rtti.check: (1 checks) ... OK (2.75 seconds)
+test.armadillo.sugar.ctor: (1 checks) ... OK (3.02 seconds)
+test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (3.15 seconds)
+test.as.Col: (1 checks) ... OK (3.03 seconds)
+test.as.Mat: (1 checks) ... OK (2.99 seconds)
+test.as.Row: (1 checks) ... OK (2.98 seconds)
+test.cxmat: (1 checks) ... OK (2.9 seconds)
+test.mtGlue: (1 checks) ... OK (2.87 seconds)
+test.mtOp: (1 checks) ... OK (2.85 seconds)
+test.sugar: (1 checks) ... OK (2.82 seconds)
+test.sugar.cplx: (1 checks) ... OK (2.87 seconds)
+test.wrap.Glue: (1 checks) ... OK (3 seconds)
+test.wrap.Op: (1 checks) ... OK (2.86 seconds)
+test.wrap.R: (10 checks) ... OK (3.87 seconds)
 --------------------------- 
-Test file: /tmp/Rtmp65jpkH/Rinst279f2c72/RcppArmadillo/unitTests/runit.fastLm.R 
-test.fastLm: (2 checks) ... OK (0.01 seconds)
+Test file: /tmp/Rtmp9Tpwdb/Rinst32b97c34/RcppArmadillo/unitTests/runit.fastLm.R 
+test.fastLm: (2 checks) ... OK (0.2 seconds)
 test.fastLm.formula: (2 checks) ... OK (0.01 seconds)
