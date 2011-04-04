@@ -1,0 +1,54 @@
+\documentclass[10pt]{article}
+%\VignetteIndexEntry{RcppArmadillo-unitTests}
+\usepackage{vmargin}
+\setmargrb{0.75in}{0.75in}{0.75in}{0.75in}
+
+\usepackage[colorlinks]{hyperref}
+\author{Dirk Eddelbuettel, Romain Fran\c{c}ois and Douglas Bates}
+\title{RcppArmadillo : Unit testing results}
+\usepackage{Sweave}
+\begin{document}
+\maketitle
+
+\begin{verbatim}
+RUNIT TEST PROTOCOL -- Tue Mar 22 15:05:56 2011 
+*********************************************** 
+Number of test functions: 16 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+RcppArmadillo unit testing - 16 test functions, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: RcppArmadillo unit testing 
+Test function regexp: ^test.+ 
+Test file regexp: ^runit.+\.[rR]$ 
+Involved directory: 
+/tmp/RtmpMbJ1HJ/Rinst3455e94/RcppArmadillo/unitTests 
+--------------------------- 
+Test file: /tmp/RtmpMbJ1HJ/Rinst3455e94/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
+test.armadillo.rtti.check: (1 checks) ... OK (2.95 seconds)
+test.armadillo.sugar.ctor: (1 checks) ... OK (3.14 seconds)
+test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (3.15 seconds)
+test.as.Col: (1 checks) ... OK (2.89 seconds)
+test.as.Mat: (1 checks) ... OK (2.93 seconds)
+test.as.Row: (1 checks) ... OK (2.92 seconds)
+test.cxmat: (1 checks) ... OK (2.86 seconds)
+test.mtGlue: (1 checks) ... OK (2.82 seconds)
+test.mtOp: (1 checks) ... OK (2.81 seconds)
+test.sugar: (1 checks) ... OK (2.73 seconds)
+test.sugar.cplx: (1 checks) ... OK (2.77 seconds)
+test.wrap.Glue: (1 checks) ... OK (2.87 seconds)
+test.wrap.Op: (1 checks) ... OK (2.85 seconds)
+test.wrap.R: (10 checks) ... OK (3.85 seconds)
+--------------------------- 
+Test file: /tmp/RtmpMbJ1HJ/Rinst3455e94/RcppArmadillo/unitTests/runit.fastLm.R 
+test.fastLm: (2 checks) ... OK (0.21 seconds)
+test.fastLm.formula: (2 checks) ... OK (0.01 seconds)\end{verbatim}
+
+\end{document}
