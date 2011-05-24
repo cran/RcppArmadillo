@@ -41,7 +41,7 @@ class op_min
   
   //
   // for complex numbers
-
+  
   template<typename T>
   inline static std::complex<T> direct_min(const std::complex<T>* const X, const u32 n_elem);
   

@@ -24,7 +24,7 @@
 //! Note that as 'Glue' can be one of the operands, more than one matrix can be stored.
 //!
 //! For example, we could have:
-//! Op< Glue< Mat, Mat, glue_times >, op_trans >
+//! Op< Glue< Mat, Mat, glue_times >, op_htrans >
 
 template<typename T1, typename op_type>
 class Op : public Base<typename T1::elem_type, Op<T1, op_type> >

@@ -25,7 +25,7 @@
 //!
 //! For example, we could have: Glue<Mat, Mat, glue_times>
 //! 
-//! Another example is: Glue< Op<Mat, op_trans>, Op<Mat, op_inv>, glue_times >
+//! Another example is: Glue< Op<Mat, op_htrans>, Op<Mat, op_inv>, glue_times >
 
 
 

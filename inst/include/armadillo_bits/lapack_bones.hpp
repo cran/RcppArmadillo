@@ -1,6 +1,7 @@
 // Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C) 2009      Edmund Highcock
+// Copyright (C)      2009 Edmund Highcock
+// Copyright (C)      2011 James Sanders
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -50,6 +51,11 @@
   #define arma_cpotrf cpotrf
   #define arma_zpotrf zpotrf
   
+  #define arma_spotri spotri
+  #define arma_dpotri dpotri
+  #define arma_cpotri cpotri
+  #define arma_zpotri zpotri
+  
   #define arma_sgeqrf sgeqrf
   #define arma_dgeqrf dgeqrf
   #define arma_cgeqrf cgeqrf
@@ -82,8 +88,18 @@
   #define arma_ctrtrs ctrtrs
   #define arma_ztrtrs ztrtrs
 
+  #define arma_sgees  sgees
+  #define arma_dgees  dgees
+  #define arma_cgees  cgees
+  #define arma_zgees  zgees
+  
+  #define arma_strsyl strsyl
+  #define arma_dtrsyl dtrsyl
+  #define arma_ctrsyl ctrsyl
+  #define arma_ztrsyl ztrsyl
+  
 #else
-
+  
   #define arma_sgetrf SGETRF
   #define arma_dgetrf DGETRF
   #define arma_cgetrf CGETRF
@@ -115,6 +131,11 @@
   #define arma_dpotrf DPOTRF
   #define arma_cpotrf CPOTRF
   #define arma_zpotrf ZPOTRF
+  
+  #define arma_spotri SPOTRI
+  #define arma_dpotri DPOTRI
+  #define arma_cpotri CPOTRI
+  #define arma_zpotri ZPOTRI
   
   #define arma_sgeqrf SGEQRF
   #define arma_dgeqrf DGEQRF
@@ -148,6 +169,16 @@
   #define arma_ctrtrs CTRTRS
   #define arma_ztrtrs ZTRTRS
 
+  #define arma_sgees  SGEES
+  #define arma_dgees  DGEES
+  #define arma_cgees  CGEES
+  #define arma_zgees  ZGEES
+
+  #define arma_strsyl STRSYL
+  #define arma_dtrsyl DTRSYL
+  #define arma_ctrsyl CTRSYL
+  #define arma_ztrsyl ZTRSYL
+  
 #endif
 
 
@@ -200,6 +231,12 @@ namespace lapack
     void arma_fortran(arma_cpotrf)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
     void arma_fortran(arma_zpotrf)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
     
+    // matrix inversion (using Cholesky decomposition result)
+    void arma_fortran(arma_spotri)(char* uplo, blas_int* n,  float* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_dpotri)(char* uplo, blas_int* n, double* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_cpotri)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
+    void arma_fortran(arma_zpotri)(char* uplo, blas_int* n,   void* a, blas_int* lda, blas_int* info);
+    
     // QR decomposition
     void arma_fortran(arma_sgeqrf)(blas_int* m, blas_int* n,  float* a, blas_int* lda,  float* tau,  float* work, blas_int* lwork, blas_int* info);
     void arma_fortran(arma_dgeqrf)(blas_int* m, blas_int* n, double* a, blas_int* lda, double* tau, double* work, blas_int* lwork, blas_int* info);
@@ -240,10 +277,23 @@ namespace lapack
     void arma_fortran(arma_ctrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const void*   a, blas_int* lda, void*   b, blas_int* ldb, blas_int* info);
     void arma_fortran(arma_ztrtrs)(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const void*   a, blas_int* lda, void*   b, blas_int* ldb, blas_int* info);
     
+    // Schur decomposition (real matrices)
+    void arma_fortran(arma_sgees)(char* jobvs, char* sort, blas_int* select, blas_int* n, float*  a, blas_int* lda, blas_int* sdim, float*  wr, float*  wi, float*  vs, blas_int* ldvs, float*  work, blas_int* lwork, blas_int* bwork, blas_int* info);
+    void arma_fortran(arma_dgees)(char* jobvs, char* sort, blas_int* select, blas_int* n, double* a, blas_int* lda, blas_int* sdim, double* wr, double* wi, double* vs, blas_int* ldvs, double* work, blas_int* lwork, blas_int* bwork, blas_int* info);
+    
+    // Schur decomposition (complex matrices)
+    void arma_fortran(arma_cgees)(char* jobvs, char* sort, blas_int* select, blas_int* n, void* a, blas_int* lda, blas_int* sdim, void* w, void* vs, blas_int* ldvs, void* work, blas_int* lwork, float*  rwork, blas_int* bwork, blas_int* info);
+    void arma_fortran(arma_zgees)(char* jobvs, char* sort, blas_int* select, blas_int* n, void* a, blas_int* lda, blas_int* sdim, void* w, void* vs, blas_int* ldvs, void* work, blas_int* lwork, double* rwork, blas_int* bwork, blas_int* info);
+    
+    // solve a Sylvester equation ax + xb = c, with a and b assumed to be in Schur form
+    void arma_fortran(arma_strsyl)(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const float*  a, blas_int* lda, const float*  b, blas_int* ldb, float*  c, blas_int* ldc, float*  scale, blas_int* info);
+    void arma_fortran(arma_dtrsyl)(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const double* a, blas_int* lda, const double* b, blas_int* ldb, double* c, blas_int* ldc, double* scale, blas_int* info);
+    void arma_fortran(arma_ctrsyl)(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const void*   a, blas_int* lda, const void*   b, blas_int* ldb, void*   c, blas_int* ldc, float*  scale, blas_int* info);
+    void arma_fortran(arma_ztrsyl)(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const void*   a, blas_int* lda, const void*   b, blas_int* ldb, void*   c, blas_int* ldc, double* scale, blas_int* info);
+    
     // void arma_fortran(arma_dgeqp3)(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* jpvt, double* tau, double* work, blas_int* lwork, blas_int* info);
     // void arma_fortran(arma_dormqr)(char* side, char* trans, blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* c, blas_int* ldc, double* work, blas_int* lwork, blas_int* info);
     // void  arma_fortran(arma_dposv)(char* uplo, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
-    // void  arma_fortran(arma_dgees)(char* jobvs, char* sort, blas_int* select, blas_int* n, double* a, blas_int* lda, blas_int* sdim, double* wr, double* wi, double* vs, blas_int* ldvs, double* work, blas_int* lwork, blas_int* bwork, blas_int* info);
     }
   
   
@@ -400,7 +450,7 @@ namespace lapack
       }
     }
   
-   
+	 
   template<typename eT>
   inline
   void
@@ -491,6 +541,41 @@ namespace lapack
       {
       typedef std::complex<double> T;
       arma_fortran(arma_zpotrf)(uplo, n, (T*)a, lda, info);
+      }
+    
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  potri(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* info)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_fortran(arma_spotri)(uplo, n, (T*)a, lda, info);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_fortran(arma_dpotri)(uplo, n, (T*)a, lda, info);
+      }
+    else
+    if(is_supported_complex_float<eT>::value == true)
+      {
+      typedef std::complex<float> T;
+      arma_fortran(arma_cpotri)(uplo, n, (T*)a, lda, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value == true)
+      {
+      typedef std::complex<double> T;
+      arma_fortran(arma_zpotri)(uplo, n, (T*)a, lda, info);
       }
     
     }
@@ -737,6 +822,87 @@ namespace lapack
       {
       typedef std::complex<double> T;
       arma_fortran(arma_ztrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  gees(char* jobvs, char* sort, blas_int* select, blas_int* n, eT* a, blas_int* lda, blas_int* sdim, eT* wr, eT* wi, eT* vs, blas_int* ldvs, eT* work, blas_int* lwork, blas_int* bwork, blas_int* info)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_fortran(sgees)(jobvs, sort, select, n, (T*)a, lda, sdim, (T*)wr, (T*)wi, (T*)vs, ldvs, (T*)work, lwork, bwork, info);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_fortran(dgees)(jobvs, sort, select, n, (T*)a, lda, sdim, (T*)wr, (T*)wi, (T*)vs, ldvs, (T*)work, lwork, bwork, info);
+      }
+    }
+  
+  
+  
+  template<typename T>
+  inline
+  void
+  cx_gees(char* jobvs, char* sort, blas_int* select, blas_int* n, std::complex<T>* a, blas_int* lda, blas_int* sdim, std::complex<T>* w, std::complex<T>* vs, blas_int* ldvs, std::complex<T>* work, blas_int* lwork, T* rwork, blas_int* bwork, blas_int* info)
+    {
+    arma_type_check<is_supported_blas_type<T>::value == false>::apply();
+    arma_type_check<is_supported_blas_type< std::complex<T> >::value == false>::apply();
+    
+    if(is_float<T>::value == true)
+      {
+      typedef float bT;
+      typedef std::complex<bT> cT;
+      arma_fortran(cgees)(jobvs, sort, select, n, (cT*)a, lda, sdim, (cT*)w, (cT*)vs, ldvs, (cT*)work, lwork, (bT*)rwork, bwork, info);
+      }
+    else
+    if(is_double<T>::value == true)
+      {
+      typedef double bT;
+      typedef std::complex<bT> cT;
+      arma_fortran(zgees)(jobvs, sort, select, n, (cT*)a, lda, sdim, (cT*)w, (cT*)vs, ldvs, (cT*)work, lwork, (bT*)rwork, bwork, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  trsyl(char* transa, char* transb, blas_int* isgn, blas_int* m, blas_int* n, const eT* a, blas_int* lda, const eT* b, blas_int* ldb, eT* c, blas_int* ldc, eT* scale, blas_int* info)
+    {
+    arma_type_check<is_supported_blas_type<eT>::value == false>::apply();
+    
+    if(is_float<eT>::value == true)
+      {
+      typedef float T;
+      arma_fortran(strsyl)(transa, transb, isgn, m, n, (T*)a, lda, (T*)b, ldb, (T*)c, ldc, (T*)scale, info);
+      }
+    else
+    if(is_double<eT>::value == true)
+      {
+      typedef double T;
+      arma_fortran(dtrsyl)(transa, transb, isgn, m, n, (T*)a, lda, (T*)b, ldb, (T*)c, ldc, (T*)scale, info);
+      }
+    else
+    if(is_supported_complex_float<eT>::value == true)
+      {
+      typedef std::complex<float> T;
+      arma_fortran(ctrsyl)(transa, transb, isgn, m, n, (T*)a, lda, (T*)b, ldb, (T*)c, ldc, (float*)scale, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value == true)
+      {
+      typedef std::complex<double> T;
+      arma_fortran(ztrsyl)(transa, transb, isgn, m, n, (T*)a, lda, (T*)b, ldb, (T*)c, ldc, (double*)scale, info);
       }
     }
   

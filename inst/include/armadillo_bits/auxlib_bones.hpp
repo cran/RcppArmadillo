@@ -1,6 +1,7 @@
 // Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2011 Conrad Sanderson
-// Copyright (C) 2009      Edmund Highcock
+// Copyright (C)      2009 Edmund Highcock
+// Copyright (C)      2011 James Sanders
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -20,6 +21,16 @@
 class auxlib
   {
   public:
+  
+  
+  template<const u32 row, const u32 col>
+  struct pos
+    {
+    static const u32 n2 = row + col*2;
+    static const u32 n3 = row + col*3;
+    static const u32 n4 = row + col*4;
+    };
+  
   
   //
   // inv
@@ -45,6 +56,13 @@ class auxlib
   
   template<typename eT, typename T1>
   inline static bool inv_tr(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout);
+  
+  
+  //
+  // inv_sym
+  
+  template<typename eT, typename T1>
+  inline static bool inv_sym(Mat<eT>& out, const Base<eT,T1>& X, const u32 layout);
   
   
   //
@@ -156,6 +174,37 @@ class auxlib
   
   template<typename eT>
   inline static bool solve_tr(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const u32 layout);
+
+
+  //
+  // Schur decomposition
+  
+  template<typename eT>
+  inline static bool schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A);
+  
+  template<typename cT>
+  inline static bool schur_dec(Mat<std::complex<cT> >& Z, Mat<std::complex<cT> >& T, const Mat<std::complex<cT> >& A);
+  
+  
+  //
+  // syl (solution of the Sylvester equation AX + XB = C)
+  
+  template<typename eT>
+  inline static bool syl(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& B, const Mat<eT>& C);
+  
+  
+  //
+  // lyap (solution of the continuous Lyapunov equation AX + XA^H + Q = 0)
+  
+  template<typename eT>
+  inline static bool lyap(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& Q);
+  
+  
+  //
+  // dlyap (solution of the discrete Lyapunov equation AXA^H - X + Q = 0)
+  
+  template<typename eT>
+  inline static bool dlyap(Mat<eT>& X, const Mat<eT>& A, const Mat<eT>& Q);
   };
 
 

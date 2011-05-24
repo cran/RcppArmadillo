@@ -53,10 +53,10 @@ class op_max
   inline static std::complex<T> direct_max(const Mat< std::complex<T> >& X, const u32 row);
   
   template<typename T>
-  inline static std::complex<T> direct_max(const subview< std::complex<T> >&X);
+  inline static std::complex<T> direct_max(const subview< std::complex<T> >& X);
   
   template<typename T>
-  inline static std::complex<T> direct_max(const diagview< std::complex<T> >&X);
+  inline static std::complex<T> direct_max(const diagview< std::complex<T> >& X);
   
   };
 
