@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -42,9 +42,11 @@ max(const Row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "max(): given vector has no elements" );
+  const u32 A_n_elem = A.n_elem;
   
-  return op_max::direct_max(A.mem, A.n_elem);
+  arma_debug_check( (A_n_elem == 0), "max(): given object has no elements" );
+  
+  return op_max::direct_max(A.mem, A_n_elem);
   }
 
 
@@ -58,9 +60,11 @@ max(const Col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "max(): given vector has no elements" );
+  const u32 A_n_elem = A.n_elem;
   
-  return op_max::direct_max(A.mem, A.n_elem);
+  arma_debug_check( (A_n_elem == 0), "max(): given object has no elements" );
+  
+  return op_max::direct_max(A.mem, A_n_elem);
   }
 
 
@@ -82,9 +86,11 @@ max(const Op<T1, op_max>& in)
   const unwrap<T1> tmp1(in.m);
   const Mat<eT>& X = tmp1.M;
   
-  arma_debug_check( (X.n_elem == 0), "max(): given matrix has no elements" );
+  const u32 X_n_elem = X.n_elem;
   
-  return op_max::direct_max(X.mem, X.n_elem);
+  arma_debug_check( (X_n_elem == 0), "max(): given object has no elements" );
+  
+  return op_max::direct_max(X.mem, X_n_elem);
   }
 
 
@@ -109,7 +115,7 @@ max(const subview_row<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "max(): given vector has no elements" );
+  arma_debug_check( (A.n_elem == 0), "max(): given object has no elements" );
   
   return op_max::direct_max(A);
   }
@@ -124,9 +130,9 @@ max(const subview_col<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "max(): given vector has no elements" );
+  arma_debug_check( (A.n_elem == 0), "max(): given object has no elements" );
   
-  return op_max::direct_max(A);
+  return op_max::direct_max(A.colptr(0), A.n_rows);
   }
 
 
@@ -142,7 +148,7 @@ max(const Op<subview<eT>, op_max>& in)
   
   const subview<eT>& X = in.m;
   
-  arma_debug_check( (X.n_elem == 0), "max(): given matrix has no elements" );
+  arma_debug_check( (X.n_elem == 0), "max(): given object has no elements" );
   
   return op_max::direct_max(X);
   }
@@ -157,7 +163,7 @@ max(const diagview<eT>& A)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (A.n_elem == 0), "max(): given vector has no elements" );
+  arma_debug_check( (A.n_elem == 0), "max(): given object has no elements" );
   
   return op_max::direct_max(A);
   }
@@ -174,9 +180,11 @@ max(const subview_elem1<eT,T1>& A)
   
   const Mat<eT> X(A);
   
-  arma_debug_check( (X.n_elem == 0), "max(): given matrix has no elements" );
+  const u32 X_n_elem = X.n_elem;
   
-  return op_max::direct_max(X.mem, X.n_elem);
+  arma_debug_check( (X_n_elem == 0), "max(): given object has no elements" );
+  
+  return op_max::direct_max(X.mem, X_n_elem);
   }
 
 

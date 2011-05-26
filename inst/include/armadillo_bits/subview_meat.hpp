@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C)      2011 James Sanders
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,7 +25,7 @@ subview<eT>::~subview()
 
 
 template<typename eT>
-arma_inline
+inline
 subview<eT>::subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols)
   : m(in_m)
   , m_ptr(0)
@@ -40,7 +41,7 @@ subview<eT>::subview(const Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, 
 
 
 template<typename eT>
-arma_inline
+inline
 subview<eT>::subview(Mat<eT>& in_m, const u32 in_row1, const u32 in_col1, const u32 in_n_rows, const u32 in_n_cols)
   : m(in_m)
   , m_ptr(&in_m)
@@ -67,9 +68,23 @@ subview<eT>::operator+= (const eT val)
   
   if(local_n_rows == 1)
     {
-    for(u32 col=0; col<local_n_cols; ++col)
+    Mat<eT>& X = (*m_ptr);
+    
+    const u32 row           = aux_row1;
+    const u32 start_col     = aux_col1;
+    const u32 end_col_plus1 = start_col + local_n_cols;
+    
+    u32 i,j;
+    
+    for(i=start_col, j=start_col+1; j < end_col_plus1; i+=2, j+=2)
       {
-      at(0, col) += val;
+      X.at(row, i) += val;
+      X.at(row, j) += val;
+      }
+    
+    if(i < end_col_plus1)
+      {
+      X.at(row, i) += val;
       }
     }
   else
@@ -95,9 +110,23 @@ subview<eT>::operator-= (const eT val)
   
   if(local_n_rows == 1)
     {
-    for(u32 col=0; col<local_n_cols; ++col)
+    Mat<eT>& X = (*m_ptr);
+    
+    const u32 row           = aux_row1;
+    const u32 start_col     = aux_col1;
+    const u32 end_col_plus1 = start_col + local_n_cols;
+    
+    u32 i,j;
+    
+    for(i=start_col, j=start_col+1; j < end_col_plus1; i+=2, j+=2)
       {
-      at(0, col) -= val;
+      X.at(row, i) -= val;
+      X.at(row, j) -= val;
+      }
+    
+    if(i < end_col_plus1)
+      {
+      X.at(row, i) -= val;
       }
     }
   else
@@ -123,9 +152,23 @@ subview<eT>::operator*= (const eT val)
   
   if(local_n_rows == 1)
     {
-    for(u32 col=0; col<local_n_cols; ++col)
+    Mat<eT>& X = (*m_ptr);
+    
+    const u32 row           = aux_row1;
+    const u32 start_col     = aux_col1;
+    const u32 end_col_plus1 = start_col + local_n_cols;
+    
+    u32 i,j;
+    
+    for(i=start_col, j=start_col+1; j < end_col_plus1; i+=2, j+=2)
       {
-      at(0, col) *= val;
+      X.at(row, i) *= val;
+      X.at(row, j) *= val;
+      }
+    
+    if(i < end_col_plus1)
+      {
+      X.at(row, i) *= val;
       }
     }
   else
@@ -151,9 +194,23 @@ subview<eT>::operator/= (const eT val)
   
   if(local_n_rows == 1)
     {
-    for(u32 col=0; col<local_n_cols; ++col)
+    Mat<eT>& X = (*m_ptr);
+    
+    const u32 row           = aux_row1;
+    const u32 start_col     = aux_col1;
+    const u32 end_col_plus1 = start_col + local_n_cols;
+    
+    u32 i,j;
+    
+    for(i=start_col, j=start_col+1; j < end_col_plus1; i+=2, j+=2)
       {
-      at(0, col) /= val;
+      X.at(row, i) /= val;
+      X.at(row, j) /= val;
+      }
+    
+    if(i < end_col_plus1)
+      {
+      X.at(row, i) /= val;
       }
     }
   else
@@ -197,9 +254,22 @@ subview<eT>::operator= (const Base<eT,T1>& in)
       {
       const eT* x_mem = x.memptr();
       
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) = x_mem[col];
+        A.at(row, start_col+i) = x_mem[i];
+        A.at(row, start_col+j) = x_mem[j];
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) = x_mem[i];
         }
       }
     else
@@ -214,9 +284,25 @@ subview<eT>::operator= (const Base<eT,T1>& in)
     {
     if(t_n_rows == 1)
       {
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) = P[col];
+        const eT tmp1 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
+        const eT tmp2 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,j) : P[j];
+        
+        A.at(row, start_col+i) = tmp1;
+        A.at(row, start_col+j) = tmp2;
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) = (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
         }
       }
     else
@@ -276,9 +362,22 @@ subview<eT>::operator+= (const Base<eT,T1>& in)
       {
       const eT* x_mem = x.memptr();
       
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) += x_mem[col];
+        A.at(row, start_col+i) += x_mem[i];
+        A.at(row, start_col+j) += x_mem[j];
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) += x_mem[i];
         }
       }
     else
@@ -293,9 +392,25 @@ subview<eT>::operator+= (const Base<eT,T1>& in)
     {
     if(t_n_rows == 1)
       {
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) += P[col];
+        const eT tmp1 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
+        const eT tmp2 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,j) : P[j];
+        
+        A.at(row, start_col+i) += tmp1;
+        A.at(row, start_col+j) += tmp2;
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) += (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
         }
       }
     else
@@ -353,9 +468,22 @@ subview<eT>::operator-= (const Base<eT,T1>& in)
       {
       const eT* x_mem = x.memptr();
       
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) -= x_mem[col];
+        A.at(row, start_col+i) -= x_mem[i];
+        A.at(row, start_col+j) -= x_mem[j];
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) -= x_mem[i];
         }
       }
     else
@@ -370,9 +498,25 @@ subview<eT>::operator-= (const Base<eT,T1>& in)
     {
     if(t_n_rows == 1)
       {
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) -= P[col];
+        const eT tmp1 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
+        const eT tmp2 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,j) : P[j];
+        
+        A.at(row, start_col+i) -= tmp1;
+        A.at(row, start_col+j) -= tmp2;
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) -= (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
         }
       }
     else
@@ -432,9 +576,22 @@ subview<eT>::operator%= (const Base<eT,T1>& in)
       {
       const eT* x_mem = x.memptr();
       
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) *= x_mem[col];
+        A.at(row, start_col+i) *= x_mem[i];
+        A.at(row, start_col+j) *= x_mem[j];
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) *= x_mem[i];
         }
       }
     else
@@ -449,9 +606,25 @@ subview<eT>::operator%= (const Base<eT,T1>& in)
     {
     if(t_n_rows == 1)
       {
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) *= P[col];
+        const eT tmp1 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
+        const eT tmp2 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,j) : P[j];
+        
+        A.at(row, start_col+i) *= tmp1;
+        A.at(row, start_col+j) *= tmp2;
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) *= (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
         }
       }
     else
@@ -511,9 +684,22 @@ subview<eT>::operator/= (const Base<eT,T1>& in)
       {
       const eT* x_mem = x.memptr();
       
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) /= x_mem[col];
+        A.at(row, start_col+i) /= x_mem[i];
+        A.at(row, start_col+j) /= x_mem[j];
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) /= x_mem[i];
         }
       }
     else
@@ -528,9 +714,25 @@ subview<eT>::operator/= (const Base<eT,T1>& in)
     {
     if(t_n_rows == 1)
       {
-      for(u32 col=0; col<t_n_cols; ++col)
+      Mat<eT>& A = (*m_ptr);
+      
+      const u32 row       = aux_row1;
+      const u32 start_col = aux_col1;
+      
+      u32 i,j;
+      
+      for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
         {
-        at(0,col) /= P[col];
+        const eT tmp1 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
+        const eT tmp2 = (Proxy<T1>::prefer_at_accessor) ? P.at(0,j) : P[j];
+        
+        A.at(row, start_col+i) /= tmp1;
+        A.at(row, start_col+j) /= tmp2;
+        }
+      
+      if(i < t_n_cols)
+        {
+        A.at(row, start_col+i) /= (Proxy<T1>::prefer_at_accessor) ? P.at(0,i) : P[i];
         }
       }
     else
@@ -583,9 +785,29 @@ subview<eT>::operator= (const subview<eT>& x_in)
   
   if(t_n_rows == 1)
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+          Mat<eT>& A = *(t.m_ptr);
+    const Mat<eT>& B = x.m;
+    
+    const u32 row_A = t.aux_row1;
+    const u32 row_B = x.aux_row1;
+    
+    const u32 start_col_A = t.aux_col1;
+    const u32 start_col_B = x.aux_col1;
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
       {
-      t.at(0,col) = x.at(0,col);
+      const eT tmp1 = B.at(row_B, start_col_B + i);
+      const eT tmp2 = B.at(row_B, start_col_B + j);
+      
+      A.at(row_A, start_col_A + i) = tmp1;
+      A.at(row_A, start_col_A + j) = tmp2;
+      }
+    
+    if(i < t_n_cols)
+      {
+      A.at(row_A, start_col_A + i) = B.at(row_B, start_col_B + i);
       }
     }
   else
@@ -627,9 +849,29 @@ subview<eT>::operator+= (const subview<eT>& x_in)
   
   if(t_n_rows == 1)
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+          Mat<eT>& A = *(t.m_ptr);
+    const Mat<eT>& B = x.m;
+    
+    const u32 row_A = t.aux_row1;
+    const u32 row_B = x.aux_row1;
+    
+    const u32 start_col_A = t.aux_col1;
+    const u32 start_col_B = x.aux_col1;
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
       {
-      t.at(0,col) += x.at(0,col);
+      const eT tmp1 = B.at(row_B, start_col_B + i);
+      const eT tmp2 = B.at(row_B, start_col_B + j);
+      
+      A.at(row_A, start_col_A + i) += tmp1;
+      A.at(row_A, start_col_A + j) += tmp2;
+      }
+    
+    if(i < t_n_cols)
+      {
+      A.at(row_A, start_col_A + i) += B.at(row_B, start_col_B + i);
       }
     }
   else
@@ -671,9 +913,29 @@ subview<eT>::operator-= (const subview<eT>& x_in)
   
   if(t_n_rows == 1)
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+          Mat<eT>& A = *(t.m_ptr);
+    const Mat<eT>& B = x.m;
+    
+    const u32 row_A = t.aux_row1;
+    const u32 row_B = x.aux_row1;
+    
+    const u32 start_col_A = t.aux_col1;
+    const u32 start_col_B = x.aux_col1;
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
       {
-      t.at(0,col) -= x.at(0,col);
+      const eT tmp1 = B.at(row_B, start_col_B + i);
+      const eT tmp2 = B.at(row_B, start_col_B + j);
+      
+      A.at(row_A, start_col_A + i) -= tmp1;
+      A.at(row_A, start_col_A + j) -= tmp2;
+      }
+    
+    if(i < t_n_cols)
+      {
+      A.at(row_A, start_col_A + i) -= B.at(row_B, start_col_B + i);
       }
     }
   else
@@ -716,9 +978,29 @@ subview<eT>::operator%= (const subview& x_in)
   
   if(t_n_rows == 1)
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+          Mat<eT>& A = *(t.m_ptr);
+    const Mat<eT>& B = x.m;
+    
+    const u32 row_A = t.aux_row1;
+    const u32 row_B = x.aux_row1;
+    
+    const u32 start_col_A = t.aux_col1;
+    const u32 start_col_B = x.aux_col1;
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
       {
-      t.at(0,col) *= x.at(0,col);
+      const eT tmp1 = B.at(row_B, start_col_B + i);
+      const eT tmp2 = B.at(row_B, start_col_B + j);
+      
+      A.at(row_A, start_col_A + i) *= tmp1;
+      A.at(row_A, start_col_A + j) *= tmp2;
+      }
+    
+    if(i < t_n_cols)
+      {
+      A.at(row_A, start_col_A + i) *= B.at(row_B, start_col_B + i);
       }
     }
   else
@@ -761,9 +1043,29 @@ subview<eT>::operator/= (const subview& x_in)
   
   if(t_n_rows == 1)
     {
-    for(u32 col=0; col<t_n_cols; ++col)
+          Mat<eT>& A = *(t.m_ptr);
+    const Mat<eT>& B = x.m;
+    
+    const u32 row_A = t.aux_row1;
+    const u32 row_B = x.aux_row1;
+    
+    const u32 start_col_A = t.aux_col1;
+    const u32 start_col_B = x.aux_col1;
+    
+    u32 i,j;
+    
+    for(i=0, j=1; j < t_n_cols; i+=2, j+=2)
       {
-      t.at(0,col) /= x.at(0,col);
+      const eT tmp1 = B.at(row_B, start_col_B + i);
+      const eT tmp2 = B.at(row_B, start_col_B + j);
+      
+      A.at(row_A, start_col_A + i) /= tmp1;
+      A.at(row_A, start_col_A + j) /= tmp2;
+      }
+    
+    if(i < t_n_cols)
+      {
+      A.at(row_A, start_col_A + i) /= B.at(row_B, start_col_B + i);
       }
     }
   else
@@ -796,9 +1098,23 @@ subview<eT>::fill(const eT val)
   
   if(local_n_rows == 1)
     {
-    for(u32 col=0; col<local_n_cols; ++col)
+    Mat<eT>& X = (*m_ptr);
+    
+    const u32 row           = aux_row1;
+    const u32 start_col     = aux_col1;
+    const u32 end_col_plus1 = start_col + local_n_cols;
+    
+    u32 i,j;
+    
+    for(i=start_col, j=start_col+1; j < end_col_plus1; i+=2, j+=2)
       {
-      at(0,col) = val;
+      X.at(row, i) = val;
+      X.at(row, j) = val;
+      }
+    
+    if(i < end_col_plus1)
+      {
+      X.at(row, i) = val;
       }
     }
   else
@@ -825,7 +1141,38 @@ subview<eT>::zeros()
 
 
 template<typename eT>
-arma_inline
+inline
+void
+subview<eT>::ones()
+  {
+  arma_extra_debug_sigprint();
+  
+  (*this).fill(eT(1));
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::eye()
+  {
+  arma_extra_debug_sigprint();
+  
+  fill(eT(0));
+  
+  const u32 N = (std::min)(n_rows, n_cols);
+  
+  for(u32 i=0; i<N; ++i)
+    {
+    at(i,i) = eT(1);
+    }
+  }
+
+
+
+template<typename eT>
+inline
 eT&
 subview<eT>::operator[](const u32 i)
   {
@@ -839,7 +1186,7 @@ subview<eT>::operator[](const u32 i)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 subview<eT>::operator[](const u32 i) const
   {
@@ -853,7 +1200,7 @@ subview<eT>::operator[](const u32 i) const
 
 
 template<typename eT>
-arma_inline
+inline
 eT&
 subview<eT>::operator()(const u32 i)
   {
@@ -869,7 +1216,7 @@ subview<eT>::operator()(const u32 i)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 subview<eT>::operator()(const u32 i) const
   {
@@ -885,7 +1232,7 @@ subview<eT>::operator()(const u32 i) const
 
 
 template<typename eT>
-arma_inline
+inline
 eT&
 subview<eT>::operator()(const u32 in_row, const u32 in_col)
   {
@@ -898,7 +1245,7 @@ subview<eT>::operator()(const u32 in_row, const u32 in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 subview<eT>::operator()(const u32 in_row, const u32 in_col) const
   {
@@ -911,7 +1258,7 @@ subview<eT>::operator()(const u32 in_row, const u32 in_col) const
 
 
 template<typename eT>
-arma_inline
+inline
 eT&
 subview<eT>::at(const u32 in_row, const u32 in_col)
   {
@@ -922,7 +1269,7 @@ subview<eT>::at(const u32 in_row, const u32 in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 eT
 subview<eT>::at(const u32 in_row, const u32 in_col) const
   {
@@ -967,46 +1314,28 @@ subview<eT>::check_overlap(const subview<eT>& x) const
     {
     if( (t.n_elem == 0) || (x.n_elem == 0) )
       {
-      // if t.n_elem is 0, t.n_rows or t.n_cols is 0
-      // if x.n_elem is 0, x.n_rows or x.n_cols is 0
       return false;
       }
     else
       {
-      // at this stage we have a guarantee that:
-      // t.n_rows > 0, t.n_cols > 0
-      // and
-      // x.n_rows > 0, x.n_cols > 0
+      const u32 t_row_start  = t.aux_row1;
+      const u32 t_row_end_p1 = t_row_start + t.n_rows;
       
-      const u32 t_aux_row1 = t.aux_row1;
-      const u32 t_aux_row2 = t_aux_row1 + t.n_rows - 1;
+      const u32 t_col_start  = t.aux_col1;
+      const u32 t_col_end_p1 = t_col_start + t.n_cols;
       
-      const u32 t_aux_col1 = t.aux_col1;
-      const u32 t_aux_col2 = t_aux_col1 + t.n_cols - 1;
       
-      const u32 x_aux_row1 = x.aux_row1;
-      const u32 x_aux_row2 = x_aux_row1 + x.n_rows - 1;
+      const u32 x_row_start  = x.aux_row1;
+      const u32 x_row_end_p1 = x_row_start + x.n_rows;
       
-      const u32 x_aux_col1 = x.aux_col1;
-      const u32 x_aux_col2 = x_aux_col1 + x.n_cols - 1;
+      const u32 x_col_start  = x.aux_col1;
+      const u32 x_col_end_p1 = x_col_start + x.n_cols;
       
-      const bool row_overlap =
-        (
-        ( (x_aux_row1 >= t_aux_row1) && (x_aux_row1 <= t_aux_row2) )
-        || 
-        ( (x_aux_row2 >= t_aux_row1) && (x_aux_row2 <= t_aux_row2) )
-        );
       
-      const bool col_overlap =
-        (
-        ( (x_aux_col1 >= t_aux_col1) && (x_aux_col1 <= t_aux_col2) )
-        || 
-        ( (x_aux_col2 >= t_aux_col1) && (x_aux_col2 <= t_aux_col2) )
-        );
+      const bool outside_rows = ( (x_row_start >= t_row_end_p1) || (t_row_start >= x_row_end_p1) );
+      const bool outside_cols = ( (x_col_start >= t_col_end_p1) || (t_col_start >= x_col_end_p1) );
       
-      const bool overlap = ( (row_overlap == true) && (col_overlap == true) );
-      
-      return overlap;
+      return ( (outside_rows == false) && (outside_cols == false) );
       }
     }
   }
@@ -1018,7 +1347,7 @@ inline
 bool
 subview<eT>::is_vec() const
   {
-  return ( (n_rows == 1) || (n_cols == 1) );
+  return ( (n_rows <= 1) || (n_cols <= 1) );
   }
 
 
@@ -1056,19 +1385,31 @@ subview<eT>::extract(Mat<eT>& actual_out, const subview<eT>& in)
       // in.colptr(0) the first column of the subview, taking into account any row offset
       arrayops::copy( out.memptr(), in.colptr(0), n_rows );
       }
-    else   // a row vector
+    else   // a row vector (possibly empty)
       {
       arma_extra_debug_print("subview::extract(): copying row (going across columns)");
       
       const Mat<eT>& X = in.m;
       
-            eT* out_mem   = out.memptr();
+      eT* out_mem = out.memptr();
+      
       const u32 row       = in.aux_row1;
       const u32 start_col = in.aux_col1;
       
-      for(u32 i=0; i<n_cols; ++i)
+      u32 i,j;
+      
+      for(i=0, j=1; j < n_cols; i+=2, j+=2)
         {
-        out_mem[i] = X.at(row, i+start_col);
+        const eT tmp1 = X.at(row, start_col+i);
+        const eT tmp2 = X.at(row, start_col+j);
+        
+        out_mem[i] = tmp1;
+        out_mem[j] = tmp2;
+        }
+      
+      if(i < n_cols)
+        {
+        out_mem[i] = X.at(row, start_col+i);
         }
       }
     }
@@ -1103,16 +1444,31 @@ subview<eT>::plus_inplace(Mat<eT>& out, const subview<eT>& in)
   
   arma_debug_assert_same_size(out, in, "addition");
   
-  const u32 n_rows = out.n_rows;
-  const u32 n_cols = out.n_cols;
+  const u32 n_rows = in.n_rows;
+  const u32 n_cols = in.n_cols;
   
   if(n_rows == 1)
     {
     eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<n_cols; ++col)
+    const Mat<eT>& X = in.m;
+    
+    const u32 row       = in.aux_row1;
+    const u32 start_col = in.aux_col1;
+    
+    u32 i,j;
+    for(i=0, j=1; j < n_cols; i+=2, j+=2)
       {
-      out_mem[col] += in.at(0,col);
+      const eT tmp1 = X.at(row, start_col+i);
+      const eT tmp2 = X.at(row, start_col+j);
+        
+      out_mem[i] += tmp1;
+      out_mem[j] += tmp2;
+      }
+    
+    if(i < n_cols)
+      {
+      out_mem[i] += X.at(row, start_col+i);
       }
     }
   else
@@ -1136,16 +1492,31 @@ subview<eT>::minus_inplace(Mat<eT>& out, const subview<eT>& in)
   
   arma_debug_assert_same_size(out, in, "subtraction");
   
-  const u32 n_rows = out.n_rows;
-  const u32 n_cols = out.n_cols;
+  const u32 n_rows = in.n_rows;
+  const u32 n_cols = in.n_cols;
   
   if(n_rows == 1)
     {
     eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<n_cols; ++col)
+    const Mat<eT>& X = in.m;
+    
+    const u32 row       = in.aux_row1;
+    const u32 start_col = in.aux_col1;
+    
+    u32 i,j;
+    for(i=0, j=1; j < n_cols; i+=2, j+=2)
       {
-      out_mem[col] -= in.at(0,col);
+      const eT tmp1 = X.at(row, start_col+i);
+      const eT tmp2 = X.at(row, start_col+j);
+        
+      out_mem[i] -= tmp1;
+      out_mem[j] -= tmp2;
+      }
+    
+    if(i < n_cols)
+      {
+      out_mem[i] -= X.at(row, start_col+i);
       }
     }
   else
@@ -1169,16 +1540,31 @@ subview<eT>::schur_inplace(Mat<eT>& out, const subview<eT>& in)
   
   arma_debug_assert_same_size(out, in, "element-wise multiplication");
   
-  const u32 n_rows = out.n_rows;
-  const u32 n_cols = out.n_cols;
+  const u32 n_rows = in.n_rows;
+  const u32 n_cols = in.n_cols;
   
   if(n_rows == 1)
     {
     eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<n_cols; ++col)
+    const Mat<eT>& X = in.m;
+    
+    const u32 row       = in.aux_row1;
+    const u32 start_col = in.aux_col1;
+    
+    u32 i,j;
+    for(i=0, j=1; j < n_cols; i+=2, j+=2)
       {
-      out_mem[col] *= in.at(0,col);
+      const eT tmp1 = X.at(row, start_col+i);
+      const eT tmp2 = X.at(row, start_col+j);
+        
+      out_mem[i] *= tmp1;
+      out_mem[j] *= tmp2;
+      }
+    
+    if(i < n_cols)
+      {
+      out_mem[i] *= X.at(row, start_col+i);
       }
     }
   else
@@ -1202,16 +1588,31 @@ subview<eT>::div_inplace(Mat<eT>& out, const subview<eT>& in)
   
   arma_debug_assert_same_size(out, in, "element-wise division");
   
-  const u32 n_rows = out.n_rows;
-  const u32 n_cols = out.n_cols;
+  const u32 n_rows = in.n_rows;
+  const u32 n_cols = in.n_cols;
   
   if(n_rows == 1)
     {
     eT* out_mem = out.memptr();
     
-    for(u32 col=0; col<n_cols; ++col)
+    const Mat<eT>& X = in.m;
+    
+    const u32 row       = in.aux_row1;
+    const u32 start_col = in.aux_col1;
+    
+    u32 i,j;
+    for(i=0, j=1; j < n_cols; i+=2, j+=2)
       {
-      out_mem[col] /= in.at(0,col);
+      const eT tmp1 = X.at(row, start_col+i);
+      const eT tmp2 = X.at(row, start_col+j);
+        
+      out_mem[i] /= tmp1;
+      out_mem[j] /= tmp2;
+      }
+    
+    if(i < n_cols)
+      {
+      out_mem[i] /= X.at(row, start_col+i);
       }
     }
   else
@@ -1225,6 +1626,649 @@ subview<eT>::div_inplace(Mat<eT>& out, const subview<eT>& in)
 
 
 
+//! creation of subview (row vector)
+template<typename eT>
+inline
+subview_row<eT>
+subview<eT>::row(const u32 row_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( row_num >= n_rows, "subview::row(): out of bounds" );
+  
+  const u32 base_row = aux_row1 + row_num;
+  
+  return subview_row<eT>(*m_ptr, base_row, aux_col1, n_cols);
+  }
+
+
+
+//! creation of subview (row vector)
+template<typename eT>
+inline
+const subview_row<eT>
+subview<eT>::row(const u32 row_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( row_num >= n_rows, "subview::row(): out of bounds" );
+  
+  const u32 base_row = aux_row1 + row_num;
+  
+  return subview_row<eT>(m, base_row, aux_col1, n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+subview_row<eT>
+subview<eT>::operator()(const u32 row_num, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool col_all = col_span.whole;
+  
+  const u32 local_n_cols = n_cols;
+  
+  const u32 in_col1       = col_all ? 0            : col_span.a;
+  const u32 in_col2       =                          col_span.b;
+  const u32 submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  const u32 base_col1     = aux_col1 + in_col1;  
+  const u32 base_row      = aux_row1 + row_num;
+  
+  arma_debug_check
+    (
+    (row_num >= n_rows)
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "subview::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_row<eT>(*m_ptr, base_row, base_col1, submat_n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_row<eT>
+subview<eT>::operator()(const u32 row_num, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool col_all = col_span.whole;
+  
+  const u32 local_n_cols = n_cols;
+  
+  const u32 in_col1       = col_all ? 0            : col_span.a;
+  const u32 in_col2       =                          col_span.b;
+  const u32 submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  const u32 base_col1     = aux_col1 + in_col1;
+  const u32 base_row      = aux_row1 + row_num;
+  
+  arma_debug_check
+    (
+    (row_num >= n_rows)
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "subview::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_row<eT>(m, base_row, base_col1, submat_n_cols);
+  }
+
+
+
+//! creation of subview (column vector)
+template<typename eT>
+inline
+subview_col<eT>
+subview<eT>::col(const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "subview::col(): out of bounds");
+  
+  const u32 base_col = aux_col1 + col_num;
+  
+  return subview_col<eT>(*m_ptr, base_col, aux_row1, n_rows);
+  }
+
+
+
+//! creation of subview (column vector)
+template<typename eT>
+inline
+const subview_col<eT>
+subview<eT>::col(const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "subview::col(): out of bounds");
+  
+  const u32 base_col = aux_col1 + col_num;
+  
+  return subview_col<eT>(m, base_col, aux_row1, n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+subview_col<eT>
+subview<eT>::operator()(const span& row_span, const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  
+  const u32 local_n_rows = n_rows;
+  
+  const u32 in_row1       = row_all ? 0            : row_span.a;
+  const u32 in_row2       =                          row_span.b;
+  const u32 submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const u32 base_row1       = aux_row1 + in_row1;  
+  const u32 base_col        = aux_col1 + col_num;
+  
+  arma_debug_check
+    (
+    (col_num >= n_cols)
+    ||
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ,
+    "subview::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_col<eT>(*m_ptr, base_col, base_row1, submat_n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_col<eT>
+subview<eT>::operator()(const span& row_span, const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  
+  const u32 local_n_rows = n_rows;
+  
+  const u32 in_row1       = row_all ? 0            : row_span.a;
+  const u32 in_row2       =                          row_span.b;
+  const u32 submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const u32 base_row1       = aux_row1 + in_row1;
+  const u32 base_col        = aux_col1 + col_num;
+  
+  arma_debug_check
+    (
+    (col_num >= n_cols)
+    ||
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ,
+    "subview::operator(): indices out of bounds or incorrectly used"
+    );
+  
+  return subview_col<eT>(m, base_col, base_row1, submat_n_rows);
+  }
+
+
+
+//! create a Col object which uses memory from an existing matrix object.
+//! this approach is currently not alias safe
+//! and does not take into account that the parent matrix object could be deleted.
+//! if deleted memory is accessed by the created Col object,
+//! it will cause memory corruption and/or a crash
+template<typename eT>
+inline
+Col<eT>
+subview<eT>::unsafe_col(const u32 col_num)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "subview::unsafe_col(): out of bounds");
+  
+  return Col<eT>(colptr(col_num), n_rows, false, true);
+  }
+
+
+
+//! create a Col object which uses memory from an existing matrix object.
+//! this approach is currently not alias safe
+//! and does not take into account that the parent matrix object could be deleted.
+//! if deleted memory is accessed by the created Col object,
+//! it will cause memory corruption and/or a crash
+template<typename eT>
+inline
+const Col<eT>
+subview<eT>::unsafe_col(const u32 col_num) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( col_num >= n_cols, "subview::unsafe_col(): out of bounds");
+  
+  return Col<eT>(const_cast<eT*>(colptr(col_num)), n_rows, false, true);
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified row vectors)
+template<typename eT>
+inline
+subview<eT>
+subview<eT>::rows(const u32 in_row1, const u32 in_row2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_row2 >= n_rows),
+    "subview::rows(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  const u32 base_row1 = aux_row1 + in_row1;
+  
+  return subview<eT>(*m_ptr, base_row1, aux_col1, subview_n_rows, n_cols );
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified row vectors)
+template<typename eT>
+inline
+const subview<eT>
+subview<eT>::rows(const u32 in_row1, const u32 in_row2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_row2 >= n_rows),
+    "subview::rows(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  const u32 base_row1 = aux_row1 + in_row1;
+  
+  return subview<eT>(m, base_row1, aux_col1, subview_n_rows, n_cols );
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified column vectors)
+template<typename eT>
+inline
+subview<eT>
+subview<eT>::cols(const u32 in_col1, const u32 in_col2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_col1 > in_col2) || (in_col2 >= n_cols),
+    "subview::cols(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  const u32 base_col1 = aux_col1 + in_col1;
+  
+  return subview<eT>(*m_ptr, aux_row1, base_col1, n_rows, subview_n_cols);
+  }
+
+
+
+//! creation of subview (submatrix comprised of specified column vectors)
+template<typename eT>
+inline
+const subview<eT>
+subview<eT>::cols(const u32 in_col1, const u32 in_col2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_col1 > in_col2) || (in_col2 >= n_cols),
+    "subview::cols(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  const u32 base_col1 = aux_col1 + in_col1;
+  
+  return subview<eT>(m, aux_row1, base_col1, n_rows, subview_n_cols);
+  }
+
+
+
+//! creation of subview (submatrix)
+template<typename eT>
+inline
+subview<eT>
+subview<eT>::submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
+    "subview::submat(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  
+  const u32 base_row1 = aux_row1 + in_row1;
+  const u32 base_col1 = aux_col1 + in_col1;
+  
+  return subview<eT>(*m_ptr, base_row1, base_col1, subview_n_rows, subview_n_cols);
+  }
+
+
+
+//! creation of subview (generic submatrix)
+template<typename eT>
+inline
+const subview<eT>
+subview<eT>::submat(const u32 in_row1, const u32 in_col1, const u32 in_row2, const u32 in_col2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
+    "subview::submat(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  
+  const u32 base_row1 = aux_row1 + in_row1;
+  const u32 base_col1 = aux_col1 + in_col1;
+  
+  return subview<eT>(m, base_row1, base_col1, subview_n_rows, subview_n_cols);
+  }
+
+
+
+//! creation of subview (submatrix)
+template<typename eT>
+inline
+subview<eT>
+subview<eT>::submat(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  const bool col_all = col_span.whole;
+  
+  const u32 local_n_rows = n_rows;
+  const u32 local_n_cols = n_cols;
+  
+  const u32 in_row1       = row_all ? 0            : row_span.a;
+  const u32 in_row2       =                          row_span.b;
+  const u32 submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const u32 in_col1       = col_all ? 0            : col_span.a;
+  const u32 in_col2       =                          col_span.b;
+  const u32 submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "subview::submat(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 base_row1 = aux_row1 + in_row1;
+  const u32 base_col1 = aux_col1 + in_col1;
+  
+  return subview<eT>(*m_ptr, base_row1, base_col1, submat_n_rows, submat_n_cols);
+  }
+
+
+
+//! creation of subview (generic submatrix)
+template<typename eT>
+inline
+const subview<eT>
+subview<eT>::submat(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool row_all = row_span.whole;
+  const bool col_all = col_span.whole;
+  
+  const u32 local_n_rows = n_rows;
+  const u32 local_n_cols = n_cols;
+  
+  const u32 in_row1       = row_all ? 0            : row_span.a;
+  const u32 in_row2       =                          row_span.b;
+  const u32 submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
+  
+  const u32 in_col1       = col_all ? 0            : col_span.a;
+  const u32 in_col2       =                          col_span.b;
+  const u32 submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
+  
+  arma_debug_check
+    (
+    ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
+    ||
+    ( col_all ? false : ((in_col1 > in_col2) || (in_col2 >= local_n_cols)) )
+    ,
+    "subview::submat(): indices out of bounds or incorrectly used"
+    );
+  
+  const u32 base_row1 = aux_row1 + in_row1;
+  const u32 base_col1 = aux_col1 + in_col1;
+  
+  return subview<eT>(m, base_row1, base_col1, submat_n_rows, submat_n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+subview<eT>
+subview<eT>::operator()(const span& row_span, const span& col_span)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).submat(row_span, col_span);
+  }
+
+
+
+template<typename eT>
+inline
+const subview<eT>
+subview<eT>::operator()(const span& row_span, const span& col_span) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).submat(row_span, col_span);
+  }
+
+
+
+//! creation of diagview (diagonal)
+template<typename eT>
+inline
+diagview<eT>
+subview<eT>::diag(const s32 in_id)
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 row_offset = (in_id < 0) ? u32(-in_id) : 0;
+  const u32 col_offset = (in_id > 0) ? u32( in_id) : 0;
+  
+  arma_debug_check
+    (
+    (row_offset >= n_rows) || (col_offset >= n_cols),
+    "subview::diag(): requested diagonal out of bounds"
+    );
+  
+  const u32 len = (std::min)(n_rows - row_offset, n_cols - col_offset);
+  
+  const u32 base_row_offset = aux_row1 + row_offset;
+  const u32 base_col_offset = aux_col1 + col_offset;
+  
+  return diagview<eT>(*m_ptr, base_row_offset, base_col_offset, len);
+  }
+
+
+
+//! creation of diagview (diagonal)
+template<typename eT>
+inline
+const diagview<eT>
+subview<eT>::diag(const s32 in_id) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const u32 row_offset = (in_id < 0) ? -in_id : 0;
+  const u32 col_offset = (in_id > 0) ?  in_id : 0;
+  
+  arma_debug_check
+    (
+    (row_offset >= n_rows) || (col_offset >= n_cols),
+    "subview::diag(): requested diagonal out of bounds"
+    );
+  
+  
+  const u32 len = (std::min)(n_rows - row_offset, n_cols - col_offset);
+  
+  const u32 base_row_offset = aux_row1 + row_offset;
+  const u32 base_col_offset = aux_col1 + col_offset;
+  
+  return diagview<eT>(m, base_row_offset, base_col_offset, len);
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::swap_rows(const u32 in_row1, const u32 in_row2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_row1 >= n_rows) || (in_row2 >= n_rows),
+    "subview::swap_rows(): out of bounds"
+    );
+  
+  eT* mem = (*m_ptr).memptr();
+  
+  for(u32 col=0; col<n_cols; ++col)
+    {
+    const u32 offset = (aux_col1 + col) * m.n_rows;
+    const u32 pos1   = aux_row1 + in_row1 + offset;
+    const u32 pos2   = aux_row1 + in_row2 + offset;
+    
+    const eT tmp          = mem[pos1];
+    access::rw(mem[pos1]) = mem[pos2];
+    access::rw(mem[pos2]) = tmp;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview<eT>::swap_cols(const u32 in_col1, const u32 in_col2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check
+    (
+    (in_col1 >= n_cols) || (in_col2 >= n_cols),
+    "subview::swap_cols(): out of bounds"
+    );
+  
+  eT* ptr1 = colptr(in_col1);
+  eT* ptr2 = colptr(in_col2);
+  
+  for(u32 row=0; row<n_rows; ++row)
+    {
+    const eT tmp = ptr1[row];
+    ptr1[row]    = ptr2[row];
+    ptr2[row]    = tmp;
+    }
+  
+  }
+
+
+
+// template<typename eT>
+// inline
+// subview<eT>::iter::iter(const subview<eT>& S)
+//   : mem       (S.m.mem)
+//   , n_rows    (S.m.n_rows)
+//   , row_start (S.aux_row1)
+//   , row_end_p1(row_start + S.n_rows)
+//   , row       (row_start)
+//   , col       (S.aux_col1)
+//   , i         (row + col*n_rows)
+//   {
+//   arma_extra_debug_sigprint();
+//   }
+// 
+// 
+// 
+// template<typename eT>
+// arma_inline
+// eT
+// subview<eT>::iter::operator*() const
+//   {
+//   return mem[i];
+//   }
+// 
+// 
+// 
+// template<typename eT>
+// inline
+// void
+// subview<eT>::iter::operator++()
+//   {
+//   ++row;
+//   
+//   if(row < row_end_p1)
+//     {
+//     ++i;
+//     }
+//   else
+//     {
+//     row = row_start;
+//     ++col;
+//     
+//     i = row + col*n_rows;
+//     }
+//   }
+// 
+// 
+// 
+// template<typename eT>
+// inline
+// void
+// subview<eT>::iter::operator++(int)
+//   {
+//   operator++();
+//   }
+
+
+
 //
 //
 //
@@ -1232,7 +2276,7 @@ subview<eT>::div_inplace(Mat<eT>& out, const subview<eT>& in)
 
 
 template<typename eT>
-arma_inline
+inline
 subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col)
   : subview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
   {
@@ -1242,7 +2286,7 @@ subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 subview_col<eT>::subview_col(Mat<eT>& in_m, const u32 in_col)
   : subview<eT>(in_m, 0, in_col, in_m.n_rows, 1)
   {
@@ -1252,7 +2296,7 @@ subview_col<eT>::subview_col(Mat<eT>& in_m, const u32 in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows)
   : subview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
   {
@@ -1262,7 +2306,7 @@ subview_col<eT>::subview_col(const Mat<eT>& in_m, const u32 in_col, const u32 in
 
 
 template<typename eT>
-arma_inline
+inline
 subview_col<eT>::subview_col(Mat<eT>& in_m, const u32 in_col, const u32 in_row1, const u32 in_n_rows)
   : subview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
   {
@@ -1311,6 +2355,77 @@ subview_col<eT>::operator=(const Base<eT,T1>& X)
 
 
 
+template<typename eT>
+inline
+subview_col<eT>
+subview_col<eT>::rows(const u32 in_row1, const u32 in_row2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::rows(): indices out of bounds or incorrectly used");
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  const u32 base_row1 = this->aux_row1 + in_row1;
+  
+  return subview_col<eT>(*(this->m_ptr), this->aux_col1, base_row1, subview_n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_col<eT>
+subview_col<eT>::rows(const u32 in_row1, const u32 in_row2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::rows(): indices out of bounds or incorrectly used");
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  const u32 base_row1 = this->aux_row1 + in_row1;
+  
+  return subview_col<eT>(this->m, this->aux_col1, base_row1, subview_n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+subview_col<eT>
+subview_col<eT>::subvec(const u32 in_row1, const u32 in_row2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::subvec(): indices out of bounds or incorrectly used");
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  const u32 base_row1 = this->aux_row1 + in_row1;
+  
+  return subview_col<eT>(*(this->m_ptr), this->aux_col1, base_row1, subview_n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_col<eT>
+subview_col<eT>::subvec(const u32 in_row1, const u32 in_row2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_row1 > in_row2) || (in_row2 >= subview<eT>::n_rows) ), "subview_col::subvec(): indices out of bounds or incorrectly used");
+  
+  const u32 subview_n_rows = in_row2 - in_row1 + 1;
+  
+  const u32 base_row1 = this->aux_row1 + in_row1;
+  
+  return subview_col<eT>(this->m, this->aux_col1, base_row1, subview_n_rows);
+  }
+
+
 
 //
 //
@@ -1319,7 +2434,7 @@ subview_col<eT>::operator=(const Base<eT,T1>& X)
 
 
 template<typename eT>
-arma_inline
+inline
 subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row)
   : subview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
   {
@@ -1329,7 +2444,7 @@ subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row)
 
 
 template<typename eT>
-arma_inline
+inline
 subview_row<eT>::subview_row(Mat<eT>& in_m, const u32 in_row)
   : subview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
   {
@@ -1339,7 +2454,7 @@ subview_row<eT>::subview_row(Mat<eT>& in_m, const u32 in_row)
 
 
 template<typename eT>
-arma_inline
+inline
 subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols)
   : subview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
   {
@@ -1349,7 +2464,7 @@ subview_row<eT>::subview_row(const Mat<eT>& in_m, const u32 in_row, const u32 in
 
 
 template<typename eT>
-arma_inline
+inline
 subview_row<eT>::subview_row(Mat<eT>& in_m, const u32 in_row, const u32 in_col1, const u32 in_n_cols)
   : subview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
   {
@@ -1394,6 +2509,78 @@ subview_row<eT>::operator=(const Base<eT,T1>& X)
   
   subview<eT>::operator=(X);
   arma_debug_check( (subview<eT>::n_rows > 1), "subview_row(): incompatible dimensions" );
+  }
+
+
+
+template<typename eT>
+inline
+subview_row<eT>
+subview_row<eT>::cols(const u32 in_col1, const u32 in_col2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::cols(): indices out of bounds or incorrectly used" );
+  
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  
+  const u32 base_col1 = this->aux_col1 + in_col1;
+  
+  return subview_row<eT>(*(this->m_ptr), this->aux_row1, base_col1, subview_n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_row<eT>
+subview_row<eT>::cols(const u32 in_col1, const u32 in_col2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::cols(): indices out of bounds or incorrectly used");
+  
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  
+  const u32 base_col1 = this->aux_col1 + in_col1;
+  
+  return subview_row<eT>(this->m, this->aux_row1, base_col1, subview_n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+subview_row<eT>
+subview_row<eT>::subvec(const u32 in_col1, const u32 in_col2)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::subvec(): indices out of bounds or incorrectly used");
+  
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  
+  const u32 base_col1 = this->aux_col1 + in_col1;
+  
+  return subview_row<eT>(*(this->m_ptr), this->aux_row1, base_col1, subview_n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_row<eT>
+subview_row<eT>::subvec(const u32 in_col1, const u32 in_col2) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( ( (in_col1 > in_col2) || (in_col2 >= subview<eT>::n_cols) ), "subview_row::subvec(): indices out of bounds or incorrectly used");
+  
+  const u32 subview_n_cols = in_col2 - in_col1 + 1;
+  
+  const u32 base_col1 = this->aux_col1 + in_col1;
+  
+  return subview_row<eT>(this->m, this->aux_row1, base_col1, subview_n_cols);
   }
 
 

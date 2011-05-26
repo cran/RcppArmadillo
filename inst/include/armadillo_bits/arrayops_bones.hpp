@@ -20,8 +20,13 @@ class arrayops
   public:
   
   template<typename eT>
-  arma_hot inline static void
+  arma_hot arma_inline static void
   copy(eT* dest, const eT* src, const u32 n_elem);
+  
+  
+  template<typename eT>
+  static inline void
+  copy_big(eT* dest, const eT* src, const u32 n_elem);
   
   
   // 

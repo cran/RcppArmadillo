@@ -11,40 +11,49 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup op_trans
+//! \addtogroup op_inv
 //! @{
 
 
-//! 'matrix transpose' operation
 
-class op_trans
+//! 'invert matrix' operation (general matrices)
+class op_inv
   {
   public:
-  
-  template<typename eT>
-  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A);
   
   template<typename eT>
   inline static void apply(Mat<eT>& out, const Mat<eT>& A);
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trans>& in);
-  
-  
-  // inline static void apply_inplace(mat &out);
-  
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& in);
+
+  template<typename T1>
+  inline static void apply_diag(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X);
+
   };
 
 
 
-class op_trans2
+//! 'invert matrix' operation (triangular matrices)
+class op_inv_tr
   {
   public:
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trans2>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_tr>& in);
   };
 
+
+
+//! 'invert matrix' operation (positive definite symmetric matrices)
+class op_inv_sym
+  {
+  public:
   
-  
+  template<typename T1>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv_sym>& in);
+  };
+
+
+
 //! @}

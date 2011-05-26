@@ -34,17 +34,20 @@ template<typename eT, typename T1>              class subview_elem1;
 template<typename eT, typename T1, typename T2> class subview_elem2;
 
 
+class arma_empty_class {};
+
 class diskio;
 
 class op_min;
 class op_max;
 
-class op_trans;
+class op_strans;
 class op_htrans;
 class op_inv;
 class op_sum;
-class op_diagmat;
 class op_abs;
+class op_diagmat;
+class op_trimat;
 
 class eop_conj;
 

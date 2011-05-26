@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2011 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -48,6 +48,10 @@ class diagview : public Base<eT, diagview<eT> >
   
   inline void operator=(const diagview& x);
   
+  inline void operator+=(const eT val);
+  inline void operator-=(const eT val);
+  inline void operator*=(const eT val);
+  inline void operator/=(const eT val);
   
   template<typename T1> inline void operator= (const Base<eT,T1>& x);
   template<typename T1> inline void operator+=(const Base<eT,T1>& x);
@@ -59,11 +63,14 @@ class diagview : public Base<eT, diagview<eT> >
   arma_inline eT& operator[](const u32 i);
   arma_inline eT  operator[](const u32 i) const;
   
+  arma_inline eT&         at(const u32 i);
+  arma_inline eT          at(const u32 i) const;
+  
   arma_inline eT& operator()(const u32 i);
   arma_inline eT  operator()(const u32 i) const;
   
-  arma_inline eT& at(const u32 in_n_row, const u32 in_n_col);
-  arma_inline eT  at(const u32 in_n_row, const u32 in_n_col) const;
+  arma_inline eT&         at(const u32 in_n_row, const u32 in_n_col);
+  arma_inline eT          at(const u32 in_n_row, const u32 in_n_col) const;
    
   arma_inline eT& operator()(const u32 in_n_row, const u32 in_n_col);
   arma_inline eT  operator()(const u32 in_n_row, const u32 in_n_col) const;
@@ -84,6 +91,8 @@ class diagview : public Base<eT, diagview<eT> >
   private:
   
   friend class Mat<eT>;
+  friend class subview<eT>;
+  
   diagview();
   //diagview(const diagview&);  // making this private causes an error under gcc 4.1/4.2, but not 4.3
   };

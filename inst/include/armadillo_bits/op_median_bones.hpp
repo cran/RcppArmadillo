@@ -40,16 +40,19 @@ class op_median
   public:
   
   template<typename eT>
-  inline static eT              direct_median(std::vector<eT>& X);
+  arma_inline static eT robust_mean(const eT A, const eT B);
   
   template<typename eT>
-  inline static eT              direct_median(const eT* X, const u32 n_elem);
+  inline static eT direct_median(std::vector<eT>& X);
   
   template<typename eT>
-  inline static eT              direct_median(const subview<eT>& X);
+  inline static eT direct_median(const eT* X, const u32 n_elem);
   
   template<typename eT>
-  inline static eT              direct_median(const diagview<eT>& X);
+  inline static eT direct_median(const subview<eT>& X);
+  
+  template<typename eT>
+  inline static eT direct_median(const diagview<eT>& X);
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& in);
@@ -57,6 +60,9 @@ class op_median
   
   //
   // for complex numbers
+  
+  template<typename T>
+  arma_inline static std::complex<T> robust_mean(const std::complex<T>& A, const std::complex<T>& B);
   
   template<typename T>
   inline static void direct_cx_median_index(u32& out_index1, u32& out_index2, std::vector< arma_cx_median_packet<T> >& X);
