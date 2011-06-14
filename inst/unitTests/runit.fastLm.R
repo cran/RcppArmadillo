@@ -1,6 +1,6 @@
 #!/usr/bin/r -t
 #
-# Copyright (C) 2010	Dirk Eddelbuettel, Romain Francois and Douglas Bates
+# Copyright (C) 2010 - 2011  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 #
 # This file is part of RcppArmadillo.
 #
@@ -23,10 +23,10 @@
 }
 
 test.fastLm <- function() {
-    data(trees)
+    data(trees, package="datasets")
     flm <- .Call("fastLm",
-                 log(trees$Volume),
                  cbind(1, log(trees$Girth)),
+                 log(trees$Volume),
                  package="RcppArmadillo")
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 
@@ -37,7 +37,7 @@ test.fastLm <- function() {
 }
 
 test.fastLm.formula <- function() {
-    data(trees)
+    data(trees, package="datasets")
     flm <- fastLm(log(Volume) ~ log(Girth), data=trees)
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 
