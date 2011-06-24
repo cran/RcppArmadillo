@@ -3,10 +3,6 @@
 \alias{fastLmPure}
 \alias{fastLm.default}
 \alias{fastLm.formula}
-\alias{print.fastLm}
-\alias{summary.fastLm}
-\alias{print.summary.fastLm}
-\alias{predict.fastLm}
 \concept{regression}
 \title{Bare-bones linear model fitting function}
 \description{
@@ -14,32 +10,25 @@
   function of \code{Armadillo} linear algebra library.
 }
 \usage{
-fastLmPure(y, X)
+fastLmPure(X, y)
 
-fastLm(x, ...)
-\method{fastLm}{default}(x, y, ...)
-\method{fastLm}{formula}(formula, data = list(), ...)
-\method{print}{fastLm}(x, ...)
-\method{summary}{fastLm}(object, ...)
-\method{predict}{fastLm}(object, newdata=NULL, ...)
+fastLm(X, \dots)
+\method{fastLm}{default}(X, y, \dots)
+\method{fastLm}{formula}(formula, data = list(), \dots)
 }
 \arguments{
   \item{y}{a vector containing the explained variable.}
-  \item{X}{a data.frame or matrix containing the explanatory variables.}
-  \item{x}{a numeric design matrix for the model.}
+  \item{X}{a model matrix.}
   \item{formula}{a symbolic description of the model to be fit.}
   \item{data}{an optional data frame containing the variables in the model.}
-  \item{newdata}{an optional data frame containing the variables for
-    which a model prediction is desired.}
-  \item{object}{an object of class \code{"fastLm"}, i.e. a fitted model}
   \item{\ldots}{not used}
 }
 \details{
   Linear models should be estimated using the \code{\link{lm}} function. In
   some cases, \code{\link{lm.fit}} may be appropriate.
 
-  The \code{fastLmPure} function provides a reference use case of the \code{GSL}
-  library via the wrapper functions in the \pkg{RcppGSL} package.
+  The \code{fastLmPure} function provides a reference use case of the \code{Armadillo}
+  library via the wrapper functions in the \pkg{RcppArmadillo} package.
   
   The \code{fastLm} function provides a more standard implementation of
   a linear model fit, offering both a default and a formula interface as
@@ -67,7 +56,7 @@ fastLm(x, ...)
   \code{fastLmPure} returns a list with three components:
   \item{coefficients}{a vector of coefficients}
   \item{stderr}{a vector of the (estimated) standard errors of the coefficient estimates}
-  \item{df}{a scalar denoting the degrees of freedom in the model}
+  \item{df.residual}{a scalar denoting the degrees of freedom in the model}
  
   \code{fastLm} returns a richer object which also includes the
   residuals, fitted values and call argument similar to the \code{\link{lm}} or
@@ -80,11 +69,10 @@ fastLm(x, ...)
   Romain Francois, Dirk Eddelbuettel and Douglas Bates.
 }
 \examples{
-  require(datasets)
-  data(trees)
+  data(trees, package="datasets")
 
   ## bare-bones direct interface
-  flm <- fastLmPure( log(trees$Volume),  cbind(1, log(trees$Girth)) )
+  flm <- fastLmPure( cbind(1, log(trees$Girth)), log(trees$Volume) )
   print(flm)
 
   ## standard R interface for formula or data returning object of class fastLm

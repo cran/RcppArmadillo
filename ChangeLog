@@ -1,3 +1,24 @@
+2011-06-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.2.23
+
+	* inst/include/*: Updated to release 1.99.5 of Armadillo
+
+2011-06-14  Douglas Bates <bates@stat.wisc.edu>
+
+	* R/fastLm.R, inst/unitTests/runit.fastLm.R, man/fastLm.Rd,
+	  src/fastLm.cpp: Change order of arguments in fastLm.cpp and fastLm.R
+	  and documentation.
+
+2011-06-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* ChangeLog, inst/NEWS: ChangeLog and NEWS entry for Doug's S3 fixes
+
+2011-06-13  Douglas Bates <bates@stat.wisc.edu>
+
+	* NAMESPACE: Properly export S3methods as such
+	* man/fastLm.Rd: Similar updates to help page
+
 2011-06-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.2.22
