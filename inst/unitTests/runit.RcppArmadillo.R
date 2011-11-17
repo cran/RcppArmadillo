@@ -247,7 +247,7 @@ test.sugar <- function(){
 
     fx <- cxxfunction( signature(x= "numeric") , '
     NumericVector xx(x) ;
-    arma::mat m = forward( xx + xx ) ;
+    arma::mat m = xx + xx ;
     return wrap( m ) ;
 
     ', plugin = "RcppArmadillo" )
@@ -261,7 +261,7 @@ test.sugar.cplx <- function(){
 
     fx <- cxxfunction( signature(x= "complex") , '
     ComplexVector xx(x) ;
-    arma::cx_mat m = forward( exp( xx ) ) ;
+    arma::cx_mat m = exp( xx ) ;
 
     return wrap( m ) ;
 
@@ -329,19 +329,19 @@ test.armadillo.sugar.matrix.ctor <- function(){
 
 }
 
-test.armadillo.rtti.check <- function() {
+## test.armadillo.rtti.check <- function() {
 
-    inc <- '
-    void blah(arma::mat& X) {
-         X.set_size(5,5);
-    }
-    '
-    src <- '
-    arma::vec V;
-    blah(V); // if blah() worked, we have a problem
-    '
-    fun <- cxxfunction(signature(), body=src, inc=inc, plugin = "RcppArmadillo")
+##     inc <- '
+##     void blah(arma::mat& X) {
+##          X.set_size(5,5);
+##     }
+##     '
+##     src <- '
+##     arma::vec V;
+##     blah(V); // if blah() worked, we have a problem
+##     '
+##     fun <- cxxfunction(signature(), body=src, inc=inc, plugin = "RcppArmadillo")
 
-    checkException(fun(), msg="RTTI check on matrix constructor exception")
+##     checkException(fun(), msg="RTTI check on matrix constructor exception")
 
-}
+## }
