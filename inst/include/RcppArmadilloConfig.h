@@ -2,7 +2,7 @@
 //
 // RcppArmadilloConfig.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010-2011 Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -52,6 +52,11 @@
 #undef ARMA_HAVE_LOG1P
 #undef ARMA_HAVE_STD_ISINF
 #undef ARMA_HAVE_STD_ISNAN
+#endif
+
+// Let's be careful for now and undef this as not all compilers support this
+#if defined(ARMA_USE_CXX11)
+#undef ARMA_USE_CXX11
 #endif
 
 #endif
