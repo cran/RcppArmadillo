@@ -1,5 +1,5 @@
-17a846aeff5e4a019fbf31f363cf7579 *ChangeLog
-43fe90b58d1db2a36daf94f03e8c81f9 *DESCRIPTION
+a3d150a35c9a28bf7e56ab8619b4088f *ChangeLog
+9ddb946bf2025ae96e118e6d6b0f507f *DESCRIPTION
 b7c6c24aeb4f91fe24e426751bf5431e *NAMESPACE
 c5c9c7a50a8fe2414d0b54d79260d115 *R/RcppArmadillo.package.skeleton.R
 f284be64c785f04694c0e015be4cea42 *R/SHLIB.R
@@ -9,7 +9,7 @@ c425fa93fb2732616eb94c17a8141afa *R/flags.R
 d30285640b9e023ad156765b4c8bce1e *R/inline.R
 b1d1c97ea840d2d002c0fc373f57d4e2 *R/unit.test.R
 9b972b45b63d3cca0632aa222127fd3b *cleanup
-94ee8ea79d46df2f24fabe58cd3a3ef6 *inst/NEWS
+c5e6a440a2771f181663e8f271424839 *inst/NEWS
 662c1aa30653a4d2667c81c1acd84c87 *inst/announce/ANNOUNCE-0.2.0.txt
 85acf67d370ace6d24e220a1fb79693b *inst/doc/Makefile
 3938960f1367db85c43a19fe5f606d5a *inst/doc/RcppArmadillo-unitTests.Rnw
@@ -63,7 +63,7 @@ d518e6440d2aedb02f7c31f32fd9ac68 *inst/include/armadillo_bits/arma_config.hpp
 c1571a8ad23b6eff18415add0f0a43dc *inst/include/armadillo_bits/arma_ostream_bones.hpp
 bdbc79d60acd440067f90fbeb0179597 *inst/include/armadillo_bits/arma_ostream_meat.hpp
 e4da823fefa178606ffc867f05611b3e *inst/include/armadillo_bits/arma_static_check.hpp
-d4f0987f4096f2e2a00690c046cec2da *inst/include/armadillo_bits/arma_version.hpp
+b0325a7ed3c111a9d7480efb8c2579e0 *inst/include/armadillo_bits/arma_version.hpp
 3d1dfd16db29eab25883a06c44c4fc18 *inst/include/armadillo_bits/arrayops_bones.hpp
 59ad48db698291c666d7280e732dbec0 *inst/include/armadillo_bits/arrayops_meat.hpp
 a8e48d11dccaad6afdfaa8aff2635bb7 *inst/include/armadillo_bits/atlas_bones.hpp
@@ -246,7 +246,7 @@ bce36833458443ea24edb8e4286bd595 *inst/include/armadillo_bits/op_prod_bones.hpp
 543813ae0c46ed3b03fb21a0152c4849 *inst/include/armadillo_bits/op_reshape_bones.hpp
 306138a215816d79e0e672a3865edef3 *inst/include/armadillo_bits/op_reshape_meat.hpp
 817ced74c4af906d358a5789ff251857 *inst/include/armadillo_bits/op_resize_bones.hpp
-022e9e9b0fe1d182e8c572721e585b9b *inst/include/armadillo_bits/op_resize_meat.hpp
+8be6af591937c8c7aaa6441956595cf0 *inst/include/armadillo_bits/op_resize_meat.hpp
 3ac46d18ad27d2a74f6812a44e583166 *inst/include/armadillo_bits/op_shuffle_bones.hpp
 a8e8eb31b651931ad2ced19312dbb790 *inst/include/armadillo_bits/op_shuffle_meat.hpp
 6c908a5b8cc2a2f31a7ce011b6a25afd *inst/include/armadillo_bits/op_sort_bones.hpp
