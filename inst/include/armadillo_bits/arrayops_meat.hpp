@@ -1,5 +1,5 @@
-// Copyright (C) 2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2011 Conrad Sanderson
+// Copyright (C) 2011-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2011-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -192,13 +192,30 @@ arrayops::convert(out_eT* dest, const in_eT* src, const uword n_elem)
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    dest[i] = out_eT( src[i] );
-    dest[j] = out_eT( src[j] );
+    const in_eT tmp_i = src[i];
+    const in_eT tmp_j = src[j];
+    
+    // dest[i] = out_eT( tmp_i );
+    // dest[j] = out_eT( tmp_j );
+    
+    dest[i] = (is_signed<out_eT>::value)
+              ? out_eT( tmp_i )
+              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
+              
+    dest[j] = (is_signed<out_eT>::value)
+              ? out_eT( tmp_j )
+              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_j, in_eT(0)) ? out_eT(0) : out_eT(tmp_j) );
     }
   
   if(i < n_elem)
     {
-    dest[i] = out_eT( src[i] );
+    const in_eT tmp_i = src[i];
+    
+    // dest[i] = out_eT( tmp_i );
+    
+    dest[i] = (is_signed<out_eT>::value)
+              ? out_eT( tmp_i )
+              : ( cond_rel< is_signed<in_eT>::value >::lt(tmp_i, in_eT(0)) ? out_eT(0) : out_eT(tmp_i) );
     }
   }
 
@@ -236,8 +253,11 @@ arrayops::inplace_plus(eT* dest, const eT* src, const uword n_elem)
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    dest[i] += src[i];
-    dest[j] += src[j];
+    const eT tmp_i = src[i];
+    const eT tmp_j = src[j];
+    
+    dest[i] += tmp_i;
+    dest[j] += tmp_j;
     }
   
   if(i < n_elem)
@@ -258,8 +278,11 @@ arrayops::inplace_minus(eT* dest, const eT* src, const uword n_elem)
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    dest[i] -= src[i];
-    dest[j] -= src[j];
+    const eT tmp_i = src[i];
+    const eT tmp_j = src[j];
+    
+    dest[i] -= tmp_i;
+    dest[j] -= tmp_j;
     }
   
   if(i < n_elem)
@@ -280,8 +303,11 @@ arrayops::inplace_mul(eT* dest, const eT* src, const uword n_elem)
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    dest[i] *= src[i];
-    dest[j] *= src[j];
+    const eT tmp_i = src[i];
+    const eT tmp_j = src[j];
+    
+    dest[i] *= tmp_i;
+    dest[j] *= tmp_j;
     }
   
   if(i < n_elem)
@@ -302,8 +328,11 @@ arrayops::inplace_div(eT* dest, const eT* src, const uword n_elem)
   
   for(i=0, j=1; j<n_elem; i+=2, j+=2)
     {
-    dest[i] /= src[i];
-    dest[j] /= src[j];
+    const eT tmp_i = src[i];
+    const eT tmp_j = src[j];
+    
+    dest[i] /= tmp_i;
+    dest[j] /= tmp_j;
     }
   
   if(i < n_elem)
@@ -329,6 +358,20 @@ arrayops::inplace_set(eT* dest, const eT val, const uword n_elem)
     }
   
   if(i < n_elem)
+    {
+    dest[i] = val;
+    }
+  }
+
+
+
+template<typename eT, const uword n_elem>
+arma_hot
+inline
+void
+arrayops::inplace_set_fixed(eT* dest, const eT val)
+  {
+  for(uword i=0; i<n_elem; ++i)
     {
     dest[i] = val;
     }

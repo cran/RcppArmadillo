@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -345,7 +345,9 @@ class gemm
     {
     arma_extra_debug_sigprint();
     
-    if( (A.n_elem <= 48u) && (B.n_elem <= 48u) )
+    const uword threshold = (is_complex<eT>::value == true) ? 16u : 48u;
+    
+    if( (A.n_elem <= threshold) && (B.n_elem <= threshold) )
       {
       gemm_emul<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
       }
