@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -131,6 +131,15 @@ template<> struct arma_blas_type_only< std::complex<double> > { typedef std::com
 
 
 
+template<typename T> struct arma_not_blas_type { typedef T result; };
+
+template<> struct arma_not_blas_type< float                > {  };
+template<> struct arma_not_blas_type< double               > {  };
+template<> struct arma_not_blas_type< std::complex<float>  > {  };
+template<> struct arma_not_blas_type< std::complex<double> > {  };
+
+
+
 template<typename T> struct arma_op_rel_only { };
 
 template<> struct arma_op_rel_only< op_rel_lt_pre    > { typedef int result; };
@@ -182,6 +191,14 @@ template<typename eT> struct arma_Mat_Col_Row_only< Row<eT> > { typedef Row<eT> 
 
 template<typename  T> struct arma_Cube_only             { };
 template<typename eT> struct arma_Cube_only< Cube<eT> > { typedef Cube<eT> result; };
+
+
+template<bool> struct enable_if       {                     };
+template<>     struct enable_if<true> { typedef int result; };
+
+
+template<bool, typename result_type > struct enable_if2                    {                             };
+template<      typename result_type > struct enable_if2<true, result_type> { typedef result_type result; };
 
 
 

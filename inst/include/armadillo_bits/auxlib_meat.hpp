@@ -626,10 +626,8 @@ auxlib::det(const Base<eT,T1>& X, const bool slow)
         return auxlib::det_lapack(A, make_copy);
       }
     }
-  else
-    {
-    return auxlib::det_lapack(A, make_copy);
-    }
+  
+  return auxlib::det_lapack(A, make_copy);
   }
 
 
@@ -920,6 +918,8 @@ auxlib::log_det(eT& out_val, typename get_pod_type<eT>::result& out_sign, const 
     }
   #else
     {
+    arma_ignore(X);
+    
     out_val  = eT(0);
     out_sign =  T(0);
     
@@ -1168,12 +1168,12 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
     char uplo  = 'U';
     
     blas_int n_rows = A.n_rows;
-    blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1);
+    blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
     
     eigval.set_size( static_cast<uword>(n_rows) );
     podarray<eT> work( static_cast<uword>(lwork) );
     
-    blas_int info;
+    blas_int info = 0;
     
     arma_extra_debug_print("lapack::syev()");
     lapack::syev(&jobz, &uplo, &n_rows, A.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
@@ -1218,14 +1218,15 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
     
     blas_int n_rows = A.n_rows;
     blas_int lda    = A.n_rows;
-    blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1);  // TODO: automatically find best size of lwork
+    blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
+    // TODO: automatically find best size of lwork
     
     eigval.set_size( static_cast<uword>(n_rows) );
     
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT>  work( static_cast<uword>(lwork) );
     podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows - 2)) );
     
-    blas_int info;
+    blas_int info = 0;
     
     arma_extra_debug_print("lapack::heev()");
     lapack::heev(&jobz, &uplo, &n_rows, A.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
@@ -1272,12 +1273,12 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
     char uplo  = 'U';
     
     blas_int n_rows = eigvec.n_rows;
-    blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1);
+    blas_int lwork  = (std::max)(blas_int(1), 3*n_rows-1) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
     
     eigval.set_size( static_cast<uword>(n_rows) );
     podarray<eT> work( static_cast<uword>(lwork) );
     
-    blas_int info;
+    blas_int info = 0;
     
     arma_extra_debug_print("lapack::syev()");
     lapack::syev(&jobz, &uplo, &n_rows, eigvec.memptr(), &n_rows, eigval.memptr(), work.memptr(), &lwork, &info);
@@ -1288,6 +1289,8 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Base<eT,T1>& X)
     {
     arma_ignore(eigval);
     arma_ignore(eigvec);
+    arma_ignore(X);
+    
     arma_stop("eig_sym(): use of LAPACK needs to be enabled");
     
     return false;
@@ -1325,14 +1328,15 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Base<std::
     
     blas_int n_rows = eigvec.n_rows;
     blas_int lda    = eigvec.n_rows;
-    blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1);  // TODO: automatically find best size of lwork
+    blas_int lwork  = (std::max)(blas_int(1), 2*n_rows - 1) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
+    // TODO: automatically find best size of lwork
     
     eigval.set_size( static_cast<uword>(n_rows) );
     
     podarray<eT> work( static_cast<uword>(lwork) );
     podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows - 2)) );
     
-    blas_int info;
+    blas_int info = 0;
     
     arma_extra_debug_print("lapack::heev()");
     lapack::heev(&jobz, &uplo, &n_rows, eigvec.memptr(), &lda, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
@@ -1416,20 +1420,21 @@ auxlib::eig_gen
     
     blas_int n_rows = A_n_rows;
     blas_int lda    = A_n_rows;
-    blas_int lwork  = (std::max)(blas_int(1), 4*n_rows);  // TODO: automatically find best size of lwork
+    blas_int lwork  = (std::max)(blas_int(1), 4*n_rows) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
+    // TODO: automatically find best size of lwork
     
     eigval.set_size(A_n_rows);
     l_eigvec.set_size(A_n_rows, A_n_rows);
     r_eigvec.set_size(A_n_rows, A_n_rows);
     
-    podarray<T> work( static_cast<uword>(lwork) );
+    podarray<T>  work( static_cast<uword>(lwork) );
     podarray<T> rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows)) );
     
     podarray<T> wr(A_n_rows);
     podarray<T> wi(A_n_rows);
     
     Mat<T> A_copy = A;
-    blas_int info;
+    blas_int info = 0;
     
     arma_extra_debug_print("lapack::geev()");
     lapack::geev(&jobvl, &jobvr, &n_rows, A_copy.memptr(), &lda, wr.memptr(), wi.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, &info);
@@ -1526,7 +1531,8 @@ auxlib::eig_gen
        
     blas_int n_rows = A_n_rows;
     blas_int lda    = A_n_rows;
-    blas_int lwork  = (std::max)(blas_int(1), 4*n_rows);  // TODO: automatically find best size of lwork
+    blas_int lwork  = (std::max)(blas_int(1), 4*n_rows) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
+    // TODO: automatically find best size of lwork
     
     eigval.set_size(A_n_rows);
     l_eigvec.set_size(A_n_rows, A_n_rows);
@@ -1535,7 +1541,7 @@ auxlib::eig_gen
     podarray<eT> work( static_cast<uword>(lwork) );
     podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*n_rows)) );  // was 2,3
     
-    blas_int info;
+    blas_int info = 0;
     
     arma_extra_debug_print("lapack::cx_geev()");
     lapack::cx_geev(&jobvl, &jobvr, &n_rows, A.memptr(), &lda, eigval.memptr(), l_eigvec.memptr(), &n_rows, r_eigvec.memptr(), &n_rows, work.memptr(), &lwork, rwork.memptr(), &info);
@@ -1598,6 +1604,8 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X)
   #else
     {
     arma_ignore(out);
+    arma_ignore(X);
+    
     arma_stop("chol(): use of LAPACK needs to be enabled");
     return false;
     }
@@ -1631,7 +1639,7 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     blas_int work_len     = (std::max)(blas_int(1),n);
     blas_int work_len_tmp;
     blas_int k            = (std::min)(m,n);
-    blas_int info;
+    blas_int info         = 0;
     
     podarray<eT> tau( static_cast<uword>(k) );
     podarray<eT> work( static_cast<uword>(work_len) );
@@ -1741,13 +1749,13 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
     blas_int  lwork = 2 * (std::max)(blas_int(1), (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
-    blas_int  info;
+    blas_int  info  = 0;
     
     S.set_size( static_cast<uword>((std::min)(m, n)) );
     
     podarray<eT> work( static_cast<uword>(lwork) );
-  
-  
+    
+    
     // let gesvd_() calculate the optimum size of the workspace
     blas_int lwork_tmp = -1;
     
@@ -1836,7 +1844,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
     blas_int  lwork = 2 * (std::max)(blas_int(1), 2*(std::min)(m,n)+(std::max)(m,n) );
-    blas_int  info;
+    blas_int  info  = 0;
     
     S.set_size( static_cast<uword>((std::min)(m,n)) );
     
@@ -1956,7 +1964,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
     blas_int  lwork = 2 * (std::max)(blas_int(1), (std::max)( (3*(std::min)(m,n) + (std::max)(m,n)), 5*(std::min)(m,n) ) );
-    blas_int  info;
+    blas_int  info  = 0;
     
     
     S.set_size( static_cast<uword>((std::min)(m,n)) );
@@ -2050,7 +2058,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     blas_int  ldu   = U.n_rows;
     blas_int  ldvt  = V.n_rows;
     blas_int  lwork = 2 * (std::max)(blas_int(1), 2*(std::min)(m,n)+(std::max)(m,n) );
-    blas_int  info;
+    blas_int  info  = 0;
     
     S.set_size( static_cast<uword>((std::min)(m,n)) );
     
@@ -2445,9 +2453,9 @@ auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
       {
       #if defined(ARMA_USE_ATLAS)
         {
-        podarray<int> ipiv(A_n_rows);
-        
         out = B;
+        
+        podarray<int> ipiv(A_n_rows + 2);  // +2 for paranoia: old versions of Atlas might be trashing memory
         
         int info = atlas::clapack_gesv<eT>(atlas::CblasColMajor, A_n_rows, B.n_cols, A.memptr(), A_n_rows, ipiv.memptr(), out.memptr(), A_n_rows);
         
@@ -2455,15 +2463,15 @@ auxlib::solve(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B, const bool slow)
         }
       #elif defined(ARMA_USE_LAPACK)
         {
-        blas_int n    = A_n_rows;
+        blas_int n    = A_n_rows;  // assuming A is square
         blas_int lda  = A_n_rows;
         blas_int ldb  = A_n_rows;
         blas_int nrhs = B.n_cols;
-        blas_int info;
-        
-        podarray<blas_int> ipiv(A_n_rows);
+        blas_int info = 0;
         
         out = B;
+        
+        podarray<blas_int> ipiv(A_n_rows + 2);  // +2 for paranoia: some versions of Lapack might be trashing memory
         
         lapack::gesv<eT>(&n, &nrhs, A.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
         
@@ -2507,8 +2515,8 @@ auxlib::solve_od(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     blas_int  lda   = A.n_rows;
     blas_int  ldb   = A.n_rows;
     blas_int  nrhs  = B.n_cols;
-    blas_int  lwork = n + (std::max)(n, nrhs);
-    blas_int  info;
+    blas_int  lwork = n + (std::max)(n, nrhs) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
+    blas_int  info  = 0;
     
     Mat<eT> tmp = B;
     
@@ -2575,8 +2583,8 @@ auxlib::solve_ud(Mat<eT>& out, Mat<eT>& A, const Mat<eT>& B)
     blas_int  lda   = A.n_rows;
     blas_int  ldb   = A.n_cols;
     blas_int  nrhs  = B.n_cols;
-    blas_int  lwork = m + (std::max)(m,nrhs);
-    blas_int  info;
+    blas_int  lwork = m + (std::max)(m,nrhs) + 2;  // +2 for paranoia: some versions of Lapack might be trashing memory
+    blas_int  info  = 0;
     
     
     Mat<eT> tmp;
@@ -2728,6 +2736,8 @@ auxlib::schur_dec(Mat<eT>& Z, Mat<eT>& T, const Mat<eT>& A)
     {
     arma_ignore(Z);
     arma_ignore(T);
+    arma_ignore(A);
+    
     arma_stop("schur_dec(): use of LAPACK needs to be enabled");
     return false;
     }
@@ -2785,6 +2795,8 @@ auxlib::schur_dec(Mat<std::complex<cT> >& Z, Mat<std::complex<cT> >& T, const Ma
     {
     arma_ignore(Z);
     arma_ignore(T);
+    arma_ignore(A);
+    
     arma_stop("schur_dec(): use of LAPACK needs to be enabled");
     return false;
     }

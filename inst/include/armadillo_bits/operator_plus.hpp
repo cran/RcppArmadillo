@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -19,9 +19,9 @@
 //! unary plus operation (does nothing, but is required for completeness)
 template<typename T1>
 arma_inline
-const Base<typename T1::elem_type,T1>&
+typename enable_if2< is_arma_type<T1>::value, const T1& >::result
 operator+
-(const Base<typename T1::elem_type,T1>& X)
+(const T1& X)
   {
   arma_extra_debug_sigprint();
   
@@ -33,13 +33,13 @@ operator+
 //! Base + scalar
 template<typename T1>
 arma_inline
-const eOp<T1, eop_scalar_plus>
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_plus> >::result
 operator+
-(const Base<typename T1::elem_type,T1>& X, const typename T1::elem_type k)
+(const T1& X, const typename T1::elem_type k)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_scalar_plus>(X.get_ref(), k);
+  return eOp<T1, eop_scalar_plus>(X, k);
   }
 
 
@@ -47,76 +47,96 @@ operator+
 //! scalar + Base
 template<typename T1>
 arma_inline
-const eOp<T1, eop_scalar_plus>
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_plus> >::result
 operator+
-(const typename T1::elem_type k, const Base<typename T1::elem_type,T1>& X)
+(const typename T1::elem_type k, const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_scalar_plus>(X.get_ref(), k);  // NOTE: order is swapped
+  return eOp<T1, eop_scalar_plus>(X, k);  // NOTE: order is swapped
   }
 
 
 
-//! non-complex Base + complex scalar (experimental)
+//! non-complex Base + complex scalar
 template<typename T1>
 arma_inline
-const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_complex<typename T1::elem_type>::value == false),
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
+  >::result
 operator+
   (
-  const Base<typename T1::pod_type, T1>&     X,
+  const T1&                                  X,
   const std::complex<typename T1::pod_type>& k
   )
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);
+  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X, k);
   }
 
 
 
-//! complex scalar + non-complex Base (experimental)
+//! complex scalar + non-complex Base
 template<typename T1>
 arma_inline
-const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_complex<typename T1::elem_type>::value == false),
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>
+  >::result
 operator+
   (
   const std::complex<typename T1::pod_type>& k,
-  const Base<typename T1::pod_type, T1>&     X
+  const T1&                                  X
   )
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X.get_ref(), k);  // NOTE: order is swapped
+  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_plus>('j', X, k);  // NOTE: order is swapped
   }
 
 
 
-//! addition of Base objects with same element type
+//! addition of user-accessible Armadillo objects with same element type
 template<typename T1, typename T2>
 arma_inline
-const eGlue<T1, T2, eglue_plus>
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
+  const eGlue<T1, T2, eglue_plus>
+  >::result
 operator+
   (
-  const Base<typename T1::elem_type,T1>& X,
-  const Base<typename T1::elem_type,T2>& Y
+  const T1& X,
+  const T2& Y
   )
   {
   arma_extra_debug_sigprint();
   
-  return eGlue<T1, T2, eglue_plus>(X.get_ref(), Y.get_ref());
+  return eGlue<T1, T2, eglue_plus>(X, Y);
   }
 
 
 
-//! addition of Base objects with different element types
+//! addition of user-accessible Armadillo objects with different element types
 template<typename T1, typename T2>
 inline
-const mtGlue<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_plus>
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_type<T2>::value && (is_same_type<typename T1::elem_type, typename T2::elem_type>::value == false)),
+  const mtGlue<typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_plus>
+  >::result
 operator+
   (
-  const Base< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T1_result, T1>& X,
-  const Base< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T2_result, T2>& Y
+  const T1& X,
+  const T2& Y
   )
   {
   arma_extra_debug_sigprint();
@@ -128,7 +148,7 @@ operator+
   
   promote_type<eT1,eT2>::check();
   
-  return mtGlue<out_eT, T1, T2, glue_mixed_plus>( X.get_ref(), Y.get_ref() );
+  return mtGlue<out_eT, T1, T2, glue_mixed_plus>( X, Y );
   }
 
 

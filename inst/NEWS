@@ -1,3 +1,53 @@
+0.3.0   2012-04-10
+
+    o   Upgraded to Armadillo release 3.0.0 "Antarctic Chilli Ranch"
+
+    	  * added non-contiguous submatrix views
+    	  * added shorthand for inverse: .i()
+    	  * added hist() and histc()
+    	  * faster repmat()
+    	  * faster handling of submatrix views with one row or column 
+    	  * faster generation of random numbers
+    	  * faster element access in fixed size matrices
+    	  * better detection of vector expressions by sum(), cumsum(),
+    	    prod(), min(), max(), mean(), median(), stddev(), var() 
+    	  * expressions X=A.i()*B and X=inv(A)*B are automatically converted
+    	    to X=solve(A,B) 
+
+0.2.40  2012-04-04
+
+    o   Upgraded to Armadillo release 2.99.4 "Antarctic Chilli Ranch (Beta 4)"
+
+    	  * fixes for handling expressions with fixed size matrices
+
+0.2.39  2012-04-02
+
+    o   Upgraded to Armadillo release 2.99.3 "Antarctic Chilli Ranch (Beta 3)"
+
+    	  * faster repmat()
+	  * workarounds for braindead compilers (eg. Visual Studio)
+
+0.2.38  2012-03-28
+
+    o   Upgraded to Armadillo release 2.99.2 "Antarctic Chilli Ranch (Beta 2)"
+
+    	  * added .i()
+    	  * much faster handling of .col() and .row()
+    	  * expressions X=A.i()*B and X=inv(A)*B are automatically converted
+    	    to X=solve(A,B) 
+
+0.2.37  2012-03-19
+
+    o   Upgraded to Armadillo release 2.99.1 "Antarctic Chilli Ranch (Beta 1)"
+
+    	  * added non-contiguous submatrix views
+	  * added hist() and histc()
+	  * faster handling of submatrix views
+	  * faster generation of random numbers
+	  * faster element access in fixed size matrices
+	  * better detection of vector expressions by sum(), cumsum(),
+	    prod(), min(), max(), mean(), median(), stddev(), var() 
+
 0.2.36  2012-03-05
 
     o   Upgraded to Armadillo release 2.4.4

@@ -1,5 +1,5 @@
-// Copyright (C) 2010-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2010-2011 Conrad Sanderson
+// Copyright (C) 2010-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2010-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -21,8 +21,9 @@ struct strip_diagmat
   {
   typedef T1 stored_type;
   
-  inline strip_diagmat(const Base<typename T1::elem_type, T1>& X)
-    : M(X.get_ref())
+  arma_hot inline
+  strip_diagmat(const T1& X)
+    : M(X)
     {
     arma_extra_debug_sigprint();
     }
@@ -39,7 +40,8 @@ struct strip_diagmat< Op<T1, op_diagmat> >
   {
   typedef T1 stored_type;
   
-  inline strip_diagmat(const Op<T1, op_diagmat>& X)
+  arma_hot inline
+  strip_diagmat(const Op<T1, op_diagmat>& X)
     : M(X.m)
     {
     arma_extra_debug_sigprint();
@@ -57,15 +59,17 @@ struct strip_inv
   {
   typedef T1 stored_type;
   
-  inline strip_inv(const T1& X)
+  arma_hot inline
+  strip_inv(const T1& X)
     : M(X)
     {
     arma_extra_debug_sigprint();
     }
   
-  static const bool do_inv = false;
-  
   const T1& M;
+  
+  static const bool slow   = false;
+  static const bool do_inv = false;
   };
 
 
@@ -75,15 +79,18 @@ struct strip_inv< Op<T1, op_inv> >
   {
   typedef T1 stored_type;
   
-  inline strip_inv(const Op<T1, op_inv>& X)
+  arma_hot inline
+  strip_inv(const Op<T1, op_inv>& X)
     : M(X.m)
+    , slow(X.aux_uword_a == 1)
     {
     arma_extra_debug_sigprint();
     }
   
-  static const bool do_inv = true;
+  const T1&  M;
+  const bool slow;
   
-  const T1& M;
+  static const bool do_inv = true;
   };
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2010 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2010 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -20,13 +20,13 @@
 //! Base * scalar
 template<typename T1>
 arma_inline
-const eOp<T1, eop_scalar_times>
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_times> >::result
 operator*
-(const Base<typename T1::elem_type,T1>& X, const typename T1::elem_type k)
+(const T1& X, const typename T1::elem_type k)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_scalar_times>(X.get_ref(),k);
+  return eOp<T1, eop_scalar_times>(X,k);
   }
 
 
@@ -34,47 +34,57 @@ operator*
 //! scalar * Base
 template<typename T1>
 arma_inline
-const eOp<T1, eop_scalar_times>
+typename enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_scalar_times> >::result
 operator*
-(const typename T1::elem_type k, const Base<typename T1::elem_type,T1>& X)
+(const typename T1::elem_type k, const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return eOp<T1, eop_scalar_times>(X.get_ref(),k);  // NOTE: order is swapped
+  return eOp<T1, eop_scalar_times>(X,k);  // NOTE: order is swapped
   }
 
 
 
-//! non-complex Base * complex scalar (experimental)
+//! non-complex Base * complex scalar
 template<typename T1>
 arma_inline
-const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_complex<typename T1::elem_type>::value == false),
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>
+  >::result
 operator*
   (
-  const Base<typename T1::pod_type, T1>&     X,
+  const T1&                                  X,
   const std::complex<typename T1::pod_type>& k
   )
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>('j', X.get_ref(), k);
+  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>('j', X, k);
   }
 
 
 
-//! complex scalar * non-complex Base (experimental)
+//! complex scalar * non-complex Base
 template<typename T1>
 arma_inline
-const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_complex<typename T1::elem_type>::value == false),
+  const mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>
+  >::result
 operator*
   (
   const std::complex<typename T1::pod_type>& k,
-  const Base<typename T1::pod_type, T1>&     X
+  const T1&                                  X
   )
   {
   arma_extra_debug_sigprint();
   
-  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>('j', X.get_ref(), k);
+  return mtOp<typename std::complex<typename T1::pod_type>, T1, op_cx_scalar_times>('j', X, k);
   }
 
 
@@ -110,13 +120,18 @@ operator*
 //! Base * diagmat
 template<typename T1, typename T2>
 arma_inline
-const Glue<T1, Op<T2, op_diagmat>, glue_times_diag>
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  const Glue<T1, Op<T2, op_diagmat>, glue_times_diag>
+  >::result
 operator*
-(const Base<typename T2::elem_type,T1>& X, const Op<T2, op_diagmat>& Y)
+(const T1& X, const Op<T2, op_diagmat>& Y)
   {
   arma_extra_debug_sigprint();
   
-  return Glue<T1, Op<T2, op_diagmat>, glue_times_diag>(X.get_ref(), Y);
+  return Glue<T1, Op<T2, op_diagmat>, glue_times_diag>(X, Y);
   }
 
 
@@ -124,13 +139,18 @@ operator*
 //! diagmat * Base
 template<typename T1, typename T2>
 arma_inline
-const Glue<Op<T1, op_diagmat>, T2, glue_times_diag>
+typename
+enable_if2
+  <
+  (is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  const Glue<Op<T1, op_diagmat>, T2, glue_times_diag>
+  >::result
 operator*
-(const Op<T1, op_diagmat>& X, const Base<typename T1::elem_type,T2>& Y)
+(const Op<T1, op_diagmat>& X, const T2& Y)
   {
   arma_extra_debug_sigprint();
   
-  return Glue<Op<T1, op_diagmat>, T2, glue_times_diag>(X, Y.get_ref());
+  return Glue<Op<T1, op_diagmat>, T2, glue_times_diag>(X, Y);
   }
 
 
@@ -175,13 +195,18 @@ operator*
 //! multiplication of Base objects with same element type
 template<typename T1, typename T2>
 arma_inline
-const Glue<T1, T2, glue_times>
+typename
+enable_if2
+  <
+  is_arma_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value,
+  const Glue<T1, T2, glue_times>
+  >::result
 operator*
-(const Base<typename T1::elem_type,T1>& X, const Base<typename T1::elem_type,T2>& Y)
+(const T1& X, const T2& Y)
   {
   arma_extra_debug_sigprint();
   
-  return Glue<T1, T2, glue_times>(X.get_ref(), Y.get_ref());
+  return Glue<T1, T2, glue_times>(X, Y);
   }
 
 
@@ -189,11 +214,16 @@ operator*
 //! multiplication of Base objects with different element types
 template<typename T1, typename T2>
 inline
-const mtGlue< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_times >
+typename
+enable_if2
+  <
+  (is_arma_type<T1>::value && is_arma_type<T2>::value && (is_same_type<typename T1::elem_type, typename T2::elem_type>::value == false)),
+  const mtGlue< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result, T1, T2, glue_mixed_times >
+  >::result
 operator*
   (
-  const Base< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T1_result, T1>& X,
-  const Base< typename force_different_type<typename T1::elem_type, typename T2::elem_type>::T2_result, T2>& Y
+  const T1& X,
+  const T2& Y
   )
   {
   arma_extra_debug_sigprint();
@@ -205,7 +235,7 @@ operator*
   
   promote_type<eT1,eT2>::check();
   
-  return mtGlue<out_eT, T1, T2, glue_mixed_times>( X.get_ref(), Y.get_ref() );
+  return mtGlue<out_eT, T1, T2, glue_mixed_times>( X, Y );
   }
 
 

@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2011 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2011 Conrad Sanderson
+// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2012 Conrad Sanderson
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -24,6 +24,8 @@ class Col : public Mat<eT>
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
+  static const bool is_col = true;
+  static const bool is_row = false;
   
   inline          Col();
   inline          Col(const Col<eT>& X);
@@ -61,6 +63,10 @@ class Col : public Mat<eT>
   
   inline mat_injector<Col> operator<<(const eT val);
   
+  arma_inline const Op<Col<eT>,op_htrans>  t() const;
+  arma_inline const Op<Col<eT>,op_htrans> ht() const;
+  arma_inline const Op<Col<eT>,op_strans> st() const;
+  
   arma_inline eT& row(const uword row_num);
   arma_inline eT  row(const uword row_num) const;
   
@@ -82,6 +88,13 @@ class Col : public Mat<eT>
   
                         inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero = true);
   template<typename T1> inline void insert_rows(const uword row_num, const Base<eT,T1>& X);
+  
+  
+  arma_inline arma_warn_unused eT& at(const uword i);
+  arma_inline arma_warn_unused eT  at(const uword i) const;
+  
+  arma_inline arma_warn_unused eT& at(const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT  at(const uword in_row, const uword in_col) const;
   
   
   typedef       eT*       row_iterator;
@@ -109,6 +122,14 @@ class Col : public Mat<eT>
     
     public:
     
+    typedef fixed<fixed_n_elem>               Col_fixed_type;
+    
+    typedef eT                                elem_type;
+    typedef typename get_pod_type<eT>::result pod_type;
+    
+    static const bool is_col = true;
+    static const bool is_row = false;
+  
     static const uword n_rows = fixed_n_elem;
     static const uword n_cols = 1;
     static const uword n_elem = fixed_n_elem;
@@ -120,7 +141,6 @@ class Col : public Mat<eT>
     template<typename T1>              inline fixed(const Base<eT,T1>& A);
     template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
     
-    inline fixed(      eT* aux_mem, const bool copy_aux_mem = true);
     inline fixed(const eT* aux_mem);
     
     inline fixed(const char*        text);
@@ -153,6 +173,9 @@ class Col : public Mat<eT>
     arma_inline arma_warn_unused eT  at         (const uword in_row, const uword in_col) const;
     arma_inline arma_warn_unused eT& operator() (const uword in_row, const uword in_col);
     arma_inline arma_warn_unused eT  operator() (const uword in_row, const uword in_col) const;
+    
+    arma_inline arma_warn_unused       eT* memptr();
+    arma_inline arma_warn_unused const eT* memptr() const;
     
     arma_hot inline const Col<eT>& fill(const eT val);
     arma_hot inline const Col<eT>& zeros();
