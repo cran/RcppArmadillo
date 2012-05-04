@@ -1,5 +1,5 @@
-2a0236f5e334487c45608de06164ebb0 *ChangeLog
-e030cddc368cdccc959f95f70458d2f7 *DESCRIPTION
+470faa79b4904c98047a4e9b79d381b4 *ChangeLog
+af0ff5996db6e3dd80a06c813c773883 *DESCRIPTION
 b7c6c24aeb4f91fe24e426751bf5431e *NAMESPACE
 c5c9c7a50a8fe2414d0b54d79260d115 *R/RcppArmadillo.package.skeleton.R
 f284be64c785f04694c0e015be4cea42 *R/SHLIB.R
@@ -9,7 +9,7 @@ c425fa93fb2732616eb94c17a8141afa *R/flags.R
 d30285640b9e023ad156765b4c8bce1e *R/inline.R
 b1d1c97ea840d2d002c0fc373f57d4e2 *R/unit.test.R
 9b972b45b63d3cca0632aa222127fd3b *cleanup
-6a9c39be58c8e5ef0f4d426dd074509f *inst/NEWS
+5fd3a55154552a5a71c8cefcf1916334 *inst/NEWS
 662c1aa30653a4d2667c81c1acd84c87 *inst/announce/ANNOUNCE-0.2.0.txt
 85acf67d370ace6d24e220a1fb79693b *inst/doc/Makefile
 3938960f1367db85c43a19fe5f606d5a *inst/doc/RcppArmadillo-unitTests.Rnw
@@ -18,6 +18,7 @@ d47854cc447425e8e696ec38b23532d2 *inst/doc/RcppArmadillo-unitTests.pdf
 cea1522e8ed6a68f6c8813d1baf24cc6 *inst/doc/unitTests-results/RcppArmadillo-unitTests.txt
 98a52985ba51bacfbe886792097429d4 *inst/doc/unitTests/RcppArmadillo-unitTests.R
 d41d8cd98f00b204e9800998ecf8427e *inst/doc/unitTests/RcppArmadillo-unitTests.Rnw
+9f5d63445f6a0f2719d8f63432160ae3 *inst/examples/fastLm.r
 e798ad168cfed1461054c7c8122eab32 *inst/examples/varSimulation.r
 446b5281f5e18f4946d7f915cde24337 *inst/include/README
 fcfaf32a191854e514cececf85a87800 *inst/include/RcppArmadillo.h
@@ -63,13 +64,13 @@ d518e6440d2aedb02f7c31f32fd9ac68 *inst/include/armadillo_bits/arma_config.hpp
 c1571a8ad23b6eff18415add0f0a43dc *inst/include/armadillo_bits/arma_ostream_bones.hpp
 0e3c62da97b9ba12a8e6d893adb216c3 *inst/include/armadillo_bits/arma_ostream_meat.hpp
 e4da823fefa178606ffc867f05611b3e *inst/include/armadillo_bits/arma_static_check.hpp
-54c7ca7d336e303335c798cd63de999e *inst/include/armadillo_bits/arma_version.hpp
+a0f873eefd9a300d3dff1178fe3d66ea *inst/include/armadillo_bits/arma_version.hpp
 780d2bb22c459f150a172d313afecd13 *inst/include/armadillo_bits/arrayops_bones.hpp
 757eb04f0b67d678b2879cf11e6d8203 *inst/include/armadillo_bits/arrayops_meat.hpp
 a8e48d11dccaad6afdfaa8aff2635bb7 *inst/include/armadillo_bits/atlas_bones.hpp
 20f8b7f69d975314f940fdca10260c71 *inst/include/armadillo_bits/atlas_wrapper.hpp
 2fb8da994b79f505de0465930ee82104 *inst/include/armadillo_bits/auxlib_bones.hpp
-e58927856afec8c0cbbc5a5d700ab991 *inst/include/armadillo_bits/auxlib_meat.hpp
+01eb013d49edfaa5192a977112343db5 *inst/include/armadillo_bits/auxlib_meat.hpp
 f180ac6c0f653a8070018676b6825b0e *inst/include/armadillo_bits/blas_bones.hpp
 327a204073a89c993ca055f8db485635 *inst/include/armadillo_bits/blas_wrapper.hpp
 dab59563e21e5257713f69c7f33e16c0 *inst/include/armadillo_bits/cmath_wrap.hpp
@@ -114,7 +115,7 @@ edde9b46849c073d16598691cee84672 *inst/include/armadillo_bits/fn_cor.hpp
 00c45fe47beb2a9334f591a68a9cb3e8 *inst/include/armadillo_bits/fn_diagvec.hpp
 414ab2116d852deb0764d95f400c7714 *inst/include/armadillo_bits/fn_dot.hpp
 d1bd42b93394e820eba734b3fdadf7fc *inst/include/armadillo_bits/fn_eig.hpp
-e373eca8d8823793e77f7f3a81f6d153 *inst/include/armadillo_bits/fn_elem.hpp
+aa13510d5f2943c940cdd26b87c11e0c *inst/include/armadillo_bits/fn_elem.hpp
 ed3bdb75df6e8c2c6d686eb271debc45 *inst/include/armadillo_bits/fn_eps.hpp
 72a913a5a7ff99b85eec2e09d5390c33 *inst/include/armadillo_bits/fn_eye.hpp
 61948fe7acac45d8061d493e5170ad39 *inst/include/armadillo_bits/fn_flip.hpp
@@ -231,7 +232,7 @@ cfcb47bacb6ee06605baa12ef41924f8 *inst/include/armadillo_bits/op_flip_meat.hpp
 b8392d24b420ecb2af4985a87a987341 *inst/include/armadillo_bits/op_hist_bones.hpp
 dabf699e9952ed3648f314e976265623 *inst/include/armadillo_bits/op_hist_meat.hpp
 255596bed0975033d02ef827fbc65009 *inst/include/armadillo_bits/op_htrans_bones.hpp
-8c205fc07d601ca1b81d3c102a4b7dc9 *inst/include/armadillo_bits/op_htrans_meat.hpp
+300b988bdfb3e4c945f480399657d4c6 *inst/include/armadillo_bits/op_htrans_meat.hpp
 6ed929863711f5ab687880669318b4bb *inst/include/armadillo_bits/op_inv_bones.hpp
 35cd4bee2d3fef4d2182f759752bdf37 *inst/include/armadillo_bits/op_inv_meat.hpp
 cfaa72c21ab78dbe5437eecf9909f183 *inst/include/armadillo_bits/op_max_bones.hpp
@@ -312,7 +313,7 @@ fb5477747725bfc3aa82e9c319a62b57 *inst/include/armadillo_bits/typedef.hpp
 73bc9a5ac3b6247d9f0cd2d45fb2d11a *inst/include/armadillo_bits/typedef_blas_int.hpp
 eab2eb6ed38ef20022626cacd6ea17bd *inst/include/armadillo_bits/typedef_fixed.hpp
 7b318c8a94e3502327b65151239ebfbb *inst/include/armadillo_bits/undefine_conflicts.hpp
-8cc044ae988c383db4069c300d636636 *inst/include/armadillo_bits/unwrap.hpp
+9e42edca6eb46b79bd4b3c2938e37bb9 *inst/include/armadillo_bits/unwrap.hpp
 d3472b7c317994e51748f92959c36d57 *inst/include/armadillo_bits/unwrap_cube.hpp
 7081da84943ba893c9b224fb44d229b6 *inst/include/armadillo_bits/upgrade_val.hpp
 2a656ffc6b423f3ddc2d2a3bc8c73324 *inst/include/armadillo_bits/wall_clock_bones.hpp
