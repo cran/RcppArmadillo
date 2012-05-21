@@ -17,9 +17,9 @@
 
 
 #define ARMA_VERSION_MAJOR 3
-#define ARMA_VERSION_MINOR 0
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Antarctic Chilli Ranch"
+#define ARMA_VERSION_MINOR 2
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Creamfields"
 
 
 

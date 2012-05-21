@@ -1,5 +1,6 @@
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 NICTA (www.nicta.com.au)
+// Copyright (C) 2012 Conrad Sanderson
+// Copyright (C) 2012 Arnold Wiliem
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -11,17 +12,20 @@
 // (see http://www.opensource.org/licenses for more info)
 
 
-//! \addtogroup op_sum
+
+//! \addtogroup op_unique
 //! @{
 
-//! Class for finding sums of values in a matrix  (e.g. along rows or columns)
-class op_sum
+
+
+class op_unique
   {
   public:
   
   template<typename T1>
-  arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1, op_sum>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_unique>& X);
   };
+
 
 
 //! @}

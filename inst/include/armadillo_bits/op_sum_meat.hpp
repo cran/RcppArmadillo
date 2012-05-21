@@ -19,6 +19,7 @@
 //! The result is stored in a dense matrix that has either one column or one row.
 //! See the sum() function for more details.
 template<typename T1>
+arma_hot
 inline
 void
 op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
@@ -32,9 +33,11 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   
   const Proxy<T1> P(in.m);
   
-  if( (is_Mat< typename Proxy<T1>::stored_type>::value == true) || (P.is_alias(out) == true) )
+  const bool is_alias = P.is_alias(out);
+  
+  if( (is_Mat< typename Proxy<T1>::stored_type>::value == true) || is_alias )
     {
-    const unwrap_check< typename Proxy<T1>::stored_type > tmp(P.Q, out);
+    const unwrap_check< typename Proxy<T1>::stored_type > tmp(P.Q, is_alias);
     
     const Mat<eT>& X = tmp.M;
     
