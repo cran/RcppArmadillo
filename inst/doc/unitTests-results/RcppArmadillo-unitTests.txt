@@ -1,4 +1,4 @@
-RUNIT TEST PROTOCOL -- Sun Jul  1 20:43:17 2012 
+RUNIT TEST PROTOCOL -- Wed Jul 11 19:55:15 2012 
 *********************************************** 
 Number of test functions: 15 
 Number of errors: 0 
@@ -23,16 +23,16 @@ test.fastLm: (2 checks) ... OK (0.03 seconds)
 test.fastLm.formula: (2 checks) ... OK (0.01 seconds)
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
-test.armadillo.sugar.ctor: (1 checks) ... OK (6.94 seconds)
-test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (6.48 seconds)
-test.as.Col: (1 checks) ... OK (6.16 seconds)
-test.as.Mat: (1 checks) ... OK (6.32 seconds)
-test.as.Row: (1 checks) ... OK (6.28 seconds)
-test.cxmat: (1 checks) ... OK (6.28 seconds)
-test.mtGlue: (1 checks) ... OK (6.15 seconds)
-test.mtOp: (1 checks) ... OK (6.26 seconds)
-test.sugar: (1 checks) ... OK (6.7 seconds)
-test.sugar.cplx: (1 checks) ... OK (7.05 seconds)
-test.wrap.Glue: (1 checks) ... OK (7.15 seconds)
-test.wrap.Op: (1 checks) ... OK (7.11 seconds)
-test.wrap.R: (10 checks) ... OK (8.41 seconds)
+test.armadillo.sugar.ctor: (1 checks) ... OK (4.1 seconds)
+test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (5.08 seconds)
+test.as.Col: (1 checks) ... OK (4.14 seconds)
+test.as.Mat: (1 checks) ... OK (4.12 seconds)
+test.as.Row: (1 checks) ... OK (4.13 seconds)
+test.cxmat: (1 checks) ... OK (4.48 seconds)
+test.mtGlue: (1 checks) ... OK (4.06 seconds)
+test.mtOp: (1 checks) ... OK (4.01 seconds)
+test.sugar: (1 checks) ... OK (4.07 seconds)
+test.sugar.cplx: (1 checks) ... OK (4.04 seconds)
+test.wrap.Glue: (1 checks) ... OK (4.1 seconds)
+test.wrap.Op: (1 checks) ... OK (4.08 seconds)
+test.wrap.R: (10 checks) ... OK (4.71 seconds)
