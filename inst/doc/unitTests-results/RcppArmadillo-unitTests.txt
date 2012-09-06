@@ -1,12 +1,12 @@
-RUNIT TEST PROTOCOL -- Wed Jul 11 19:55:15 2012 
+RUNIT TEST PROTOCOL -- Thu Sep  6 06:30:22 2012 
 *********************************************** 
-Number of test functions: 15 
+Number of test functions: 17 
 Number of errors: 0 
 Number of failures: 0 
 
  
 1 Test Suite : 
-RcppArmadillo unit testing - 15 test functions, 0 errors, 0 failures
+RcppArmadillo unit testing - 17 test functions, 0 errors, 0 failures
 
 
 
@@ -19,20 +19,22 @@ Involved directory:
 /usr/local/lib/R/site-library/RcppArmadillo/unitTests 
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.fastLm.R 
-test.fastLm: (2 checks) ... OK (0.03 seconds)
-test.fastLm.formula: (2 checks) ... OK (0.01 seconds)
+test.fastLm: (3 checks) ... OK (0.07 seconds)
+test.fastLm.default: (5 checks) ... OK (0.01 seconds)
+test.fastLm.formula: (5 checks) ... OK (0.01 seconds)
+test.summary.fastLm: (12 checks) ... OK (0.02 seconds)
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
-test.armadillo.sugar.ctor: (1 checks) ... OK (4.1 seconds)
-test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (5.08 seconds)
-test.as.Col: (1 checks) ... OK (4.14 seconds)
-test.as.Mat: (1 checks) ... OK (4.12 seconds)
-test.as.Row: (1 checks) ... OK (4.13 seconds)
-test.cxmat: (1 checks) ... OK (4.48 seconds)
-test.mtGlue: (1 checks) ... OK (4.06 seconds)
-test.mtOp: (1 checks) ... OK (4.01 seconds)
-test.sugar: (1 checks) ... OK (4.07 seconds)
-test.sugar.cplx: (1 checks) ... OK (4.04 seconds)
-test.wrap.Glue: (1 checks) ... OK (4.1 seconds)
-test.wrap.Op: (1 checks) ... OK (4.08 seconds)
-test.wrap.R: (10 checks) ... OK (4.71 seconds)
+test.armadillo.sugar.ctor: (1 checks) ... OK (4.37 seconds)
+test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (4.56 seconds)
+test.as.Col: (1 checks) ... OK (4.34 seconds)
+test.as.Mat: (1 checks) ... OK (4.39 seconds)
+test.as.Row: (1 checks) ... OK (4.28 seconds)
+test.cxmat: (1 checks) ... OK (4.23 seconds)
+test.mtGlue: (1 checks) ... OK (4.19 seconds)
+test.mtOp: (1 checks) ... OK (4.16 seconds)
+test.sugar: (1 checks) ... OK (4.46 seconds)
+test.sugar.cplx: (1 checks) ... OK (4.61 seconds)
+test.wrap.Glue: (1 checks) ... OK (4.31 seconds)
+test.wrap.Op: (1 checks) ... OK (4.23 seconds)
+test.wrap.R: (10 checks) ... OK (6.18 seconds)

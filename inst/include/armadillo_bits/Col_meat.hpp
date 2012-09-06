@@ -139,43 +139,79 @@ Col<eT>::operator=(const std::string& text)
 
 
 
-#if defined(ARMA_USE_CXX11)
-
+//! create a column vector from std::vector
 template<typename eT>
 inline
-Col<eT>::Col(const std::initializer_list<eT>& list)
+Col<eT>::Col(const std::vector<eT>& x)
+  : Mat<eT>(arma_vec_indicator(), uword(x.size()), 1, 1)
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
   
-  access::rw(Mat<eT>::vec_state) = 2;
-  
-  Mat<eT>::operator=(list);
-  
-  std::swap( access::rw(Mat<eT>::n_rows), access::rw(Mat<eT>::n_cols) );
-  
-  access::rw(Mat<eT>::vec_state) = 1;
+  if(x.size() > 0)
+    {
+    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
+    }
   }
-
-
-
+  
+  
+  
+//! create a column vector from std::vector
 template<typename eT>
 inline
 const Col<eT>&
-Col<eT>::operator=(const std::initializer_list<eT>& list)
+Col<eT>::operator=(const std::vector<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  access::rw(Mat<eT>::vec_state) = 2;
+  Mat<eT>::init_warm(uword(x.size()), 1);
   
-  Mat<eT>::operator=(list);
-  
-  std::swap( access::rw(Mat<eT>::n_rows), access::rw(Mat<eT>::n_cols) );
-  
-  access::rw(Mat<eT>::vec_state) = 1;
+  if(x.size() > 0)
+    {
+    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
+    }
   
   return *this;
   }
 
+
+
+#if defined(ARMA_USE_CXX11)
+  
+  template<typename eT>
+  inline
+  Col<eT>::Col(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    access::rw(Mat<eT>::vec_state) = 2;
+    
+    Mat<eT>::operator=(list);
+    
+    std::swap( access::rw(Mat<eT>::n_rows), access::rw(Mat<eT>::n_cols) );
+    
+    access::rw(Mat<eT>::vec_state) = 1;
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  const Col<eT>&
+  Col<eT>::operator=(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    access::rw(Mat<eT>::vec_state) = 2;
+    
+    Mat<eT>::operator=(list);
+    
+    std::swap( access::rw(Mat<eT>::n_rows), access::rw(Mat<eT>::n_cols) );
+    
+    access::rw(Mat<eT>::vec_state) = 1;
+    
+    return *this;
+    }
+  
 #endif
 
 
@@ -938,41 +974,41 @@ Col<eT>::fixed<fixed_n_elem>::operator=(const subview_cube<eT>& X)
 
 
 #if defined(ARMA_USE_CXX11)
-
-template<typename eT>
-template<uword fixed_n_elem>
-inline
-Col<eT>::fixed<fixed_n_elem>::fixed(const std::initializer_list<eT>& list)
-  : Col<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
-  {
-  arma_extra_debug_sigprint_this(this);
   
-  (*this).operator=(list);
-  }
-
-
-
-template<typename eT>
-template<uword fixed_n_elem>
-inline
-const Col<eT>&
-Col<eT>::fixed<fixed_n_elem>::operator=(const std::initializer_list<eT>& list)
-  {
-  arma_extra_debug_sigprint();
+  template<typename eT>
+  template<uword fixed_n_elem>
+  inline
+  Col<eT>::fixed<fixed_n_elem>::fixed(const std::initializer_list<eT>& list)
+    : Col<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    (*this).operator=(list);
+    }
   
-  const uword N = list.size();
   
-  arma_debug_check( (N > fixed_n_elem), "Col::fixed: initialiser list is too long" );
   
-  eT* this_mem = (*this).memptr();
+  template<typename eT>
+  template<uword fixed_n_elem>
+  inline
+  const Col<eT>&
+  Col<eT>::fixed<fixed_n_elem>::operator=(const std::initializer_list<eT>& list)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword N = list.size();
+    
+    arma_debug_check( (N > fixed_n_elem), "Col::fixed: initialiser list is too long" );
+    
+    eT* this_mem = (*this).memptr();
+    
+    arrayops::copy( this_mem, list.begin(), N );
+    
+    for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
+    
+    return *this;
+    }
   
-  arrayops::copy( this_mem, list.begin(), N );
-  
-  for(uword iq=N; iq < fixed_n_elem; ++iq) { this_mem[iq] = eT(0); }
-  
-  return *this;
-  }
-
 #endif
 
 
