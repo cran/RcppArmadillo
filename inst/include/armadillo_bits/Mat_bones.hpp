@@ -1,5 +1,6 @@
 // Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
 // Copyright (C) 2008-2012 Conrad Sanderson
+// Copyright (C) 2012 Ryan Curtin
 // 
 // This file is part of the Armadillo C++ library.
 // It is provided without any warranty of fitness
@@ -59,6 +60,9 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline                  Mat(const std::string& text);
   inline const Mat& operator=(const std::string& text);
+  
+  inline                  Mat(const std::vector<eT>& x);
+  inline const Mat& operator=(const std::vector<eT>& x);
   
   #if defined(ARMA_USE_CXX11)
   inline                  Mat(const std::initializer_list<eT>& list);
@@ -134,7 +138,15 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2> inline const Mat& operator*=(const subview_elem2<eT,T1,T2>& X);
   template<typename T1, typename T2> inline const Mat& operator%=(const subview_elem2<eT,T1,T2>& X);
   template<typename T1, typename T2> inline const Mat& operator/=(const subview_elem2<eT,T1,T2>& X);
-  
+
+  // Operators on sparse matrices (and subviews).
+  template<typename T1> inline explicit          Mat(const SpBase<eT, T1>& m);
+  template<typename T1> inline const Mat&  operator=(const SpBase<eT, T1>& m);
+  template<typename T1> inline const Mat& operator+=(const SpBase<eT, T1>& m);
+  template<typename T1> inline const Mat& operator-=(const SpBase<eT, T1>& m);
+  template<typename T1> inline const Mat& operator*=(const SpBase<eT, T1>& m);
+  template<typename T1> inline const Mat& operator%=(const SpBase<eT, T1>& m);
+  template<typename T1> inline const Mat& operator/=(const SpBase<eT, T1>& m);
   
   inline mat_injector<Mat> operator<<(const eT val);
   inline mat_injector<Mat> operator<<(const injector_end_of_row<>& x);
@@ -194,6 +206,11 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T2> arma_inline const subview_elem2<eT,T2,T2> cols(const Base<uword,T2>& ci) const;
   
   
+  arma_inline subview_each1< Mat<eT>, 0 > each_col();
+  arma_inline subview_each1< Mat<eT>, 1 > each_row();
+  
+  template<typename T1> inline subview_each2< Mat<eT>, 0, T1 > each_col(const Base<uword, T1>& indices);
+  template<typename T1> inline subview_each2< Mat<eT>, 1, T1 > each_row(const Base<uword, T1>& indices);
   
   arma_inline       diagview<eT> diag(const sword in_id = 0);
   arma_inline const diagview<eT> diag(const sword in_id = 0) const;

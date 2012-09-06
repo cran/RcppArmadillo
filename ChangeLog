@@ -1,3 +1,36 @@
+2012-09-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.4.0
+
+	* inst/include/*: Upgraded to new release 3.4.0 of Armadillo
+
+2012-08-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/NEWS.Rd: Converted to Rd format
+
+2012-08-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 0.3.3.91
+
+	* inst/include/*: Upgraded to release 3.3.91 (v3.4 beta 1) of Armadillo
+
+2012-07-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.fastLm.R: expanded unit tests for fastLm
+
+2012-07-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/fastLm.R (summary.fastLm): Also display residual standard error
+
+2012-07-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/fastLm.R (fastLm.formula): Note whether intercept in formula or
+	not; also store the result of summary() on residuals
+	* R/fastLm.R (fastLm.default): Autmagically detect intercept use
+	* R/fastLm.R (print.summary.fastLm): Display summary of residuals
+	* R/fastLm.R (summary.fastLm): Distinguish between the intercept and
+	no-intercept cases when computing R^2
+
 2012-07-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 0.3.2.4
