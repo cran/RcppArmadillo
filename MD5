@@ -1,5 +1,5 @@
-83328b3599a186561b9229106b0b2cc8 *ChangeLog
-2bb65a79a96d1fea43e6fba0591f6ce0 *DESCRIPTION
+222e5623947e49999c7a74a445e91234 *ChangeLog
+8df44e5d6be8ee1c3c1674f5c95925fa *DESCRIPTION
 b7c6c24aeb4f91fe24e426751bf5431e *NAMESPACE
 c5c9c7a50a8fe2414d0b54d79260d115 *R/RcppArmadillo.package.skeleton.R
 f284be64c785f04694c0e015be4cea42 *R/SHLIB.R
@@ -9,7 +9,7 @@ c425fa93fb2732616eb94c17a8141afa *R/flags.R
 d30285640b9e023ad156765b4c8bce1e *R/inline.R
 b1d1c97ea840d2d002c0fc373f57d4e2 *R/unit.test.R
 9b972b45b63d3cca0632aa222127fd3b *cleanup
-04639660b1ea9aaa70d61907be247fca *inst/NEWS.Rd
+2450085bd5326f3eb60f4c69eb3ed5ba *inst/NEWS.Rd
 662c1aa30653a4d2667c81c1acd84c87 *inst/announce/ANNOUNCE-0.2.0.txt
 9ba36100bcdbf2b59b4d09c99b971b7d *inst/doc/Makefile
 0749cd6df426794e5e2961ec6401c2bf *inst/doc/RcppArmadillo-intro.Rnw
@@ -87,7 +87,7 @@ d4a45f8cdd234246a1fa46233ba1980f *inst/include/armadillo_bits/SpValProxy_bones.h
 f2a5ad1de8608709d1428a5cff776799 *inst/include/armadillo_bits/arma_ostream_bones.hpp
 8cc892a649d42ff9728a232c62a97805 *inst/include/armadillo_bits/arma_ostream_meat.hpp
 e4da823fefa178606ffc867f05611b3e *inst/include/armadillo_bits/arma_static_check.hpp
-2a50e0de7ea60c71a3fc996ac74c49a7 *inst/include/armadillo_bits/arma_version.hpp
+018008bc5048d2913f9baeeac97ebdd5 *inst/include/armadillo_bits/arma_version.hpp
 c88fbe06166f2a66bd4eaa0a49db6d60 *inst/include/armadillo_bits/arrayops_bones.hpp
 07a5d3250b773b7325a7194cb5de90c8 *inst/include/armadillo_bits/arrayops_meat.hpp
 a8e48d11dccaad6afdfaa8aff2635bb7 *inst/include/armadillo_bits/atlas_bones.hpp
@@ -134,7 +134,7 @@ edde9b46849c073d16598691cee84672 *inst/include/armadillo_bits/fn_cor.hpp
 2fa34932b8e26af139ceacce4c1a8e6b *inst/include/armadillo_bits/fn_cross.hpp
 4b1a409f681f275f16cedae0d9e3277d *inst/include/armadillo_bits/fn_cumsum.hpp
 f1583a4d9f2b51185d4a73433e488b35 *inst/include/armadillo_bits/fn_det.hpp
-56479adb6feca4021c8dab889d87b2e8 *inst/include/armadillo_bits/fn_diagmat.hpp
+cef71d5155ba980e3f593490bb49fdb4 *inst/include/armadillo_bits/fn_diagmat.hpp
 00c45fe47beb2a9334f591a68a9cb3e8 *inst/include/armadillo_bits/fn_diagvec.hpp
 14c166bbd37298a3584a8fe95d1cc652 *inst/include/armadillo_bits/fn_dot.hpp
 1a77afab9a2237a2032e18ea908c3886 *inst/include/armadillo_bits/fn_eig.hpp
@@ -171,7 +171,7 @@ bebe67e8cb600fb26e1d65d6049f9d0e *inst/include/armadillo_bits/fn_resize.hpp
 23fc13e1da6569be856a631d9f1e4374 *inst/include/armadillo_bits/fn_solve.hpp
 375838f54aeb8cd301182c1bab47ae11 *inst/include/armadillo_bits/fn_sort.hpp
 75001310986a14ea89223f4a76ff1c6f *inst/include/armadillo_bits/fn_sort_index.hpp
-4f267ce2a0ffe21549e033806f7557f5 *inst/include/armadillo_bits/fn_speye.hpp
+965927a3f3385eab1a67ec4c33cc8515 *inst/include/armadillo_bits/fn_speye.hpp
 31c79ec99398184b91e1a8e09f01917d *inst/include/armadillo_bits/fn_spones.hpp
 fd5063c8325d2d1155aa2109c3cfd598 *inst/include/armadillo_bits/fn_sprandn.hpp
 8ed6d4b8a4f4f8763e1386530648c4e6 *inst/include/armadillo_bits/fn_sprandu.hpp
@@ -248,7 +248,7 @@ a367d548aa98a9eda2f169e521a2dc14 *inst/include/armadillo_bits/op_cumsum_meat.hpp
 3c62b570e20132cd472d0f46ed6b318a *inst/include/armadillo_bits/op_cx_scalar_bones.hpp
 bf1f66709a85b09a6ab8e911ce903c1d *inst/include/armadillo_bits/op_cx_scalar_meat.hpp
 d777e9611b9507f9e02d240eaa3654e4 *inst/include/armadillo_bits/op_diagmat_bones.hpp
-a90d6a23979519722e8b9ecf870a91eb *inst/include/armadillo_bits/op_diagmat_meat.hpp
+4a3ac0758add18cfdb9f2645bfefa85f *inst/include/armadillo_bits/op_diagmat_meat.hpp
 65a7ff2ec005d175f43b65efe2d71b2b *inst/include/armadillo_bits/op_diagvec_bones.hpp
 273cb484461fbc1bd00099766027fc6a *inst/include/armadillo_bits/op_diagvec_meat.hpp
 1f64f3e0f0a816f6c5c6ffcd966e3522 *inst/include/armadillo_bits/op_dot_bones.hpp
@@ -379,7 +379,7 @@ d81a50bbc8fe944ac39fc6f3cb93dc15 *inst/skeleton/rcpparma_hello_world.h
 4dc62bbb1eebd7a55722cb150e6335e8 *inst/unitTests/runTests.R
 79fbceffdb56245c60c6f6362f0041c9 *inst/unitTests/runit.RcppArmadillo.R
 637dda92362f79c956b133841cebc681 *inst/unitTests/runit.fastLm.R
-cbbdfb74f963c5e3260b89bc79dd4f0b *man/RcppArmadillo-package.Rd
+a71549d01c96a2d5fa0c020bba569868 *man/RcppArmadillo-package.Rd
 30981735fa8e4b19fb0e8e7afc845e9d *man/RcppArmadillo.package.skeleton.Rd
 fd9f6dd1cea9eb30a62f0b2a069f2648 *man/fastLm.Rd
 437206ae8d41244f81bc030c1b219ef3 *src/Makevars
