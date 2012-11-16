@@ -1,5 +1,5 @@
-222e5623947e49999c7a74a445e91234 *ChangeLog
-8df44e5d6be8ee1c3c1674f5c95925fa *DESCRIPTION
+1e9998d3a298e1ef48cf25137b15b3e2 *ChangeLog
+be494465ff4d3d4bcffc573eda8c4890 *DESCRIPTION
 b7c6c24aeb4f91fe24e426751bf5431e *NAMESPACE
 c5c9c7a50a8fe2414d0b54d79260d115 *R/RcppArmadillo.package.skeleton.R
 f284be64c785f04694c0e015be4cea42 *R/SHLIB.R
@@ -9,7 +9,7 @@ c425fa93fb2732616eb94c17a8141afa *R/flags.R
 d30285640b9e023ad156765b4c8bce1e *R/inline.R
 b1d1c97ea840d2d002c0fc373f57d4e2 *R/unit.test.R
 9b972b45b63d3cca0632aa222127fd3b *cleanup
-2450085bd5326f3eb60f4c69eb3ed5ba *inst/NEWS.Rd
+e189308b84351b8e7f10eae634769cba *inst/NEWS.Rd
 662c1aa30653a4d2667c81c1acd84c87 *inst/announce/ANNOUNCE-0.2.0.txt
 9ba36100bcdbf2b59b4d09c99b971b7d *inst/doc/Makefile
 0749cd6df426794e5e2961ec6401c2bf *inst/doc/RcppArmadillo-intro.Rnw
@@ -71,7 +71,7 @@ b8be958b849902bf94a570375aa2f7f3 *inst/include/armadillo_bits/SpGlue_bones.hpp
 a206effb27a54b4ba0a967d669466977 *inst/include/armadillo_bits/SpGlue_meat.hpp
 75f397f07997b92ab693b7535c8a34eb *inst/include/armadillo_bits/SpMat_bones.hpp
 47136343d1eb12308516d9667c0b1cce *inst/include/armadillo_bits/SpMat_iterators_meat.hpp
-6e1a6557fa78b54f17b7220d3cb7a8d8 *inst/include/armadillo_bits/SpMat_meat.hpp
+3f722d0d87e197365e90efcf4d258430 *inst/include/armadillo_bits/SpMat_meat.hpp
 e19fca2451a9ae8c86f81dcfea13506e *inst/include/armadillo_bits/SpOp_bones.hpp
 39c6d72350c2c514566de824c286113e *inst/include/armadillo_bits/SpOp_meat.hpp
 b2497a2c689a453730cbe1b29e133067 *inst/include/armadillo_bits/SpProxy.hpp
@@ -79,15 +79,15 @@ b2497a2c689a453730cbe1b29e133067 *inst/include/armadillo_bits/SpProxy.hpp
 53873a599c72e3220d7162e8b00175fd *inst/include/armadillo_bits/SpRow_meat.hpp
 9ecd27f8ec47a4d0ce22107a8d6d536b *inst/include/armadillo_bits/SpSubview_bones.hpp
 c9fc7d236cc9f7576ea94355a81bc8ca *inst/include/armadillo_bits/SpSubview_iterators_meat.hpp
-8818308290e1de7f3d13c4ac4e57de54 *inst/include/armadillo_bits/SpSubview_meat.hpp
-d4a45f8cdd234246a1fa46233ba1980f *inst/include/armadillo_bits/SpValProxy_bones.hpp
-901bf01bae1f092f93795b0bfcfd7db5 *inst/include/armadillo_bits/SpValProxy_meat.hpp
+d1098af98e7bce98961b47be404a5c0c *inst/include/armadillo_bits/SpSubview_meat.hpp
+d9f5270a3dbbc7959c01093f5b5d351e *inst/include/armadillo_bits/SpValProxy_bones.hpp
+94643d0272359a35b37a033f3c2ef56a *inst/include/armadillo_bits/SpValProxy_meat.hpp
 0776f02dee4d3c75853ac607608354ef *inst/include/armadillo_bits/access.hpp
 41db240bcbcc1060f39c3381a1d29a08 *inst/include/armadillo_bits/arma_config.hpp
 f2a5ad1de8608709d1428a5cff776799 *inst/include/armadillo_bits/arma_ostream_bones.hpp
 8cc892a649d42ff9728a232c62a97805 *inst/include/armadillo_bits/arma_ostream_meat.hpp
 e4da823fefa178606ffc867f05611b3e *inst/include/armadillo_bits/arma_static_check.hpp
-018008bc5048d2913f9baeeac97ebdd5 *inst/include/armadillo_bits/arma_version.hpp
+e386ee387f86dc8100d94d0dea02760e *inst/include/armadillo_bits/arma_version.hpp
 c88fbe06166f2a66bd4eaa0a49db6d60 *inst/include/armadillo_bits/arrayops_bones.hpp
 07a5d3250b773b7325a7194cb5de90c8 *inst/include/armadillo_bits/arrayops_meat.hpp
 a8e48d11dccaad6afdfaa8aff2635bb7 *inst/include/armadillo_bits/atlas_bones.hpp
@@ -108,7 +108,7 @@ c052b921c530336e49af5b8d93cb5941 *inst/include/armadillo_bits/constants.hpp
 d960df320655b6810707fd4b169d0797 *inst/include/armadillo_bits/diagview_bones.hpp
 9ad4dd8b63bed1ef4e45426a9709738a *inst/include/armadillo_bits/diagview_meat.hpp
 e6e830e5c5fb034274911f4516f925f1 *inst/include/armadillo_bits/diskio_bones.hpp
-75c38cb3aff5d02f88b0d25a414edfda *inst/include/armadillo_bits/diskio_meat.hpp
+6674547bf3b80aaf239d8493197b78b7 *inst/include/armadillo_bits/diskio_meat.hpp
 5910e42e0651557aa6d3904fb5fbfc8d *inst/include/armadillo_bits/eGlueCube_bones.hpp
 97a65b95fbc8cc0a450d5d340ddd6f82 *inst/include/armadillo_bits/eGlueCube_meat.hpp
 32ca1580d8482b03666bfc41aefc164f *inst/include/armadillo_bits/eGlue_bones.hpp
@@ -154,7 +154,7 @@ f81b3a659d3119b2370b2108ae1c65ad *inst/include/armadillo_bits/fn_mean.hpp
 3eed00a45f818472739bdef2aff71215 *inst/include/armadillo_bits/fn_median.hpp
 ba671d74c67795e5d793dab24b49a152 *inst/include/armadillo_bits/fn_min.hpp
 25b02be6cdfe044b42592dd0823e54ef *inst/include/armadillo_bits/fn_misc.hpp
-5b43cf6d12117276fb620da37683f692 *inst/include/armadillo_bits/fn_n_unique.hpp
+74cdb4e372b307cb99a9c25637a0e949 *inst/include/armadillo_bits/fn_n_unique.hpp
 6808578f9da77749f5bcd1229445f99c *inst/include/armadillo_bits/fn_norm.hpp
 c4e04e035b80644fd5c3e9249d54dc1c *inst/include/armadillo_bits/fn_ones.hpp
 ae74c7724b428c31fb0733a5548d686f *inst/include/armadillo_bits/fn_pinv.hpp
@@ -313,7 +313,7 @@ c1c77360402a90590e7570124d24691b *inst/include/armadillo_bits/operator_cube_plus
 f20fb8886eec8e2b2af26877e1a24e79 *inst/include/armadillo_bits/operator_cube_relational.hpp
 9521aef333c7a3b920b0337807afc077 *inst/include/armadillo_bits/operator_cube_schur.hpp
 0af8f1acb6e359f5ada45c1684ad9081 *inst/include/armadillo_bits/operator_cube_times.hpp
-04a90906a8ff62b1041afd50c926a2c5 *inst/include/armadillo_bits/operator_div.hpp
+8b15bb0ebbcc3f7c5f1685fcc07cdf47 *inst/include/armadillo_bits/operator_div.hpp
 b1b18cb7ffe8f3db13e71465ff6ebb4c *inst/include/armadillo_bits/operator_minus.hpp
 f1078f56ca948c427203c0daaeb18ecc *inst/include/armadillo_bits/operator_ostream.hpp
 833f86e19006996677e52bfaad611472 *inst/include/armadillo_bits/operator_plus.hpp
@@ -379,7 +379,7 @@ d81a50bbc8fe944ac39fc6f3cb93dc15 *inst/skeleton/rcpparma_hello_world.h
 4dc62bbb1eebd7a55722cb150e6335e8 *inst/unitTests/runTests.R
 79fbceffdb56245c60c6f6362f0041c9 *inst/unitTests/runit.RcppArmadillo.R
 637dda92362f79c956b133841cebc681 *inst/unitTests/runit.fastLm.R
-a71549d01c96a2d5fa0c020bba569868 *man/RcppArmadillo-package.Rd
+fde953406231258d8b99326000aabd31 *man/RcppArmadillo-package.Rd
 30981735fa8e4b19fb0e8e7afc845e9d *man/RcppArmadillo.package.skeleton.Rd
 fd9f6dd1cea9eb30a62f0b2a069f2648 *man/fastLm.Rd
 437206ae8d41244f81bc030c1b219ef3 *src/Makevars
