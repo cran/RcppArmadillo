@@ -2,7 +2,7 @@
 //
 // RcppArmadillo.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2012  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -21,6 +21,10 @@
 
 #ifndef RcppArmadillo__RcppArmadillo__h
 #define RcppArmadillo__RcppArmadillo__h
+
+#ifdef Rcpp_hpp
+    #error "The file 'Rcpp.h' should not be included. Please correct to include only 'RcppArmadillo.h'."
+#endif
 
 #include <RcppArmadilloForward.h>
 #include <Rcpp.h>
