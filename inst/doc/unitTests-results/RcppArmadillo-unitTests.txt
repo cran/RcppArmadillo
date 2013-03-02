@@ -1,4 +1,4 @@
-RUNIT TEST PROTOCOL -- Tue Jan 29 20:46:39 2013 
+RUNIT TEST PROTOCOL -- Fri Mar  1 08:01:29 2013 
 *********************************************** 
 Number of test functions: 17 
 Number of errors: 0 
@@ -19,22 +19,22 @@ Involved directory:
 /usr/local/lib/R/site-library/RcppArmadillo/unitTests 
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.fastLm.R 
-test.fastLm: (3 checks) ... OK (0.04 seconds)
-test.fastLm.default: (5 checks) ... OK (0 seconds)
+test.fastLm: (3 checks) ... OK (0.03 seconds)
+test.fastLm.default: (5 checks) ... OK (0.01 seconds)
 test.fastLm.formula: (5 checks) ... OK (0.01 seconds)
 test.summary.fastLm: (12 checks) ... OK (0.02 seconds)
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
-test.armadillo.sugar.ctor: (1 checks) ... OK (4.9 seconds)
-test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (5.22 seconds)
-test.as.Col: (1 checks) ... OK (4.76 seconds)
-test.as.Mat: (1 checks) ... OK (4.84 seconds)
-test.as.Row: (1 checks) ... OK (4.73 seconds)
-test.cxmat: (1 checks) ... OK (4.71 seconds)
-test.mtGlue: (1 checks) ... OK (4.7 seconds)
-test.mtOp: (1 checks) ... OK (4.61 seconds)
-test.sugar: (1 checks) ... OK (4.66 seconds)
-test.sugar.cplx: (1 checks) ... OK (4.66 seconds)
-test.wrap.Glue: (1 checks) ... OK (4.77 seconds)
-test.wrap.Op: (1 checks) ... OK (4.69 seconds)
-test.wrap.R: (10 checks) ... OK (5.44 seconds)
+test.armadillo.sugar.ctor: (1 checks) ... OK (4.92 seconds)
+test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (5.06 seconds)
+test.as.Col: (1 checks) ... OK (4.81 seconds)
+test.as.Mat: (1 checks) ... OK (4.9 seconds)
+test.as.Row: (1 checks) ... OK (4.8 seconds)
+test.cxmat: (1 checks) ... OK (4.74 seconds)
+test.mtGlue: (1 checks) ... OK (4.81 seconds)
+test.mtOp: (1 checks) ... OK (4.74 seconds)
+test.sugar: (1 checks) ... OK (4.69 seconds)
+test.sugar.cplx: (1 checks) ... OK (4.74 seconds)
+test.wrap.Glue: (1 checks) ... OK (4.78 seconds)
+test.wrap.Op: (1 checks) ... OK (4.79 seconds)
+test.wrap.R: (10 checks) ... OK (5.46 seconds)
