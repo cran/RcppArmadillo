@@ -1,12 +1,12 @@
-RUNIT TEST PROTOCOL -- Fri Mar  1 08:01:29 2013 
+RUNIT TEST PROTOCOL -- Fri Apr 19 20:10:43 2013 
 *********************************************** 
-Number of test functions: 17 
+Number of test functions: 18 
 Number of errors: 0 
 Number of failures: 0 
 
  
 1 Test Suite : 
-RcppArmadillo unit testing - 17 test functions, 0 errors, 0 failures
+RcppArmadillo unit testing - 18 test functions, 0 errors, 0 failures
 
 
 
@@ -20,21 +20,24 @@ Involved directory:
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.fastLm.R 
 test.fastLm: (3 checks) ... OK (0.03 seconds)
-test.fastLm.default: (5 checks) ... OK (0.01 seconds)
+test.fastLm.default: (5 checks) ... OK (0 seconds)
 test.fastLm.formula: (5 checks) ... OK (0.01 seconds)
 test.summary.fastLm: (12 checks) ... OK (0.02 seconds)
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
-test.armadillo.sugar.ctor: (1 checks) ... OK (4.92 seconds)
-test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (5.06 seconds)
-test.as.Col: (1 checks) ... OK (4.81 seconds)
-test.as.Mat: (1 checks) ... OK (4.9 seconds)
-test.as.Row: (1 checks) ... OK (4.8 seconds)
-test.cxmat: (1 checks) ... OK (4.74 seconds)
-test.mtGlue: (1 checks) ... OK (4.81 seconds)
-test.mtOp: (1 checks) ... OK (4.74 seconds)
-test.sugar: (1 checks) ... OK (4.69 seconds)
-test.sugar.cplx: (1 checks) ... OK (4.74 seconds)
-test.wrap.Glue: (1 checks) ... OK (4.78 seconds)
-test.wrap.Op: (1 checks) ... OK (4.79 seconds)
-test.wrap.R: (10 checks) ... OK (5.46 seconds)
+test.armadillo.sugar.ctor: (1 checks) ... OK (0 seconds)
+test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (0 seconds)
+test.as.Col: (1 checks) ... OK (0 seconds)
+test.as.Mat: (1 checks) ... OK (0 seconds)
+test.as.Row: (1 checks) ... OK (0 seconds)
+test.cxmat: (1 checks) ... OK (0 seconds)
+test.mtGlue: (1 checks) ... OK (0 seconds)
+test.mtOp: (1 checks) ... OK (0 seconds)
+test.sugar: (1 checks) ... OK (0 seconds)
+test.sugar.cplx: (1 checks) ... OK (0 seconds)
+test.wrap.Glue: (1 checks) ... OK (0 seconds)
+test.wrap.Op: (1 checks) ... OK (0 seconds)
+test.wrap.R: (10 checks) ... OK (0 seconds)
+--------------------------- 
+Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.sample.R 
+test.sample: (21 checks) ... OK (0 seconds)
