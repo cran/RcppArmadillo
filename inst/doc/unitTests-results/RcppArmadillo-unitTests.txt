@@ -1,4 +1,4 @@
-RUNIT TEST PROTOCOL -- Tue Apr 30 07:16:33 2013 
+RUNIT TEST PROTOCOL -- Mon May 13 09:24:51 2013 
 *********************************************** 
 Number of test functions: 18 
 Number of errors: 0 
@@ -19,13 +19,13 @@ Involved directory:
 /usr/local/lib/R/site-library/RcppArmadillo/unitTests 
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.fastLm.R 
-test.fastLm: (3 checks) ... OK (0.06 seconds)
-test.fastLm.default: (5 checks) ... OK (0.01 seconds)
+test.fastLm: (3 checks) ... OK (0.03 seconds)
+test.fastLm.default: (5 checks) ... OK (0 seconds)
 test.fastLm.formula: (5 checks) ... OK (0.01 seconds)
-test.summary.fastLm: (12 checks) ... OK (0.03 seconds)
+test.summary.fastLm: (12 checks) ... OK (0.02 seconds)
 --------------------------- 
 Test file: /usr/local/lib/R/site-library/RcppArmadillo/unitTests/runit.RcppArmadillo.R 
-test.armadillo.sugar.ctor: (1 checks) ... OK (0.01 seconds)
+test.armadillo.sugar.ctor: (1 checks) ... OK (0 seconds)
 test.armadillo.sugar.matrix.ctor: (1 checks) ... OK (0 seconds)
 test.as.Col: (1 checks) ... OK (0 seconds)
 test.as.Mat: (1 checks) ... OK (0 seconds)
