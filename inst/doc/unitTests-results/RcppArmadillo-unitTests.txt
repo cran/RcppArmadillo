@@ -1,4 +1,4 @@
-RUNIT TEST PROTOCOL -- Mon May 13 09:24:51 2013 
+RUNIT TEST PROTOCOL -- Tue Jun  4 17:48:21 2013 
 *********************************************** 
 Number of test functions: 18 
 Number of errors: 0 
