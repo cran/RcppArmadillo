@@ -2,7 +2,7 @@
 //
 // Mat_meat.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2012  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2013  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -100,7 +100,7 @@ inline Mat<eT>::Mat( const Rcpp::VectorBase<RTYPE,NA,VECTOR>& X )
 	: n_rows(0)
 	, n_cols(0)
 	, n_elem(0)
-	, vec_state(1)
+	, vec_state(0)
 	, mem_state(0)
 	, mem(0)
 {
