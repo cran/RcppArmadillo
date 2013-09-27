@@ -44,6 +44,8 @@ namespace Rcpp {
     template <typename T> SEXP wrap ( const arma::Col<T>& ) ;
     template <typename T> SEXP wrap ( const arma::field<T>& ) ;
     template <typename T> SEXP wrap ( const arma::Cube<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::subview<T>& ) ;
+    template <typename T> SEXP wrap ( const arma::SpMat<T>& ) ;
     
     template <typename T1, typename T2, typename glue_type> 
     SEXP wrap(const arma::Glue<T1, T2, glue_type>& X ) ;
@@ -87,11 +89,25 @@ namespace Rcpp {
 	template <typename T> class Exporter< arma::Mat<T> > ;
 	template <typename T> class Exporter< arma::Row<T> > ;
 	template <typename T> class Exporter< arma::Col<T> > ;
-        // template <typename T> class Exporter< arma::field<T> > ;
+	template <typename T> class Exporter< arma::SpMat<T> > ;
+    
+	// template <typename T> class Exporter< arma::field<T> > ;
         // template <typename T> class Exporter< arma::Cube<T> > ;
 
     } // namespace traits 
 
+    template <typename T> class ConstReferenceInputParameter< arma::Mat<T> > ;
+    template <typename T> class ReferenceInputParameter< arma::Mat<T> > ;
+    template <typename T> class ConstInputParameter< arma::Mat<T> > ;
+    
+    template <typename T> class ConstReferenceInputParameter< arma::Col<T> > ;
+    template <typename T> class ReferenceInputParameter< arma::Col<T> > ;
+    template <typename T> class ConstInputParameter< arma::Col<T> > ;
+    
+    template <typename T> class ConstReferenceInputParameter< arma::Row<T> > ;
+    template <typename T> class ReferenceInputParameter< arma::Row<T> > ;
+    template <typename T> class ConstInputParameter< arma::Row<T> > ;
+    
 }
 
 #endif
