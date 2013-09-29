@@ -57,6 +57,14 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline Cube(const uword in_rows, const uword in_cols, const uword in_slices);
   
+  template<typename fill_type>
+  inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
+  
+  #if defined(ARMA_USE_CXX11)
+  inline                  Cube(Cube&& m);
+  inline const Cube& operator=(Cube&& m);
+  #endif
+  
   inline Cube(      eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, const uword aux_n_slices, const bool copy_aux_mem = true, const bool strict = true);
   inline Cube(const eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, const uword aux_n_slices);
   
@@ -97,6 +105,15 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   inline            subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span);
   inline      const subview_cube<eT> operator()(const span& row_span, const span& col_span, const span& slice_span) const;
+  
+  arma_inline       subview_cube<eT> tube(const uword in_row1, const uword in_col1);
+  arma_inline const subview_cube<eT> tube(const uword in_row1, const uword in_col1) const;
+  
+  arma_inline       subview_cube<eT> tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
+  arma_inline const subview_cube<eT> tube(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;
+  
+  inline            subview_cube<eT> tube(const span& row_span, const span& col_span);
+  inline      const subview_cube<eT> tube(const span& row_span, const span& col_span) const;
   
   
   inline void shed_slice(const uword slice_num);
@@ -341,21 +358,17 @@ class Cube<eT>::fixed : public Cube<eT>
   
   public:
   
-  inline fixed() { mem_setup(); }
+  inline fixed();
+  inline fixed(const fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>& X);
   
-  inline const Cube& operator=(const eT val) { mem_setup(); Cube<eT>::operator=(val); return *this; }
+  template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
+  template<typename T1>              inline fixed(const BaseCube<eT,T1>& A);
+  template<typename T1, typename T2> inline fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);
   
-  template<typename T1>
-  inline fixed(const BaseCube<eT,T1>& A) { mem_setup(); Cube<eT>::operator=(A.get_ref()); }
-  
-  template<typename T1>
-  inline const Cube& operator=(const BaseCube<eT,T1>& A) { Cube<eT>::operator=(A.get_ref()); return *this; }
-  
-  template<typename T1, typename T2>
-  inline explicit fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B) { mem_setup(); Cube<eT>::init(A,B); }
-  
-  
+  using Cube<eT>::operator=;
   using Cube<eT>::operator();
+  
+  inline const Cube& operator=(const fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>& X);
   
   
   arma_inline arma_warn_unused       eT& operator[] (const uword i);
