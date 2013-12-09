@@ -17,16 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- function(){
-    suppressMessages(require(RcppArmadillo))
-    if (exists("pathRcppArmadilloTests")) {
-        sourceCpp(file.path(pathRcppArmadilloTests, "cpp", "armadillo.cpp"))
-    } else if (file.exists("cpp/armadillo.cpp")) {
-        sourceCpp("cpp/armadillo.cpp")
-    } else {
-        sourceCpp(system.file("unitTests", "cpp", "armadillo.cpp", package="RcppArmadillo"))
-    }
-}
+.setUp <- RcppArmadillo:::unit_test_setup( "armadillo.cpp", "RcppArmadillo" ) 
 
 test.wrap.R <- function(){
     fx <- wrap_
