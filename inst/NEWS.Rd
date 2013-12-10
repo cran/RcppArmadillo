@@ -2,6 +2,19 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.3.930.1 (2013-12-09)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.930.1
+    \itemize{
+      \item Armadillo falls back to standard complex svd if the more
+      performant divide-and-conquer variant is unavailable
+    }
+    \item Added detection for Lapack library and distinguish between R's
+    own version (withhout zgesdd) and system Lapack; a preprocessor define is
+    set accordingly
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.920.3 (2013-11-20)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.920.3

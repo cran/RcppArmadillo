@@ -17,17 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
-.setUp <- function(){
-    suppressMessages(require(datasets))
-    suppressMessages(require(RcppArmadillo))
-}
+.setUp <- RcppArmadillo:::unit_test_setup( packages = c("RcppArmadillo", "datasets" ) )
 
 test.fastLm <- function() {
     data(trees, package="datasets")
-    flm <- .Call("fastLm",
+    flm <- .Call( "RcppArmadillo_fastLm", 
                  cbind(1, log(trees$Girth)),
-                 log(trees$Volume),
-                 package="RcppArmadillo")
+                 log(trees$Volume), 
+                 PACKAGE = "RcppArmadillo"
+           )
     fit <- lm(log(Volume) ~ log(Girth), data=trees)
 
     checkEquals(as.numeric(flm$coefficients), as.numeric(coef(fit)),
