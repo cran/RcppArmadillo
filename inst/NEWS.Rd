@@ -2,6 +2,34 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.000 (2014-01-05)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.000 (Feral Steamroller)
+    \itemize{
+      \item added eigen decompositions of sparse matrices:
+      \code{eigs_sym()} and \code{eigs_gen()} [ but this requires
+      linking against ARPACK which \cpkg{RcppArmadillo} as a
+      pure-template package does not do, and R is not linked against
+      ARPACK either. ]
+      \item added eigen decomposition for pair of matrices: \code{eig_pair()}
+      \item added simpler forms of \code{eig_gen()}
+      \item added condition number of matrices: \code{cond()}
+      \item expanded \code{find()} to handle cubes
+      \item expanded subcube views to access elements specified in a vector
+      \item template argument for \code{running_stat_vec} expanded to
+      accept vector types 
+      \item more robust fast inverse of 4x4 matrices
+      \item faster divide-and-conquer decompositions are now used by
+      default for \code{eig_sym()}, \code{pinv()}, \code{princomp()},
+      \code{rank()}, \code{svd()}, \code{svd_econ()} 
+      \item the form \code{inv(sympd(X))} no longer assumes that X is
+      positive definite; use \code{inv_sympd()} instead 
+      \item added MEX connector for interfacing Octave/Matlab with
+      Armadillo matrices (contributed by George Yammine) 
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.3.930.1 (2013-12-09)}{
   \itemize{
     \item Upgraded to Armadillo release Version 3.930.1
@@ -12,6 +40,30 @@
     \item Added detection for Lapack library and distinguish between R's
     own version (withhout zgesdd) and system Lapack; a preprocessor define is
     set accordingly
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.3.930.0 (2013-12-06)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 3.930 ("Dragon's Back")
+    \itemize{
+      \item added divide-and-conquer variant of \code{svd_econ()}, for
+      faster SVD 
+      \item added divide-and-conquer variant of \code{pinv()}, for
+      faster pseudo-inverse 
+      \item added element-wise variants of \code{min()} and \code{max()} 
+      \item added \code{size()} based specifications of submatrix view
+      sizes 
+      \item added \code{randi()} for generating matrices with random
+      integer values 
+      \item added more intuitive specification of sort direction in
+      \code{sort()} and \code{sort_index()} 
+      \item added more intuitive specification of method in
+      \code{det()}, \code{.i()}, \code{inv()} and \code{solve()} 
+      \item added more precise timer for the \code{wall_clock} class
+      when using C++11 
+    }
+    \item New unit tests for complex matrices and vectors
   }
 }
 
