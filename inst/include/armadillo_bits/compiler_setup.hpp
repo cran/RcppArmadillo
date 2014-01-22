@@ -128,7 +128,7 @@
     #error "*** Need a newer compiler ***"
   #endif
   
-  #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) )
+  #if ( (ARMA_GCC_VERSION >= 40700) && (ARMA_GCC_VERSION <= 40701) ) && !defined(__INTEL_COMPILER)
     #error "gcc versions 4.7.0 and 4.7.1 are unsupported; use 4.7.2 or later"
     // due to http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53549
   #endif
@@ -206,7 +206,7 @@
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1700)
+  #if (_MSC_VER < 1600)
     #error "*** Need a newer compiler ***"
   #endif
   
