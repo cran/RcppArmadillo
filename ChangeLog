@@ -1,3 +1,41 @@
+2014-02-19  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.000.4
+        * inst/NEWS: Release 0.4.000.4
+        * inst/include/*: Upgraded to new release 4.000.4 of Armadillo
+        * debian/*: Similarly updated for new release to Debian
+
+2014-02-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppArmadillo.cpp: Clarify in help page that Armadillo seed
+	setter will not work under RStudio
+
+2014-02-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* man/*: Add help pages for \code{armadillo_version},
+	\code{armadillo_set_seed} and \code{armadillo_set_seed_random}
+
+	* NAMESPACE: Export three helper functions
+
+2014-02-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Versioned Imports: on Rcpp (>= 0.11.0)
+
+	* src/Makevars (PKG_LIBS): Simplified with Rcpp (>= 0.11.0)
+	* src/Makevars.win (PKG_LIBS): Ditto
+	* inst/skeleton/Makevars (PKG_LIBS): Ditto
+
+	* R/RcppArmadillo.package.skeleton.R: Updated:
+	  - no longer set namespace argument (as NAMESPACEs req'ed)
+	  - corresponding code updates
+	  - reflect Rcpp 0.11.0
+
+	* inst/skeleton/rcpparma_hello_world.cpp: Rewritten to use Rcpp
+	Attributes and expanded to included more examples
+
+	* src/RcppArmadillo.cpp: Add accessor functions to set Armadillo's
+	RNG from a given and a random value as suggested by Gábor Csárdi
+
 2014-01-21  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.000.2

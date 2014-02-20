@@ -37,3 +37,26 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// armadillo_set_seed_random
+void armadillo_set_seed_random();
+RcppExport SEXP RcppArmadillo_armadillo_set_seed_random() {
+BEGIN_RCPP
+    {
+        Rcpp::RNGScope __rngScope;
+        armadillo_set_seed_random();
+    }
+    return R_NilValue;
+END_RCPP
+}
+// armadillo_set_seed
+void armadillo_set_seed(unsigned int val);
+RcppExport SEXP RcppArmadillo_armadillo_set_seed(SEXP valSEXP) {
+BEGIN_RCPP
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< unsigned int >::type val(valSEXP );
+        armadillo_set_seed(val);
+    }
+    return R_NilValue;
+END_RCPP
+}

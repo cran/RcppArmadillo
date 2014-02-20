@@ -2,6 +2,28 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.000.4 (2014-02-19)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.000.4
+    \itemize{
+      \item fix for \code{randi()} generating out-of-interval values
+      \item fix for saving field objects
+      \item workaround for a bug in the Intel compiler
+    }
+    \item Updated for \cpkg{Rcpp} (>= 0.11.0) by removing linking step
+    from build process, added appropriate dependency on \cpkg{Rcpp}
+    \item Updated \code{RcppArmadillo.package.skeleton} function
+    accordingly to use proper \code{NAMESPACE} import
+    \item Rewritten \code{rcpparma_hello_world} (which is used by the
+    \code{RcppArmadillo.package.skeleton} function) to use Rcpp
+    Attributes, and added more examples
+    \item Added two functions to set Armadillo's RNGs (ie the system
+    RNG) from a given value and to randomize it, as suggested by Gábor
+    Csárdi. Note that these do not work within RStudio (which itself
+    also uses the same system RNG). 
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.000.2 (2014-01-21)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.000.2
