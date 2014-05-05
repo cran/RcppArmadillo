@@ -1,3 +1,28 @@
+2014-05-04  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.300.0
+        * inst/NEWS: Release 0.4.300.0
+        * debian/*: Similarly updated for new release to Debian
+
+	* configure: If R version 3.0.3 or newer, use comples GESDD
+
+2014-05-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to version 4.300 of Armadillo
+
+2014-04-20  Kevin Ushey  <kevinushey@gmail.com>
+
+        * inst/include/RcppArmadilloAs.h: Force vector coercion if the type
+        does not fit within an R vector through as
+
+	* inst/unitTests/cpp/armadillo.cpp: Add unit tests
+	* inst/unitTests/runit.RcppArmadillo.R: Add unit tests
+
+2014-04-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloConfig.h: Comment-out setting of C++11
+	define which (Rcpp)Armadillo gets correctly by itself
+
 2014-04-07  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.4.200.0
