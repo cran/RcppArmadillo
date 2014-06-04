@@ -38,12 +38,6 @@
 #endif
 
 
-#if (__cplusplus >= 201103L)
-  #undef  ARMA_USE_CXX11
-  #define ARMA_USE_CXX11
-#endif
-
-
 #include "armadillo_bits/config.hpp"
 #include "armadillo_bits/compiler_setup.hpp"
 
@@ -51,8 +45,10 @@
 #if defined(ARMA_USE_CXX11)
   #include <initializer_list>
   #include <cstdint>
-  #include <chrono>
   #include <random>
+  #if !defined(ARMA_DONT_USE_CXX11_CHRONO)
+    #include <chrono>
+  #endif
 #endif
 
 
