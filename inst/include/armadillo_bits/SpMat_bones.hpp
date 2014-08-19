@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2013 Ryan Curtin
+// Copyright (C) 2011-2014 Ryan Curtin
 // Copyright (C) 2012-2014 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
 // 
@@ -36,27 +36,38 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * The memory used to store the values of the matrix.
    * In accordance with the CSC format, this stores only the actual values.
    * The correct locations of the values are assembled from the row indices
-   * and the column pointers.  The length of this array is n_nonzero + 1; the
-   * final value ensures the integrity of iterators.  If you are planning on
-   * resizing this vector, it's probably best to use mem_resize() instead.
+   * and the column pointers.
+   * 
+   * The length of this array is (n_nonzero + 1); the final value ensures
+   * the integrity of iterators.  If you are planning on resizing this vector,
+   * it's probably best to use mem_resize() instead, which automatically sets
+   * the length to (n_nonzero + 1).  If you need to allocate the memory yourself
+   * for some reason, be sure to set values[n_nonzero] to 0.
    */
   const eT* const values;
   
   /**
    * The row indices of each value.  row_indices[i] is the row of values[i].
-   * The length of this array is n_nonzero + 1; the final value ensures the
-   * integrity of iterators.  If you are planning on resizing this vector, it's
-   * probably best to use mem_resize() instead.
+   * 
+   * The length of this array is (n_nonzero + 1); the final value ensures
+   * the integrity of iterators.  If you are planning on resizing this vector,
+   * it's probably best to use mem_resize() instead.  If you need to allocate
+   * the memory yourself for some reason, be sure to set row_indices[n_nonzero] to 0.
    */
   const uword* const row_indices;
   
   /**
    * The column pointers.  This stores the index of the first item in column i.
    * That is, values[col_ptrs[i]] is the first value in column i, and it is in
-   * row row_indices[col_ptrs[i]].  This array is of length (n_cols + 2); the
-   * element col_ptrs[n_cols] should be equal to n_nonzero, and the element
-   * col_ptrs[n_cols + 1] is an invalid very large value that ensures the
-   * integrity of iterators.
+   * the row indicated by row_indices[col_ptrs[i]].
+   * 
+   * This array is of length (n_cols + 2); the element col_ptrs[n_cols] should
+   * be equal to n_nonzero, and the element col_ptrs[n_cols + 1] is an invalid
+   * very large value that ensures the integrity of iterators.
+   * 
+   * The col_ptrs array is set by the init() function (which is called by the
+   * constructors and set_size() and other functions that set the size of the
+   * matrix), so allocating col_ptrs by hand should not be necessary.
    */
   const uword* const col_ptrs;
   
@@ -77,10 +88,17 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline const SpMat& operator=(SpMat&& m);
   #endif
   
-  template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const bool sort_locations = true);
-  template<typename T1, typename T2> inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const uword n_rows, const uword n_cols, const bool sort_locations = true, const bool check_for_zeros = true);
+  template<typename T1, typename T2, typename T3>
+  inline SpMat(const Base<uword,T1>& rowind, const Base<uword,T2>& colptr, const Base<eT,T3>& values, const uword n_rows, const uword n_cols);
   
-  template<typename T1, typename T2, typename T3> inline SpMat(const Base<uword,T1>& rowind, const Base<uword,T2>& colptr, const Base<eT,T3>& values, const uword n_rows, const uword n_cols);
+  template<typename T1, typename T2>
+  inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const bool sort_locations = true);
+  
+  template<typename T1, typename T2>
+  inline SpMat(const Base<uword,T1>& locations, const Base<eT,T2>& values, const uword n_rows, const uword n_cols, const bool sort_locations = true, const bool check_for_zeros = true);
+  
+  template<typename T1, typename T2>
+  inline SpMat(const bool add_values, const Base<uword,T1>& locations, const Base<eT,T2>& values, const uword n_rows, const uword n_cols, const bool sort_locations = true, const bool check_for_zeros = true);
   
   inline const SpMat&  operator=(const eT val); //! Sets size to 1x1.
   inline const SpMat& operator*=(const eT val);
@@ -308,17 +326,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline void reset();
   
-  /**
-   * Get the minimum or maximum of the matrix.
-   */
-  inline arma_warn_unused eT min() const;
-  inline                  eT min(uword& index_of_min_val) const;
-  inline                  eT min(uword& row_of_min_val, uword& col_of_min_val) const;
-
-  inline arma_warn_unused eT max() const;
-  inline                  eT max(uword& index_of_max_val) const;
-  inline                  eT max(uword& row_of_min_val, uword& col_of_min_val) const;
-  
   
   // saving and loading
   
@@ -352,17 +359,18 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     {
     public:
 
+    inline iterator_base();
     inline iterator_base(const SpMat& in_M);
     inline iterator_base(const SpMat& in_M, const uword col, const uword pos);
 
     inline arma_hot eT operator*() const;
     
     // Don't hold location internally; call "dummy" methods to get that information.
-    arma_inline uword row() const { return M.row_indices[internal_pos]; }
-    arma_inline uword col() const { return internal_col;                }
-    arma_inline uword pos() const { return internal_pos;                }
+    arma_inline uword row() const { return M->row_indices[internal_pos]; }
+    arma_inline uword col() const { return internal_col;                 }
+    arma_inline uword pos() const { return internal_pos;                 }
 
-    arma_aligned const SpMat& M;
+    arma_aligned const SpMat* M;
     arma_aligned       uword  internal_col;
     arma_aligned       uword  internal_pos;
 
@@ -378,6 +386,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     {
     public:
     
+    inline const_iterator();
     inline const_iterator(const SpMat& in_M, uword initial_pos = 0); // Assumes initial_pos is valid.
     //! Once initialized, will be at the first nonzero value after the given position (using forward columnwise traversal).
     inline const_iterator(const SpMat& in_M, uword in_row, uword in_col);
@@ -414,6 +423,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     {
     public:
 
+    inline iterator() : const_iterator() { }
     inline iterator(SpMat& in_M, uword initial_pos = 0) : const_iterator(in_M, initial_pos) { }
     inline iterator(SpMat& in_M, uword in_row, uword in_col) : const_iterator(in_M, in_row, in_col) { }
     inline iterator(SpMat& in_M, uword in_row, uword in_col, uword in_pos) : const_iterator(in_M, in_row, in_col, in_pos) { }
@@ -438,6 +448,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     {
     public:
     
+    inline const_row_iterator();
     inline const_row_iterator(const SpMat& in_M, uword initial_pos = 0);
     //! Once initialized, will be at the first nonzero value after the given position (using forward row-wise traversal).
     inline const_row_iterator(const SpMat& in_M, uword in_row, uword in_col);
@@ -452,7 +463,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     uword internal_row; // Hold row internally because we use internal_pos differently.
     uword actual_pos; // Actual position in matrix.
 
-    arma_inline eT operator*() const { return iterator_base::M.values[actual_pos]; }
+    arma_inline eT operator*() const { return iterator_base::M->values[actual_pos]; }
 
     arma_inline uword row() const { return internal_row; }
 
@@ -473,6 +484,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     {
     public:
     
+    inline row_iterator() : const_row_iterator() {}
     inline row_iterator(SpMat& in_M, uword initial_pos = 0) : const_row_iterator(in_M, initial_pos) { }
     //! Once initialized, will be at the first nonzero value after the given position (using forward row-wise traversal).
     inline row_iterator(SpMat& in_M, uword in_row, uword in_col) : const_row_iterator(in_M, in_row, in_col) { }
@@ -493,11 +505,16 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     typedef const SpValProxy<SpMat<eT> >&  reference;
     };
   
+  
+  typedef       iterator       row_col_iterator;
+  typedef const_iterator const_row_col_iterator;
+  
+  
   inline       iterator     begin();
   inline const_iterator     begin() const;
   
-  inline       iterator end();
-  inline const_iterator end() const;
+  inline       iterator     end();
+  inline const_iterator     end() const;
   
   inline       iterator     begin_col(const uword col_num);
   inline const_iterator     begin_col(const uword col_num) const;
@@ -513,6 +530,13 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline       row_iterator end_row(const uword row_num);
   inline const_row_iterator end_row(const uword row_num) const;
+  
+  inline       row_col_iterator begin_row_col();
+  inline const_row_col_iterator begin_row_col() const;
+  
+  inline       row_col_iterator end_row_col();
+  inline const_row_col_iterator end_row_col() const;
+  
   
   inline void  clear();
   inline bool  empty() const;
@@ -553,7 +577,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline void init(const SpMat& x);
   
   
-  inline void init_batch(const Mat<uword>& locations, const Mat<eT>& values, const bool sort_locations);
+  inline void init_batch_std(const Mat<uword>& locations, const Mat<eT>& values, const bool sort_locations);
+  inline void init_batch_add(const Mat<uword>& locations, const Mat<eT>& values, const bool sort_locations);
   
   
   

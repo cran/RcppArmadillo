@@ -77,6 +77,94 @@ Base<elem_type,derived>::raw_print(std::ostream& user_stream, const std::string 
 
 
 
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+elem_type
+Base<elem_type,derived>::min() const
+  {
+  return op_min::min( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+elem_type
+Base<elem_type,derived>::max() const
+  {
+  return op_max::max( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+elem_type
+Base<elem_type,derived>::min(uword& index_of_min_val) const
+  {
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  return op_min::min_with_index(P, index_of_min_val);
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+elem_type
+Base<elem_type,derived>::max(uword& index_of_max_val) const
+  {
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  return op_max::max_with_index(P, index_of_max_val);
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+elem_type
+Base<elem_type,derived>::min(uword& row_of_min_val, uword& col_of_min_val) const
+  {
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  uword index;
+  
+  const elem_type val = op_min::min_with_index(P, index);
+  
+  const uword local_n_rows = P.get_n_rows();
+  
+  row_of_min_val = index % local_n_rows;
+  col_of_min_val = index / local_n_rows;
+  
+  return val;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+elem_type
+Base<elem_type,derived>::max(uword& row_of_max_val, uword& col_of_max_val) const
+  {
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  uword index;
+  
+  const elem_type val = op_max::max_with_index(P, index);
+  
+  const uword local_n_rows = P.get_n_rows();
+  
+  row_of_max_val = index % local_n_rows;
+  col_of_max_val = index / local_n_rows;
+  
+  return val;
+  }
+
+
+
 //
 // extra functions defined in Base_inv_yes
 

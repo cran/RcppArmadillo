@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2013 Ryan Curtin
+// Copyright (C) 2011-2014 Ryan Curtin
 // Copyright (C) 2012-2014 Conrad Sanderson
 // Copyright (C) 2011 Matthew Amidon
 // 
@@ -260,11 +260,11 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
         }
       }
     
-    init_batch(filtered_locs, filtered_vals, sort_locations);
+    init_batch_std(filtered_locs, filtered_vals, sort_locations);
     }
   else
     {
-    init_batch(locs, vals, sort_locations);
+    init_batch_std(locs, vals, sort_locations);
     }
   }
 
@@ -333,16 +333,88 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
           }
         }
       
-      init_batch(filtered_locs, filtered_vals, sort_locations);
+      init_batch_std(filtered_locs, filtered_vals, sort_locations);
       }
     else
       {
-      init_batch(locs, vals, sort_locations);
+      init_batch_std(locs, vals, sort_locations);
       }
     }
   else
     {
-    init_batch(locs, vals, sort_locations);
+    init_batch_std(locs, vals, sort_locations);
+    }
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2>
+inline
+SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_expr, const uword in_n_rows, const uword in_n_cols, const bool sort_locations, const bool check_for_zeros)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL)
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  const unwrap<T1> locs_tmp( locations_expr.get_ref() );
+  const unwrap<T2> vals_tmp(      vals_expr.get_ref() );
+  
+  const Mat<uword>& locs = locs_tmp.M;
+  const Mat<eT>&    vals = vals_tmp.M;
+  
+  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object is not a vector"                  );
+  arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
+  arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
+  
+  init(in_n_rows, in_n_cols);
+
+  // Ensure that there are no zeros, unless the user asked not to.
+  if(check_for_zeros)
+    {
+    const uword N_old = vals.n_elem;
+          uword N_new = 0;
+    
+    for(uword i = 0; i < N_old; ++i)
+      {
+      if(vals[i] != eT(0))  { ++N_new; }
+      }
+    
+    if(N_new != N_old)
+      {
+      Col<eT>    filtered_vals(N_new);
+      Mat<uword> filtered_locs(2, N_new);
+      
+      uword index = 0;
+      for(uword i = 0; i < N_old; ++i)
+        {
+        if(vals[i] != eT(0))
+          {
+          filtered_vals[index] = vals[i];
+          
+          filtered_locs.at(0, index) = locs.at(0, i);
+          filtered_locs.at(1, index) = locs.at(1, i);
+          
+          ++index;
+          }
+        }
+      
+      add_values ? init_batch_add(filtered_locs, filtered_vals, sort_locations) : init_batch_std(filtered_locs, filtered_vals, sort_locations);
+      }
+    else
+      {
+      add_values ? init_batch_add(locs, vals, sort_locations) : init_batch_std(locs, vals, sort_locations);
+      }
+    }
+  else
+    {
+    add_values ? init_batch_add(locs, vals, sort_locations) : init_batch_std(locs, vals, sort_locations);
     }
   }
 
@@ -3358,246 +3430,6 @@ SpMat<eT>::reset()
 
 
 
-/**
- * Get the minimum or the maximum of the matrix.
- */
-template<typename eT>
-inline
-arma_warn_unused
-eT
-SpMat<eT>::min() const
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check((n_elem == 0), "min(): object has no elements");
-
-  if (n_nonzero == 0)
-    {
-    return 0;
-    }
-
-  eT val = op_min::direct_min(values, n_nonzero);
-
-  if ((val > 0) && (n_nonzero < n_elem)) // A sparse 0 is less.
-    {
-    val = 0;
-    }
-
-  return val;
-  }
-
-
-
-template<typename eT>
-inline
-eT
-SpMat<eT>::min(uword& index_of_min_val) const
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check((n_elem == 0), "min(): object has no elements");
-
-  eT val = 0;
-
-  if (n_nonzero == 0) // There are no other elements.  It must be 0.
-    {
-    index_of_min_val = 0;
-    }
-  else
-    {
-    uword location;
-    val = op_min::direct_min(values, n_nonzero, location);
-
-    if ((val > 0) && (n_nonzero < n_elem)) // A sparse 0 is less.
-      {
-      val = 0;
-
-      // Give back the index to the first zero position.
-      index_of_min_val = 0;
-      while (get_position(index_of_min_val) == index_of_min_val) // An element exists at that position.
-        {
-        index_of_min_val++;
-        }
-
-      }
-    else
-      {
-      index_of_min_val = get_position(location);
-      }
-    }
-
-  return val;
-
-  }
-
-
-
-template<typename eT>
-inline
-eT
-SpMat<eT>::min(uword& row_of_min_val, uword& col_of_min_val) const
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check((n_elem == 0), "min(): object has no elements");
-
-  eT val = 0;
-
-  if (n_nonzero == 0) // There are no other elements.  It must be 0.
-    {
-    row_of_min_val = 0;
-    col_of_min_val = 0;
-    }
-  else
-    {
-    uword location;
-    val = op_min::direct_min(values, n_nonzero, location);
-
-    if ((val > 0) && (n_nonzero < n_elem)) // A sparse 0 is less.
-      {
-      val = 0;
-
-      location = 0;
-      while (get_position(location) == location) // An element exists at that position.
-        {
-        location++;
-        }
-
-      row_of_min_val = location % n_rows;
-      col_of_min_val = location / n_rows;
-      }
-    else
-      {
-      get_position(location, row_of_min_val, col_of_min_val);
-      }
-    }
-
-  return val;
-
-  }
-
-
-
-template<typename eT>
-inline
-arma_warn_unused
-eT
-SpMat<eT>::max() const
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check((n_elem == 0), "max(): object has no elements");
-
-  if (n_nonzero == 0)
-    {
-    return 0;
-    }
-
-  eT val = op_max::direct_max(values, n_nonzero);
-
-  if ((val < 0) && (n_nonzero < n_elem)) // A sparse 0 is more.
-    {
-    return 0;
-    }
-
-  return val;
-
-  }
-
-
-
-template<typename eT>
-inline
-eT
-SpMat<eT>::max(uword& index_of_max_val) const
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check((n_elem == 0), "max(): object has no elements");
-
-  eT val = 0;
-
-  if (n_nonzero == 0)
-    {
-    index_of_max_val = 0;
-    }
-  else
-    {
-    uword location;
-    val = op_max::direct_max(values, n_nonzero, location);
-
-    if ((val < 0) && (n_nonzero < n_elem)) // A sparse 0 is more.
-      {
-      val = 0;
-
-      location = 0;
-      while (get_position(location) == location) // An element exists at that position.
-        {
-        location++;
-        }
-
-      }
-    else
-      {
-      index_of_max_val = get_position(location);
-      }
-
-    }
-
-  return val;
-
-  }
-
-
-
-template<typename eT>
-inline
-eT
-SpMat<eT>::max(uword& row_of_max_val, uword& col_of_max_val) const
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check((n_elem == 0), "max(): object has no elements");
-
-  eT val = 0;
-
-  if (n_nonzero == 0)
-    {
-    row_of_max_val = 0;
-    col_of_max_val = 0;
-    }
-  else
-    {
-    uword location;
-    val = op_max::direct_max(values, n_nonzero, location);
-
-    if ((val < 0) && (n_nonzero < n_elem)) // A sparse 0 is more.
-      {
-      val = 0;
-
-      location = 0;
-      while (get_position(location) == location) // An element exists at that position.
-        {
-        location++;
-        }
-
-      row_of_max_val = location % n_rows;
-      col_of_max_val = location / n_rows;
-
-      }
-    else
-      {
-      get_position(location, row_of_max_val, col_of_max_val);
-      }
-
-    }
-
-  return val;
-
-  }
-
-
-
 //! save the matrix to a file
 template<typename eT>
 inline
@@ -4066,7 +3898,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
 template<typename eT>
 inline
 void
-SpMat<eT>::init_batch(const Mat<uword>& locs, const Mat<eT>& vals, const bool sort_locations)
+SpMat<eT>::init_batch_std(const Mat<uword>& locs, const Mat<eT>& vals, const bool sort_locations)
   {
   arma_extra_debug_sigprint();
   
@@ -4113,21 +3945,13 @@ SpMat<eT>::init_batch(const Mat<uword>& locs, const Mat<eT>& vals, const bool so
         {
         const uword* locs_i = locs.colptr( sorted_indices[i] );
         
-        arma_debug_check
-          (
-          ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ),
-          "SpMat::SpMat(): invalid row or column index"
-          );
+        arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
         
         if(i > 0)
           {
           const uword* locs_im1 = locs.colptr( sorted_indices[i-1] );
           
-          arma_debug_check
-            (
-            ( (locs_i[1] == locs_im1[1]) && (locs_i[0] == locs_im1[0]) ),
-            "SpMat::SpMat(): two identical point locations in list"
-            );
+          arma_debug_check( ( (locs_i[1] == locs_im1[1]) && (locs_i[0] == locs_im1[0]) ), "SpMat::SpMat(): detected identical locations" );
           }
         
         access::rw(values[i])      = vals[ sorted_indices[i] ];
@@ -4142,15 +3966,11 @@ SpMat<eT>::init_batch(const Mat<uword>& locs, const Mat<eT>& vals, const bool so
     {
     // Now set the values and row indices correctly.
     // Increment the column pointers in each column (so they are column "counts").
-    for (uword i = 0; i < vals.n_elem; ++i)
+    for(uword i = 0; i < vals.n_elem; ++i)
       {
       const uword* locs_i = locs.colptr(i);
       
-      arma_debug_check
-        (
-        ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ),
-        "SpMat::SpMat(): invalid row or column index"
-        );
+      arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
       
       if(i > 0)
         {
@@ -4162,17 +3982,186 @@ SpMat<eT>::init_batch(const Mat<uword>& locs, const Mat<eT>& vals, const bool so
           "SpMat::SpMat(): out of order points; either pass sort_locations = true, or sort points in column-major ordering"
           );
         
-        arma_debug_check
-          (
-          ( (locs_i[1] == locs_im1[1]) && (locs_i[0] == locs_im1[0]) ),
-          "SpMat::SpMat(): two identical point locations in list"
-          );
+        arma_debug_check( ( (locs_i[1] == locs_im1[1]) && (locs_i[0] == locs_im1[0]) ), "SpMat::SpMat(): detected identical locations" );
         }
       
       access::rw(values[i])      = vals[i];
       access::rw(row_indices[i]) = locs_i[0];
       
       access::rw(col_ptrs[ locs_i[1] + 1 ])++;
+      }
+    }
+  
+  // Now fix the column pointers.
+  for (uword i = 0; i <= n_cols; ++i)
+    {
+    access::rw(col_ptrs[i + 1]) += col_ptrs[i];
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpMat<eT>::init_batch_add(const Mat<uword>& locs, const Mat<eT>& vals, const bool sort_locations)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(locs.n_cols < 2)
+    {
+    init_batch_std(locs, vals, false);
+    return;
+    }
+  
+  // Reset column pointers to zero.
+  arrayops::inplace_set(access::rwp(col_ptrs), uword(0), n_cols + 1);
+  
+  bool actually_sorted = true;
+  
+  if(sort_locations == true)
+    {
+    // sort_index() uses std::sort() which may use quicksort... so we better
+    // make sure it's not already sorted before taking an O(N^2) sort penalty.
+    for (uword i = 1; i < locs.n_cols; ++i)
+      {
+      const uword* locs_i   = locs.colptr(i  );
+      const uword* locs_im1 = locs.colptr(i-1);
+      
+      if( (locs_i[1] < locs_im1[1]) || (locs_i[1] == locs_im1[1]  &&  locs_i[0] <= locs_im1[0]) )
+        {
+        actually_sorted = false;
+        break;
+        }
+      }
+    
+    if(actually_sorted == false)
+      {
+      // This may not be the fastest possible implementation but it maximizes code reuse.
+      Col<uword> abslocs(locs.n_cols);
+      
+      for (uword i = 0; i < locs.n_cols; ++i)
+        {
+        const uword* locs_i = locs.colptr(i);
+        
+        abslocs[i] = locs_i[1] * n_rows + locs_i[0];
+        }
+      
+      uvec sorted_indices = sort_index(abslocs); // Ascending sort.
+      
+      // work out the number of unique elments 
+      uword n_unique = 1;  // first element is unique
+      
+      for(uword i=1; i < sorted_indices.n_elem; ++i)
+        {
+        const uword* locs_i   = locs.colptr( sorted_indices[i  ] );
+        const uword* locs_im1 = locs.colptr( sorted_indices[i-1] );
+        
+        if( (locs_i[1] != locs_im1[1]) || (locs_i[0] != locs_im1[0]) )  { ++n_unique; }
+        }
+      
+      // resize to correct number of elements
+      mem_resize(n_unique);
+      
+      // Now we add the elements in this sorted order.
+      uword count = 0;
+      
+      // first element
+        {
+        const uword  i      = 0;
+        const uword* locs_i = locs.colptr( sorted_indices[i] );
+        
+        arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+        
+        access::rw(values[count])      = vals[ sorted_indices[i] ];
+        access::rw(row_indices[count]) = locs_i[0];
+        
+        access::rw(col_ptrs[ locs_i[1] + 1 ])++;
+        }
+      
+      for(uword i=1; i < sorted_indices.n_elem; ++i)
+        {
+        const uword* locs_i   = locs.colptr( sorted_indices[i  ] );
+        const uword* locs_im1 = locs.colptr( sorted_indices[i-1] );
+        
+        arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+        
+        if( (locs_i[1] == locs_im1[1]) && (locs_i[0] == locs_im1[0]) )
+          {
+          access::rw(values[count]) += vals[ sorted_indices[i] ];
+          }
+        else
+          {
+          count++;
+          access::rw(values[count])      = vals[ sorted_indices[i] ];
+          access::rw(row_indices[count]) = locs_i[0];
+          
+          access::rw(col_ptrs[ locs_i[1] + 1 ])++;
+          }
+        }
+      }
+    }
+  
+  if( (sort_locations == false) || (actually_sorted == true) )
+    {
+    // work out the number of unique elments 
+    uword n_unique = 1;  // first element is unique
+    
+    for(uword i=1; i < locs.n_cols; ++i)
+      {
+      const uword* locs_i   = locs.colptr(i  );
+      const uword* locs_im1 = locs.colptr(i-1);
+      
+      if( (locs_i[1] != locs_im1[1]) || (locs_i[0] != locs_im1[0]) )  { ++n_unique; }
+      }
+    
+    // resize to correct number of elements
+    mem_resize(n_unique);
+    
+    // Now set the values and row indices correctly.
+    // Increment the column pointers in each column (so they are column "counts").
+    
+    uword count = 0;
+    
+    // first element
+      {
+      const uword  i      = 0;
+      const uword* locs_i = locs.colptr(i);
+      
+      arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+      
+      access::rw(values[count])      = vals[i];
+      access::rw(row_indices[count]) = locs_i[0];
+      
+      access::rw(col_ptrs[ locs_i[1] + 1 ])++;
+      }
+    
+    for(uword i=1; i < locs.n_cols; ++i)
+      {
+      const uword* locs_i   = locs.colptr(i  );
+      const uword* locs_im1 = locs.colptr(i-1);
+      
+      arma_debug_check( ( (locs_i[0] >= n_rows) || (locs_i[1] >= n_cols) ), "SpMat::SpMat(): invalid row or column index" );
+      
+      arma_debug_check
+        (
+        ( (locs_i[1] < locs_im1[1]) || (locs_i[1] == locs_im1[1]  &&  locs_i[0] < locs_im1[0]) ),
+        "SpMat::SpMat(): out of order points; either pass sort_locations = true, or sort points in column-major ordering"
+        );
+      
+      if( (locs_i[1] == locs_im1[1]) && (locs_i[0] == locs_im1[0]) )
+        {
+        access::rw(values[count]) += vals[i];
+        }
+      else
+        {
+        count++;
+        
+        access::rw(values[count])      = vals[i];
+        access::rw(row_indices[count]) = locs_i[0];
+        
+        access::rw(col_ptrs[ locs_i[1] + 1 ])++;
+        }
       }
     }
   
@@ -4526,6 +4515,45 @@ typename SpMat<eT>::const_row_iterator
 SpMat<eT>::end_row(const uword row_num) const
   {
   return const_row_iterator(*this, row_num + 1, 0);
+  }
+
+
+
+template<typename eT>
+inline
+typename SpMat<eT>::row_col_iterator
+SpMat<eT>::begin_row_col()
+  {
+  return begin();
+  }
+
+
+
+template<typename eT>
+inline
+typename SpMat<eT>::const_row_col_iterator
+SpMat<eT>::begin_row_col() const
+  {
+  return begin();
+  }
+
+
+
+template<typename eT>
+inline typename SpMat<eT>::row_col_iterator
+SpMat<eT>::end_row_col()
+  {
+  return end();
+  }
+
+
+
+template<typename eT>
+inline
+typename SpMat<eT>::const_row_col_iterator
+SpMat<eT>::end_row_col() const
+  {
+  return end();
   }
 
 

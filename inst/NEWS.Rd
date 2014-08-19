@@ -2,6 +2,24 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.400.0 (2014-08-19)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.400 (Winter Shark Alley) 
+    \itemize{
+      \item added \code{gmm_diag} class for statistical modelling using Gaussian Mixture Models; 
+      includes multi-threaded implementation of k-means and Expectation-Maximisation for parameter estimation
+      \item added \code{clamp()} for clamping values to be between lower and upper limits
+      \item expanded batch insertion constructors for sparse matrices to add values at repeated locations
+      \item faster handling of subvectors by \code{dot()}
+      \item faster handling of aliasing by submatrix views
+    }
+    \item Corrected a bug (found by the g++ Address Sanitizer) in sparse
+    matrix initialization where space for a sentinel was allocated, but
+    the sentinel was not set; with extra thanks to Ryan Curtin for help
+    \item Added a few unit tests for sparse matrices
+  }  
+}
+    
 \section{Changes in RcppArmadillo version 0.4.320.0 (2014-07-03)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.320 (Daintree Tea Raider)

@@ -1,3 +1,31 @@
+2014-08-19  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.400.0
+        * inst/NEWS: Release 0.4.400.0
+        * debian/*: Similarly updated for new release to Debian
+
+	* inst/include/*: Upgraded to release 4.400 of Armadillo
+
+2014-08-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to pre-release 4.399.3 of Armadillo
+
+2014-08-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.sparse.R: New unit tests for sparse matrices
+	* inst/unitTests/cpp/sparse.cpp: New unit tests for sparse matrices
+
+2014-08-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to pre-release 4.399.2 of Armadillo
+
+	* inst/include/RcppArmadilloAs.h: Further correction to sparse matrix
+	converter with special thanks to Ryan Curtin for some excellent help
+
+2014-08-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadilloAs.h: Correct sparse matrix converter
+
 2014-07-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* vignettes/RcppArmadillo-unitTests.Rnw: Commented-out copy of unit
