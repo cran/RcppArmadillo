@@ -27,25 +27,30 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
 	
     if (! length(list)) {
         fake <- TRUE
-        assign( "Rcpp.fake.fun", function(){}, envir = env )
+        assign("Rcpp.fake.fun", function(){}, envir = env)
     } else {
         fake <- FALSE
     }
-	
-    ## first let the traditional version do its business
+
+    haveKitten <- require("pkgKitten", quietly=TRUE, character.only=TRUE)
+    skelFunUsed <- ifelse(haveKitten, "kitten", "package.skeleton")
+    message("\nCalling ", skelFunUsed, " to create basic package.")
+
+    ## first let the traditional version (or the kitten alternate) do its business
     call <- match.call()
-    call[[1]] <- as.name("package.skeleton")
-    if ("example_code" %in% names(call)){
-        ## remove the example_code argument
-        call[["example_code"]] <- NULL
+    call[[1]] <- if (haveKitten) as.name("kitten") else as.name("package.skeleton")
+    if (! haveKitten) {                 # in the package.skeleton() case
+        if ("example_code" %in% names(call)){
+            call[["example_code"]] <- NULL	# remove the example_code argument
+        }
+        if (fake) {
+            call[["list"]] <- "Rcpp.fake.fun"
+        }
     }
-    if (fake) {
-        call[["list"]] <- "Rcpp.fake.fun"
-    }
-	
+
     tryCatch(eval(call, envir=env),
              error = function(e) {
-                 stop("error while calling `package.skeleton`")
+                 stop(paste("error while calling `", skelFunUsed, "`", sep=""))
              })
 	
     message("\nAdding RcppArmadillo settings")
@@ -56,13 +61,11 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     ## Add Rcpp to the DESCRIPTION
     DESCRIPTION <- file.path(root, "DESCRIPTION")
     if (file.exists(DESCRIPTION)) {
-        x <- cbind(read.dcf( DESCRIPTION), 
-                   "Imports" = sprintf("Rcpp (>= %s), RcppArmadillo (>= %s)", 
-                   packageDescription("Rcpp")[["Version"]], 
-                   packageDescription("RcppArmadillo")[["Version"]]), 
+        x <- cbind(read.dcf(DESCRIPTION), 
+                   "Imports" = sprintf("Rcpp (>= %s)", packageDescription("Rcpp")[["Version"]]), 
                    "LinkingTo" = "Rcpp, RcppArmadillo")
         write.dcf(x, file=DESCRIPTION)
-        message(" >> added Imports: Rcpp, RcppArmadillo")
+        message(" >> added Imports: Rcpp")
         message(" >> added LinkingTo: Rcpp, RcppArmadillo")
     }
 	
@@ -71,7 +74,6 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     lines <- readLines( NAMESPACE )
     if (! grepl("useDynLib", lines)) {
         lines <- c(sprintf("useDynLib(%s)", name),
-                   "import(RcppArmadillo)",
                    "importFrom(Rcpp, evalCpp)",        ## ensures Rcpp instantiation
                    lines)
         writeLines(lines, con = NAMESPACE)
@@ -82,6 +84,10 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     src <- file.path(root, "src")
     if (!file.exists(src)) {
         dir.create(src)
+    }
+    man <- file.path(root, "man")
+    if (!file.exists(man)) {
+        dir.create(man)
     }
     skeleton <- system.file("skeleton", package="RcppArmadillo")
     Makevars <- file.path(src, "Makevars")
@@ -99,6 +105,8 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     if (example_code) {
         file.copy(file.path(skeleton, "rcpparma_hello_world.cpp"), src)
         message(" >> added example src file using armadillo classes")
+        file.copy(file.path(skeleton, "rcpparma_hello_world.Rd"), man)
+        message(" >> added example Rd file for using armadillo classes")
 
 	Rcpp::compileAttributes(root)
         message(" >> invoked Rcpp::compileAttributes to create wrappers")

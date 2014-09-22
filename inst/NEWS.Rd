@@ -2,6 +2,33 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.4.450.1.0 (2014-09-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release Version 4.450.1 (Spring Hill Fort)
+    \itemize{
+      \item faster handling of matrix transposes within compound
+      expressions
+      \item expanded \code{symmatu()}/\code{symmatl()} to optionally
+      disable taking the complex conjugate of elements 
+      \item expanded \code{sort_index()} to handle complex vectors
+      \item expanded the \code{gmm_diag} class with functions to generate random samples
+    }
+    \item A new random-number implementation for Armadillo uses the RNG
+    from R as a fallback (when C++11 is not selected so the C++11-based
+    RNG is unavailable) which avoids using the older C++98-based \code{std::rand}
+    \item The \code{RcppArmadillo.package.skeleton()} function was
+    updated to only set an "Imports:" for Rcpp, but not RcppArmadillo 
+    which (as a template library) needs only LinkingTo:
+    \item The \code{RcppArmadillo.package.skeleton()} function will now
+    prefer \code{pkgKitten::kitten()} over \code{package.skeleton()} in
+    order to create a working package which passes \code{R CMD check}.
+    \item The \cpkg{pkgKitten} package is now a \code{Suggests:} 
+    \item A manual page was added to provide documentation for the
+    functions provided by the skeleton package.
+    \item A small update was made to the package manual page.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.4.400.0 (2014-08-19)}{
   \itemize{
     \item Upgraded to Armadillo release Version 4.400 (Winter Shark Alley) 
