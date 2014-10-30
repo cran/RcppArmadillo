@@ -1,3 +1,30 @@
+2014-10-30  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.500.0
+        * inst/NEWS: Release 0.4.500.0
+        * debian/*: Similarly updated for new release to Debian
+
+	* inst/include/*: Upgraded to release 4.500 of Armadillo
+
+2014-10-26  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.4.449.1.0 [GitHub only]
+        * inst/NEWS.Rd: Release 0.4.449.1.0 [GitHub only]
+
+        * inst/include/*: Upgraded to "alpha" version 4.449.1 of Armadillo
+
+2014-09-26  Christian Gunning  <xian@unm.edu>
+
+	* inst/include/RcppArmadilloExtensions/sample.h: Extended with
+	Walker's method
+	* inst/include/RcppArmadilloExtensions/rmultinom.h: Added
+	* inst/include/RcppArmadilloExtensions/fixprob.h: Split off from
+	sample.h
+
+	* inst/unitTests/runit.sample.R: Updated for new functionality
+	* inst/unitTests/runit.rmultinom.R: New unit test
+	* inst/unitTests/cpp/rmultinom.cpp: New unit test file in C++
+
 2014-09-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/RcppArmadilloConfig.h: Add a new #define variable
