@@ -12,9 +12,9 @@
 
 
 #define ARMA_VERSION_MAJOR 4
-#define ARMA_VERSION_MINOR 500
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "Singapore Sling"
+#define ARMA_VERSION_MINOR 550
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "Singapore Sling Deluxe"
 
 
 

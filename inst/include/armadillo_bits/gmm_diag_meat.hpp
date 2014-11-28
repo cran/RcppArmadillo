@@ -655,8 +655,8 @@ gmm_diag<eT>::learn
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
   
-  if(X.is_empty()          )  { arma_warn(true, "gmm_diag::learn(): given matrix is empty"             ); reset(); return false; }
-  if(X.is_finite() == false)  { arma_warn(true, "gmm_diag::learn(): given matrix has non-finite values"); reset(); return false; }
+  if(X.is_empty()          )  { arma_warn(true, "gmm_diag::learn(): given matrix is empty"             ); return false; }
+  if(X.is_finite() == false)  { arma_warn(true, "gmm_diag::learn(): given matrix has non-finite values"); return false; }
   
   if(N_gaus == 0)  { reset(); return true; }
   
@@ -671,25 +671,28 @@ gmm_diag<eT>::learn
       {
       const eT val = mah_aux_mem[i];
       
-      mah_aux_mem[i] = (val != eT(0)) ? eT(1) / val : eT(1);
+      mah_aux_mem[i] = ((val != eT(0)) && arma_isfinite(val)) ? eT(1) / val : eT(1);
       }
     }
   
-  // mah_aux.print("mah_aux:");
+  
+  // copy current model, in case of failure by k-means and/or EM
+  
+  const gmm_diag<eT> orig = (*this);
   
   
   // initial means
   
   if(seed_mode == keep_existing)
     {
-    if(means.is_empty()        )  { arma_warn(true, "gmm_diag::learn(): no existing means"      ); reset(); return false; }
-    if(X.n_rows != means.n_rows)  { arma_warn(true, "gmm_diag::learn(): dimensionality mismatch"); reset(); return false; }
+    if(means.is_empty()        )  { arma_warn(true, "gmm_diag::learn(): no existing means"      ); return false; }
+    if(X.n_rows != means.n_rows)  { arma_warn(true, "gmm_diag::learn(): dimensionality mismatch"); return false; }
     
     // TODO: also check for number of vectors?
     }
   else
     {
-    if(X.n_cols < N_gaus)  { arma_warn(true, "gmm_diag::learn(): number of vectors is less than number of gaussians"); reset(); return false; }
+    if(X.n_cols < N_gaus)  { arma_warn(true, "gmm_diag::learn(): number of vectors is less than number of gaussians"); return false; }
     
     reset(X.n_rows, N_gaus);
     
@@ -713,7 +716,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_stream_err2());
     
-    if(status == false)  { arma_warn(true, "gmm_diag::learn(): k-means algorithm failed"); reset(); return false; }
+    if(status == false)  { arma_warn(true, "gmm_diag::learn(): k-means algorithm failed"); init(orig); return false; }
     }
   
   
@@ -740,7 +743,7 @@ gmm_diag<eT>::learn
     
     stream_state.restore(get_stream_err2());
     
-    if(status == false)  { arma_warn(true, "gmm_diag::learn(): EM algorithm failed"); reset(); return false; }
+    if(status == false)  { arma_warn(true, "gmm_diag::learn(): EM algorithm failed"); init(orig); return false; }
     }
   
   mah_aux.reset();
@@ -821,6 +824,56 @@ gmm_diag<eT>::init_constants()
     }
   
   log_hefts = log(hefts);  // TODO: possible issue when one of the hefts is zero
+  }
+
+
+
+template<typename eT>
+inline
+umat
+gmm_diag<eT>::internal_gen_boundaries(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(_OPENMP)
+    // const uword n_cores = 0;
+    const uword n_cores   = uword(omp_get_num_procs());
+    const uword n_threads = (n_cores > 0) ? ( (n_cores <= N) ? n_cores : 1 ) : 1;
+  #else
+    // static const uword n_cores   = 0;
+    static const uword n_threads = 1;
+  #endif
+  
+  // get_stream_err2() << "gmm_diag::internal_gen_boundaries(): n_cores:   " << n_cores   << '\n';
+  // get_stream_err2() << "gmm_diag::internal_gen_boundaries(): n_threads: " << n_threads << '\n';
+  
+  umat boundaries(2, n_threads);
+  
+  if(N > 0)
+    {
+    const uword chunk_size = N / n_threads;
+    
+    uword count = 0;
+    
+    for(uword t=0; t<n_threads; t++)
+      {
+      boundaries.at(0,t) = count;
+      
+      count += chunk_size;
+      
+      boundaries.at(1,t) = count-1;
+      }
+    
+    boundaries.at(1,n_threads-1) = N - 1;
+    }
+  else
+    {
+    boundaries.zeros();
+    }
+  
+  // get_stream_err2() << "gmm_diag::internal_gen_boundaries(): boundaries: " << '\n' << boundaries << '\n';
+  
+  return boundaries;
   }
 
 
@@ -914,11 +967,40 @@ gmm_diag<eT>::internal_vec_log_p(const T1& X) const
   
   Row<eT> out(N);
   
-  eT* out_mem = out.memptr();
-  
-  for(uword i=0; i < N; ++i)
+  if(N > 0)
     {
-    out_mem[i] = internal_scalar_log_p( X.colptr(i) );
+    #if defined(_OPENMP)
+      {
+      const arma_omp_state save_omp_state;
+      
+      const umat boundaries = internal_gen_boundaries(N);
+      
+      const uword n_threads = boundaries.n_cols;
+      
+      #pragma omp parallel for
+      for(uword t=0; t < n_threads; ++t)
+        {
+        const uword start_index = boundaries.at(0,t);
+        const uword   end_index = boundaries.at(1,t);
+        
+        eT* out_mem = out.memptr();
+        
+        for(uword i=start_index; i <= end_index; ++i)
+          {
+          out_mem[i] = internal_scalar_log_p( X.colptr(i) );
+          }
+        }
+      }
+    #else
+      {
+      eT* out_mem = out.memptr();
+      
+      for(uword i=0; i < N; ++i)
+        {
+        out_mem[i] = internal_scalar_log_p( X.colptr(i) );
+        }
+      }
+    #endif
     }
   
   return out;
@@ -941,11 +1023,40 @@ gmm_diag<eT>::internal_vec_log_p(const T1& X, const uword gaus_id) const
   
   Row<eT> out(N);
   
-  eT* out_mem = out.memptr();
-  
-  for(uword i=0; i < N; ++i)
+  if(N > 0)
     {
-    out_mem[i] = internal_scalar_log_p( X.colptr(i), gaus_id );
+    #if defined(_OPENMP)
+      {
+      const arma_omp_state save_omp_state;
+      
+      const umat boundaries = internal_gen_boundaries(N);
+      
+      const uword n_threads = boundaries.n_cols;
+      
+      #pragma omp parallel for
+      for(uword t=0; t < n_threads; ++t)
+        {
+        const uword start_index = boundaries.at(0,t);
+        const uword   end_index = boundaries.at(1,t);
+        
+        eT* out_mem = out.memptr();
+        
+        for(uword i=start_index; i <= end_index; ++i)
+          {
+          out_mem[i] = internal_scalar_log_p( X.colptr(i), gaus_id );
+          }
+        }
+      }
+    #else
+      {
+      eT* out_mem = out.memptr();
+      
+      for(uword i=0; i < N; ++i)
+        {
+        out_mem[i] = internal_scalar_log_p( X.colptr(i), gaus_id );
+        }
+      }
+    #endif
     }
   
   return out;
@@ -962,17 +1073,63 @@ gmm_diag<eT>::internal_avg_log_p(const T1& X) const
   arma_extra_debug_sigprint();
   
   arma_debug_check( (X.n_rows != means.n_rows), "gmm_diag::avg_log_p(): incompatible dimensions" );
-  
-  running_mean_scalar<eT> running_mean;
-  
+    
   const uword N = X.n_cols;
   
-  for(uword i=0; i<N; ++i)
-    {
-    running_mean( internal_scalar_log_p( X.colptr(i) ) );
-    }
+  if(N == 0)  { return (-Datum<eT>::inf); }
   
-  return ( (N > 0) ? running_mean.mean() : (-Datum<eT>::inf) );
+  
+  #if defined(_OPENMP)
+    {
+    const arma_omp_state save_omp_state;
+    
+    const umat boundaries = internal_gen_boundaries(N);
+    
+    const uword n_threads = boundaries.n_cols;
+    
+    field< running_mean_scalar<eT> > t_running_means(n_threads);
+    
+    
+    #pragma omp parallel for
+    for(uword t=0; t < n_threads; ++t)
+      {
+      const uword start_index = boundaries.at(0,t);
+      const uword   end_index = boundaries.at(1,t);
+      
+      running_mean_scalar<eT>& current_running_mean = t_running_means[t];
+      
+      for(uword i=start_index; i <= end_index; ++i)
+        {
+        current_running_mean( internal_scalar_log_p( X.colptr(i) ) );
+        }
+      }
+    
+    
+    eT avg = eT(0);
+    
+    for(uword t=0; t < n_threads; ++t)
+      {
+      running_mean_scalar<eT>& current_running_mean = t_running_means[t];
+      
+      const eT w = eT(current_running_mean.count()) / eT(N);
+      
+      avg += w * current_running_mean.mean();
+      }
+    
+    return avg;
+    }
+  #else
+    {
+    running_mean_scalar<eT> running_mean;
+    
+    for(uword i=0; i<N; ++i)
+      {
+      running_mean( internal_scalar_log_p( X.colptr(i) ) );
+      }
+    
+    return running_mean.mean();
+    }
+  #endif
   }
 
 
@@ -988,16 +1145,64 @@ gmm_diag<eT>::internal_avg_log_p(const T1& X, const uword gaus_id) const
   arma_debug_check( (X.n_rows != means.n_rows), "gmm_diag::avg_log_p(): incompatible dimensions" );
   arma_debug_check( (gaus_id  >= means.n_cols), "gmm_diag::avg_log_p(): specified gaussian is out of range"    );
   
-  running_mean_scalar<eT> running_mean;
-  
   const uword N = X.n_cols;
   
-  for(uword i=0; i<N; ++i)
-    {
-    running_mean( internal_scalar_log_p( X.colptr(i), gaus_id ) );
-    }
+  if(N == 0)  { return (-Datum<eT>::inf); }
   
-  return ( (N > 0) ? running_mean.mean() : (-Datum<eT>::inf) );
+  
+  #if defined(_OPENMP)
+    {
+    const arma_omp_state save_omp_state;
+    
+    const umat boundaries = internal_gen_boundaries(N);
+    
+    const uword n_threads = boundaries.n_cols;
+    
+    field< running_mean_scalar<eT> > t_running_means(n_threads);
+    
+    
+    #pragma omp parallel for
+    for(uword t=0; t < n_threads; ++t)
+      {
+      const uword start_index = boundaries.at(0,t);
+      const uword   end_index = boundaries.at(1,t);
+      
+      running_mean_scalar<eT>& current_running_mean = t_running_means[t];
+      
+      for(uword i=start_index; i <= end_index; ++i)
+        {
+        current_running_mean( internal_scalar_log_p( X.colptr(i), gaus_id) );
+        }
+      }
+    
+    
+    eT avg = eT(0);
+    
+    for(uword t=0; t < n_threads; ++t)
+      {
+      running_mean_scalar<eT>& current_running_mean = t_running_means[t];
+      
+      const eT w = eT(current_running_mean.count()) / eT(N);
+      
+      avg += w * current_running_mean.mean();
+      }
+    
+    return avg;
+    }
+  #else
+    {
+    running_mean_scalar<eT> running_mean;
+    
+    const uword N = X.n_cols;
+    
+    for(uword i=0; i<N; ++i)
+      {
+      running_mean( internal_scalar_log_p( X.colptr(i), gaus_id ) );
+      }
+    
+    return running_mean.mean();
+    }
+  #endif
   }
 
 
@@ -1376,41 +1581,19 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
   #if defined(_OPENMP)
     const arma_omp_state save_omp_state;
     
-    omp_set_dynamic(0);
+    const umat boundaries = internal_gen_boundaries(X.n_cols);
     
-    //const uword n_cores = 0;
-    const uword n_cores   = uword(omp_get_num_procs());
-    const uword n_threads = (n_cores > 0) ? ( (n_cores <= X.n_cols) ? n_cores : 1 ) : 1;
+    const uword n_threads = boundaries.n_cols;
     
     field< field< running_mean_vec<eT> > > t_running_means(n_threads);
     
     for(uword t=0; t < n_threads; ++t)  { t_running_means[t].set_size(N_gaus); }
     
-    field< uvec > t_boundary(n_threads);
-    
-    const uword chunk_size = X.n_cols / n_threads;
-    
-    uword vec_count = 0;
-    
-    for(uword t=0; t<n_threads; t++)
-      {
-      t_boundary[t].set_size(2);
-      
-      t_boundary[t][0] = vec_count;
-      
-      vec_count += chunk_size;
-      
-      t_boundary[t][1] = vec_count-1;
-      }
-    
-    t_boundary[n_threads-1][1] = X.n_cols - 1;
-    
     vec tmp_mean(N_dims);
     
     if(verbose)
       {
-      get_stream_err2() << "gmm_diag::learn(): k-means: n_threads:  " << n_threads  << '\n';
-      get_stream_err2() << "gmm_diag::learn(): k-means: chunk_size: " << chunk_size << '\n';
+      get_stream_err2() << "gmm_diag::learn(): k-means: n_threads: " << n_threads  << '\n';
       }
   #endif
   
@@ -1430,11 +1613,9 @@ gmm_diag<eT>::km_iterate(const Mat<eT>& X, const uword max_iter, const bool verb
       #pragma omp parallel for
       for(uword t=0; t < n_threads; ++t)
         {
-        const uvec& boundary = t_boundary[t];
-        
         field< running_mean_vec<eT> >& current_running_means = t_running_means[t];
         
-        km_update_stats<dist_id>(X, boundary[0], boundary[1], old_means, current_running_means);
+        km_update_stats<dist_id>(X, boundaries.at(0,t), boundaries.at(1,t), old_means, current_running_means);
         }
       
       
@@ -1642,21 +1823,11 @@ gmm_diag<eT>::em_iterate(const Mat<eT>& X, const uword max_iter, const eT var_fl
   
   #if defined(_OPENMP)
     const arma_omp_state save_omp_state;
-    
-    omp_set_dynamic(0);
-    
-    // const uword n_cores = 0;
-    const uword n_cores   = uword(omp_get_num_procs());
-    const uword n_threads = (n_cores > 0) ? ( (n_cores <= X.n_cols) ? n_cores : 1 ) : 1;
-  #else
-    // static const uword n_cores   = 0;
-    static const uword n_threads = 1;
   #endif
   
-  // get_stream_err2() << "n_cores:   " << n_cores   << '\n';
-  // get_stream_err2() << "n_threads: " << n_threads << '\n';
+  const umat boundaries = internal_gen_boundaries(X.n_cols);
   
-  field< uvec    > t_boundary(n_threads);
+  const uword n_threads = boundaries.n_cols;
   
   field< Mat<eT> > t_acc_means(n_threads); 
   field< Mat<eT> > t_acc_dcovs(n_threads);
@@ -1668,8 +1839,6 @@ gmm_diag<eT>::em_iterate(const Mat<eT>& X, const uword max_iter, const eT var_fl
   
   for(uword t=0; t<n_threads; t++)
     {
-    t_boundary[t].set_size(2);
-    
     t_acc_means[t].set_size(N_dims, N_gaus);
     t_acc_dcovs[t].set_size(N_dims, N_gaus);
     
@@ -1677,29 +1846,11 @@ gmm_diag<eT>::em_iterate(const Mat<eT>& X, const uword max_iter, const eT var_fl
     t_gaus_log_lhoods[t].set_size(N_gaus);
     }
   
-  const uword chunk_size = X.n_cols / n_threads;
-  
-  uword count = 0;
-  
-  for(uword t=0; t<n_threads; t++)
-    {
-    t_boundary[t][0] = count;
-    
-    count += chunk_size;
-    
-    t_boundary[t][1] = count-1;
-    }
-  
-  t_boundary[n_threads-1][1] = X.n_cols - 1;
-  
-  // get_stream_err2() << "t_boundary.n_elem: " << t_boundary.n_elem << '\n';
-  // t_boundary.print("t_boundary:");
   
   #if defined(_OPENMP)
     if(verbose)
       {
-      get_stream_err2() << "gmm_diag::learn(): EM: n_threads:  " << n_threads  << '\n';
-      get_stream_err2() << "gmm_diag::learn(): EM: chunk_size: " << chunk_size << '\n';
+      get_stream_err2() << "gmm_diag::learn(): EM: n_threads: " << n_threads  << '\n';
       }
   #endif
   
@@ -1709,7 +1860,7 @@ gmm_diag<eT>::em_iterate(const Mat<eT>& X, const uword max_iter, const eT var_fl
     {
     init_constants();
     
-    em_update_params(X, t_boundary, t_acc_means, t_acc_dcovs, t_acc_norm_lhoods, t_gaus_log_lhoods, t_progress_log_lhood);
+    em_update_params(X, boundaries, t_acc_means, t_acc_dcovs, t_acc_norm_lhoods, t_gaus_log_lhoods, t_progress_log_lhood);
     
     em_fix_params(var_floor);
     
@@ -1754,7 +1905,7 @@ void
 gmm_diag<eT>::em_update_params
   (
   const Mat<eT>&          X,
-  const field< uvec    >& t_boundary,
+  const umat&             boundaries,
         field< Mat<eT> >& t_acc_means,
         field< Mat<eT> >& t_acc_dcovs,
         field< Col<eT> >& t_acc_norm_lhoods,
@@ -1764,7 +1915,7 @@ gmm_diag<eT>::em_update_params
   {
   arma_extra_debug_sigprint();
   
-  const uword n_threads = t_boundary.n_elem;
+  const uword n_threads = boundaries.n_cols;
   
   
   // em_generate_acc() is the "map" operation, which produces partial accumulators for means, diagonal covariances and hefts
@@ -1774,19 +1925,18 @@ gmm_diag<eT>::em_update_params
     #pragma omp parallel for
     for(uword t=0; t<n_threads; t++)
       {
-      const uvec&    boundary           = t_boundary[t];
-            Mat<eT>& acc_means          = t_acc_means[t];
-            Mat<eT>& acc_dcovs          = t_acc_dcovs[t];
-            Col<eT>& acc_norm_lhoods    = t_acc_norm_lhoods[t];
-            Col<eT>& gaus_log_lhoods    = t_gaus_log_lhoods[t];
-            eT&      progress_log_lhood = t_progress_log_lhood[t];
+      Mat<eT>& acc_means          = t_acc_means[t];
+      Mat<eT>& acc_dcovs          = t_acc_dcovs[t];
+      Col<eT>& acc_norm_lhoods    = t_acc_norm_lhoods[t];
+      Col<eT>& gaus_log_lhoods    = t_gaus_log_lhoods[t];
+      eT&      progress_log_lhood = t_progress_log_lhood[t];
       
-      em_generate_acc(X, boundary, acc_means, acc_dcovs, acc_norm_lhoods, gaus_log_lhoods, progress_log_lhood);
+      em_generate_acc(X, boundaries.at(0,t), boundaries.at(1,t), acc_means, acc_dcovs, acc_norm_lhoods, gaus_log_lhoods, progress_log_lhood);
       }
     }
   #else
     {
-    em_generate_acc(X, t_boundary[0], t_acc_means[0], t_acc_dcovs[0], t_acc_norm_lhoods[0], t_gaus_log_lhoods[0], t_progress_log_lhood[0]);
+    em_generate_acc(X, boundaries.at(0,0), boundaries.at(1,0), t_acc_means[0], t_acc_dcovs[0], t_acc_norm_lhoods[0], t_gaus_log_lhoods[0], t_progress_log_lhood[0]);
     }
   #endif
   
@@ -1842,7 +1992,8 @@ void
 gmm_diag<eT>::em_generate_acc
   (
   const Mat<eT>& X,
-  const uvec&    boundary,
+  const uword    start_index,
+  const uword      end_index,
         Mat<eT>& acc_means,
         Mat<eT>& acc_dcovs,
         Col<eT>& acc_norm_lhoods,
@@ -1867,8 +2018,6 @@ gmm_diag<eT>::em_generate_acc
   const eT* log_hefts_mem       = log_hefts.memptr();
         eT* gaus_log_lhoods_mem = gaus_log_lhoods.memptr();
   
-  const uword start_index = boundary[0];
-  const uword   end_index = boundary[1];
   
   for(uword i=start_index; i <= end_index; i++)
     {
