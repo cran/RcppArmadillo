@@ -17,6 +17,7 @@
 //! SIAM Review, Vol. 45, No. 1, 2003, pp. 3-49.
 //! http://dx.doi.org/10.1137/S00361445024180
 
+
 template<typename T1>
 inline
 void
@@ -46,9 +47,15 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
     
     arma_debug_check( (A.is_square() == false), "expmat(): given matrix is not square sized" );
     
-    const uword s = (std::max)(uword(0), uword(eop_aux::log2(norm(A, "inf"))) + uword(1) + uword(1));
+    const T norm_val = arma::norm(A, "inf");
     
-    const Mat<eT> AA = A / std::pow(double(2), s);
+    const double log2_val = (norm_val > T(0)) ? double(eop_aux::log2(norm_val)) : double(0);
+    
+    int exponent = int(0);  std::frexp(log2_val, &exponent);
+    
+    const uword s = uword( (std::max)(int(0), exponent + int(1)) );
+    
+    const Mat<eT> AA = A / eT(eop_aux::pow(double(2), double(s)));
     
     T c = T(0.5);
     
