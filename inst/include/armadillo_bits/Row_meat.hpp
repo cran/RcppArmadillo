@@ -1,5 +1,5 @@
-// Copyright (C) 2008-2013 Conrad Sanderson
-// Copyright (C) 2008-2013 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 Conrad Sanderson
+// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -724,6 +724,54 @@ Row<eT>::tail(const uword N) const
 
 
 
+template<typename eT>
+arma_inline
+subview_row<eT>
+Row<eT>::head_cols(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).head(N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_row<eT>
+Row<eT>::head_cols(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).head(N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+subview_row<eT>
+Row<eT>::tail_cols(const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).tail(N);
+  }
+
+
+
+template<typename eT>
+arma_inline
+const subview_row<eT>
+Row<eT>::tail_cols(const uword N) const
+  {
+  arma_extra_debug_sigprint();
+  
+  return (*this).tail(N);
+  }
+
+
+
 //! remove specified columns
 template<typename eT>
 inline
@@ -887,7 +935,7 @@ Row<eT>::begin_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Row::begin_row(): index out of bounds");
   
   return Mat<eT>::memptr();
   }
@@ -901,7 +949,7 @@ Row<eT>::begin_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "begin_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Row::begin_row(): index out of bounds");
   
   return Mat<eT>::memptr();
   }
@@ -915,7 +963,7 @@ Row<eT>::end_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "end_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Row::end_row(): index out of bounds");
   
   return Mat<eT>::memptr() + Mat<eT>::n_cols;
   }
@@ -929,7 +977,7 @@ Row<eT>::end_row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (row_num >= Mat<eT>::n_rows), "end_row(): index out of bounds");
+  arma_debug_check( (row_num >= Mat<eT>::n_rows), "Row::end_row(): index out of bounds");
   
   return Mat<eT>::memptr() + Mat<eT>::n_cols;
   }
