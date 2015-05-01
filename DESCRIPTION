@@ -2,21 +2,20 @@ Package: RcppArmadillo
 Type: Package
 Title: Rcpp Integration for the Armadillo Templated Linear Algebra
         Library
-Version: 0.5.000.0
-Date: 2015-04-12
+Version: 0.5.100.1.0
+Date: 2015-05-01
 Author: Romain Francois, Dirk Eddelbuettel and Doug Bates
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
-Description: R and Armadillo integration using Rcpp
- Armadillo is a templated C++ linear algebra library (by Conrad Sanderson)
- that aims towards a good balance between speed and ease of use. Integer,
+Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
+ Sanderson) that aims towards a good balance between speed and ease of use. Integer,
  floating point and complex numbers are supported, as well as a subset of
  trigonometric and statistics functions. Various matrix decompositions are
  provided through optional integration with LAPACK and ATLAS libraries.
- The RcppArmadillo package includes the header files from the templated
- Armadillo library. Thus users do not need to install Armadillo itself in
- order to use RcppArmadillo. Armadillo is licensed under the MPL 2.0, while
- RcppArmadillo (the Rcpp bindings/bridge to Armadillo) is licensed under the
- GNU GPL version 2 or later, as is the rest of Rcpp.
+ The 'RcppArmadillo' package includes the header files from the templated
+ 'Armadillo' library. Thus users do not need to install 'Armadillo' itself in
+ order to use 'RcppArmadillo'. 'Armadillo' is licensed under the MPL 2.0, while
+ 'RcppArmadillo' (the 'Rcpp' bindings/bridge to Armadillo) is licensed under the
+ GNU GPL version 2 or later, as is the rest of 'Rcpp'.
 License: GPL (>= 2)
 LazyLoad: yes
 LinkingTo: Rcpp
@@ -27,6 +26,6 @@ URL: https://github.com/RcppCore/RcppArmadillo,
         http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
 NeedsCompilation: yes
-Packaged: 2015-04-12 12:48:42.514857 UTC; edd
+Packaged: 2015-05-01 11:40:20.679282 UTC; edd
 Repository: CRAN
-Date/Publication: 2015-04-21 18:37:29
+Date/Publication: 2015-05-01 19:00:45

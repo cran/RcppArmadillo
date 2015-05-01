@@ -2,6 +2,17 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.100.1.0 (2015-05-01)}{
+  \itemize{
+    \item Upgraded to Armadillo release 5.100.1  ("Ankle Biter Deluxe")
+    \itemize{
+      \item added \code{interp1()} for 1D interpolation
+      \item added \code{.is_sorted()} for checking whether a vector or matrix has sorted elements
+      \item updated physical constants to NIST 2010 CODATA values
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.000.0 (2015-04-12)}{
   \itemize{
     \item Upgraded to Armadillo release Version 5.000 ("Ankle Biter")
