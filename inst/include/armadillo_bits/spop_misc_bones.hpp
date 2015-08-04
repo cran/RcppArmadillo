@@ -59,15 +59,75 @@ class spop_cx_abs
 
 
 
+class spop_real
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_real>& in);
+  };
+
+
+
+class spop_imag
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_imag>& in);
+  };
+
+
+
+class spop_conj
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_conj>& in);
+  };
+
+
+
 class spop_repmat
   {
   public:
   
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_repmat>& in);
+  };
+
+
+
+class spop_reshape
+  {
+  public:
   
-  template<typename eT>
-  inline static void apply_noalias(SpMat<eT>& out, const SpMat<eT>& X, const uword copies_per_row, const uword copies_per_col);
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_reshape>& in);
+  };
+
+
+
+class spop_resize
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_resize>& in);
+  };
+
+
+
+class spop_diagmat
+  {
+  public:
+  
+  template<typename T1>
+  inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat>& in);
+  
+  template<typename T1>
+  inline static void apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& p);
   };
 
 
