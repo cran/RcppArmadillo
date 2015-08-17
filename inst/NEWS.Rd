@@ -2,6 +2,24 @@
 \title{News for Package 'RcppArmadillo'}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in RcppArmadillo version 0.5.400.2.0 (2015-08-17)}{
+  \itemize{
+    \item Upgraded to Armadillo 5.400.2 ("Plutocracy Incorporated Deluxe")
+    \itemize{
+      \item added \code{find_unique()} for finding indices of unique values
+      \item added \code{diff()} for calculating differences between consecutive elements
+      \item added \code{cumprod()} for calculating cumulative product
+      \item added \code{null()} for finding the orthonormal basis of null space
+      \item expanded \code{interp1()} to handle repeated locations
+      \item expanded \code{unique()} to handle complex numbers
+      \item faster \code{flupud()}
+      \item faster row-wise \code{cumsum()}
+      \item fix for k-means clustering in gmm_diag class
+    }
+    \item corrected use of \code{kitten()} thanks to Grant Brown
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.5.300.4 (2015-08-03)}{
   \itemize{
     \item Upgraded to Armadillo 5.300.4 ("Plutocrazy Incorporated") 
