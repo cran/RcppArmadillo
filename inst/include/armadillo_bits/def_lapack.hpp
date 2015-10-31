@@ -1,12 +1,13 @@
-// Copyright (C) 2008-2012 Conrad Sanderson
-// Copyright (C) 2008-2012 NICTA (www.nicta.com.au)
-// Copyright (C) 2009 Edmund Highcock
-// Copyright (C) 2011 James Sanders
-// Copyright (C) 2012 Eric Jon Sundstrom
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by James Sanders
+// Written by Eric Jon Sundstrom
 
 
 
@@ -30,6 +31,11 @@
   #define arma_ctrtri ctrtri
   #define arma_ztrtri ztrtri
   
+  #define arma_sgeev  sgeev
+  #define arma_dgeev  dgeev
+  #define arma_cgeev  cgeev
+  #define arma_zgeev  zgeev
+  
   #define arma_ssyev  ssyev
   #define arma_dsyev  dsyev
 
@@ -41,12 +47,6 @@
   
   #define arma_cheevd cheevd
   #define arma_zheevd zheevd
-  
-  #define arma_sgeev  sgeev
-  #define arma_dgeev  dgeev
-  
-  #define arma_cgeev  cgeev
-  #define arma_zgeev  zgeev
   
   #define arma_sggev  sggev
   #define arma_dggev  dggev
@@ -143,6 +143,11 @@
   #define arma_ctrtri CTRTRI
   #define arma_ztrtri ZTRTRI
   
+  #define arma_sgeev  SGEEV
+  #define arma_dgeev  DGEEV
+  #define arma_cgeev  CGEEV
+  #define arma_zgeev  ZGEEV
+  
   #define arma_ssyev  SSYEV
   #define arma_dsyev  DSYEV
   
@@ -154,12 +159,6 @@
   
   #define arma_cheevd CHEEVD
   #define arma_zheevd ZHEEVD
-  
-  #define arma_sgeev  SGEEV
-  #define arma_dgeev  DGEEV
-  
-  #define arma_cgeev  CGEEV
-  #define arma_zgeev  ZGEEV
   
   #define arma_sggev  SGGEV
   #define arma_dggev  DGGEV
@@ -263,35 +262,35 @@ extern "C"
   void arma_fortran(arma_ctrtri)(char* uplo, char* diag, blas_int* n,   void* a, blas_int* lda, blas_int* info);
   void arma_fortran(arma_ztrtri)(char* uplo, char* diag, blas_int* n,   void* a, blas_int* lda, blas_int* info);
   
-  // eigenvector decomposition of symmetric real matrices
+  // eigen decomposition of general matrix (real)
+  void arma_fortran(arma_sgeev)(char* jobvl, char* jobvr, blas_int* N,  float* a, blas_int* lda,  float* wr,  float* wi,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);
+  void arma_fortran(arma_dgeev)(char* jobvl, char* jobvr, blas_int* N, double* a, blas_int* lda, double* wr, double* wi, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, double* work, blas_int* lwork, blas_int* info);
+  
+  // eigen decomposition of general matrix (complex)
+  void arma_fortran(arma_cgeev)(char* jobvl, char* jobvr, blas_int* N, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
+  void arma_fortran(arma_zgeev)(char* jobvl, char* jobvr, blas_int* N, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
+  
+  // eigen decomposition of symmetric real matrices
   void arma_fortran(arma_ssyev)(char* jobz, char* uplo, blas_int* n,  float* a, blas_int* lda,  float* w,  float* work, blas_int* lwork, blas_int* info);
   void arma_fortran(arma_dsyev)(char* jobz, char* uplo, blas_int* n, double* a, blas_int* lda, double* w, double* work, blas_int* lwork, blas_int* info);
     
-  // eigenvector decomposition of hermitian matrices (complex)
+  // eigen decomposition of hermitian matrices (complex)
   void arma_fortran(arma_cheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda,  float* w,   void* work, blas_int* lwork,  float* rwork, blas_int* info);
   void arma_fortran(arma_zheev)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda, double* w,   void* work, blas_int* lwork, double* rwork, blas_int* info);
   
-  // eigenvector decomposition of symmetric real matrices by divide and conquer
+  // eigen decomposition of symmetric real matrices by divide and conquer
   void arma_fortran(arma_ssyevd)(char* jobz, char* uplo, blas_int* n,  float* a, blas_int* lda,  float* w,  float* work, blas_int* lwork, blas_int* iwork, blas_int* liwork, blas_int* info);
   void arma_fortran(arma_dsyevd)(char* jobz, char* uplo, blas_int* n, double* a, blas_int* lda, double* w, double* work, blas_int* lwork, blas_int* iwork, blas_int* liwork, blas_int* info);
   
-  // eigenvector decomposition of hermitian matrices (complex) by divide and conquer
+  // eigen decomposition of hermitian matrices (complex) by divide and conquer
   void arma_fortran(arma_cheevd)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda,  float* w,   void* work, blas_int* lwork,  float* rwork, blas_int* lrwork, blas_int* iwork, blas_int* liwork, blas_int* info);
   void arma_fortran(arma_zheevd)(char* jobz, char* uplo, blas_int* n,   void* a, blas_int* lda, double* w,   void* work, blas_int* lwork, double* rwork, blas_int* lrwork, blas_int* iwork, blas_int* liwork, blas_int* info);
   
-  // eigenvector decomposition of general real matrices
-  void arma_fortran(arma_sgeev)(char* jobvl, char* jobvr, blas_int* n,  float* a, blas_int* lda,  float* wr,  float* wi,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);
-  void arma_fortran(arma_dgeev)(char* jobvl, char* jobvr, blas_int* n, double* a, blas_int* lda, double* wr, double* wi, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, double* work, blas_int* lwork, blas_int* info);
-  
-  // eigenvector decomposition of general complex matrices
-  void arma_fortran(arma_cgeev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
-  void arma_fortran(arma_zgeev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* w, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
-  
-  // eigenvector decomposition of general real matrix pair
+  // eigen decomposition of general real matrix pair
   void arma_fortran(arma_sggev)(char* jobvl, char* jobvr, blas_int* n,  float* a, blas_int* lda,  float* b, blas_int* ldb,  float* alphar,  float* alphai,  float* beta,  float* vl, blas_int* ldvl,  float* vr, blas_int* ldvr,  float* work, blas_int* lwork, blas_int* info);
   void arma_fortran(arma_dggev)(char* jobvl, char* jobvr, blas_int* n, double* a, blas_int* lda, double* b, blas_int* ldb, double* alphar, double* alphai, double* beta, double* vl, blas_int* ldvl, double* vr, blas_int* ldvr, double* work, blas_int* lwork, blas_int* info);
   
-  // eigenvector decomposition of general complex matrix pair
+  // eigen decomposition of general complex matrix pair
   void arma_fortran(arma_cggev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* b, blas_int* ldb, void* alpha, void* beta, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork,  float* rwork, blas_int* info);
   void arma_fortran(arma_zggev)(char* jobvl, char* jobvr, blas_int* n, void* a, blas_int* lda, void* b, blas_int* ldb, void* alpha, void* beta, void* vl, blas_int* ldvl, void* vr, blas_int* ldvr, void* work, blas_int* lwork, double* rwork, blas_int* info);
   
@@ -386,10 +385,6 @@ extern "C"
   // QZ decomposition (complex matrices)
   void arma_fortran(arma_cgges)(char* jobvsl, char* jobvsr, char* sort, char* selctg, blas_int* n, void* a, blas_int* lda, void* b, blas_int* ldb, blas_int* sdim, void* alpha, void* beta, void* vsl, blas_int* ldvsl, void* vsr, blas_int* ldvsr, void* work, blas_int* lwork,  float* rwork,  float* bwork, blas_int* info);
   void arma_fortran(arma_zgges)(char* jobvsl, char* jobvsr, char* sort, char* selctg, blas_int* n, void* a, blas_int* lda, void* b, blas_int* ldb, blas_int* sdim, void* alpha, void* beta, void* vsl, blas_int* ldvsl, void* vsr, blas_int* ldvsr, void* work, blas_int* lwork, double* rwork, double* bwork, blas_int* info);
-  
-  // void arma_fortran(arma_dgeqp3)(blas_int* m, blas_int* n, double* a, blas_int* lda, blas_int* jpvt, double* tau, double* work, blas_int* lwork, blas_int* info);
-  // void arma_fortran(arma_dormqr)(char* side, char* trans, blas_int* m, blas_int* n, blas_int* k, double* a, blas_int* lda, double* tau, double* c, blas_int* ldc, double* work, blas_int* lwork, blas_int* info);
-  // void  arma_fortran(arma_dposv)(char* uplo, blas_int* n, blas_int* nrhs, double* a, blas_int* lda, double* b, blas_int* ldb, blas_int* info);
   }
 
 

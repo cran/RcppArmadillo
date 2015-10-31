@@ -1,12 +1,13 @@
-// Copyright (C) 2008-2015 Conrad Sanderson
-// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
-// Copyright (C) 2009 Edmund Highcock
-// Copyright (C) 2011 James Sanders
-// Copyright (C) 2012 Eric Jon Sundstrom
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by James Sanders
+// Written by Eric Jon Sundstrom
 
 
 
@@ -123,6 +124,52 @@ namespace lapack
   template<typename eT>
   inline
   void
+  geev(char* jobvl, char* jobvr, blas_int* N, eT* a, blas_int* lda, eT* wr, eT* wi, eT* vl, blas_int* ldvl, eT* vr, blas_int* ldvr, eT* work, blas_int* lwork, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+
+    if(is_float<eT>::value)
+      {
+      typedef float T;
+      arma_fortran(arma_sgeev)(jobvl, jobvr, N, (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
+      }
+    else
+    if(is_double<eT>::value)
+      {
+      typedef double T;
+      arma_fortran(arma_dgeev)(jobvl, jobvr, N, (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  cx_geev(char* jobvl, char* jobvr, blas_int* N, eT* a, blas_int* lda, eT* w, eT* vl, blas_int* ldvl, eT* vr, blas_int* ldvr, eT* work, blas_int* lwork, typename eT::value_type* rwork, blas_int* info)
+    {
+    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    
+    if(is_supported_complex_float<eT>::value)
+      {
+      typedef float T;
+      typedef typename std::complex<T> cx_T;
+      arma_fortran(arma_cgeev)(jobvl, jobvr, N, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
+      }
+    else
+    if(is_supported_complex_double<eT>::value)
+      {
+      typedef double T;
+      typedef typename std::complex<T> cx_T;
+      arma_fortran(arma_zgeev)(jobvl, jobvr, N, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
+      }
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
   syev(char* jobz, char* uplo, blas_int* n, eT* a, blas_int* lda, eT* w,  eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
@@ -225,65 +272,6 @@ namespace lapack
   
 	
 	
-  template<typename eT>
-  inline
-  void
-  geev
-    (
-    char* jobvl, char* jobvr, blas_int* n, 
-    eT* a, blas_int* lda, eT* wr, eT* wi, eT* vl, 
-    blas_int* ldvl, eT* vr, blas_int* ldvr, 
-    eT* work, blas_int* lwork,
-    blas_int* info
-    )
-    {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
-
-    if(is_float<eT>::value)
-      {
-      typedef float T;
-      arma_fortran(arma_sgeev)(jobvl, jobvr, n,  (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
-      }
-    else
-    if(is_double<eT>::value)
-      {
-      typedef double T;
-      arma_fortran(arma_dgeev)(jobvl, jobvr, n,  (T*)a, lda, (T*)wr, (T*)wi, (T*)vl, ldvl, (T*)vr, ldvr, (T*)work, lwork, info);
-      }
-    }
-
-
-  template<typename eT>
-  inline
-  void
-  cx_geev
-    (
-    char* jobvl, char* jobvr, blas_int* n, 
-    eT* a, blas_int* lda, eT* w, 
-    eT* vl, blas_int* ldvl, 
-    eT* vr, blas_int* ldvr, 
-    eT* work, blas_int* lwork, typename eT::value_type* rwork, 
-    blas_int* info
-    )
-    {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
-    
-    if(is_supported_complex_float<eT>::value)
-      {
-      typedef float T;
-      typedef typename std::complex<T> cx_T;
-      arma_fortran(arma_cgeev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
-      }
-    else
-    if(is_supported_complex_double<eT>::value)
-      {
-      typedef double T;
-      typedef typename std::complex<T> cx_T;
-      arma_fortran(arma_zgeev)(jobvl, jobvr, n, (cx_T*)a, lda, (cx_T*)w, (cx_T*)vl, ldvl, (cx_T*)vr, ldvr, (cx_T*)work, lwork, (T*)rwork, info);
-      }
-    }
-  
-  
   template<typename eT>
   inline
   void

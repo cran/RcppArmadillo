@@ -1,10 +1,12 @@
-// Copyright (C) 2008-2015 Conrad Sanderson
-// Copyright (C) 2013-2015 Ryan Curtin
-// Copyright (C) 2008-2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2008-2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
+// Written by Ryan Curtin
 
 
 
@@ -132,13 +134,13 @@
   #define ARMA_DEFAULT_OSTREAM std::cout
 #endif
 
+#if !defined(ARMA_PRINT_ERRORS)
 #define ARMA_PRINT_ERRORS
-//#define ARMA_PRINT_HDF5_ERRORS
+//// Comment out the above line if you don't want errors and warnings printed (eg. failed decompositions)
+#endif
 
-
-#if defined(ARMA_DONT_PRINT_ERRORS)
-  #undef ARMA_PRINT_ERRORS
-  #undef ARMA_PRINT_HDF5_ERRORS
+#if !defined(ARMA_PRINT_HDF5_ERRORS)
+// #define ARMA_PRINT_HDF5_ERRORS
 #endif
 
 #if defined(ARMA_DONT_USE_LAPACK)
@@ -192,3 +194,12 @@
 #if defined(ARMA_DONT_USE_HDF5)
   #undef ARMA_USE_HDF5
 #endif
+
+#if defined(ARMA_DONT_PRINT_ERRORS)
+  #undef ARMA_PRINT_ERRORS
+#endif
+
+#if defined(ARMA_DONT_PRINT_HDF5_ERRORS)
+  #undef ARMA_PRINT_HDF5_ERRORS
+#endif
+

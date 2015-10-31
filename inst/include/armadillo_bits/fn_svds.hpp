@@ -1,9 +1,11 @@
-// Copyright (C) 2015 Conrad Sanderson
-// Copyright (C) 2015 NICTA (www.nicta.com.au)
+// Copyright (C) 2015 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// -------------------------------------------------------------------
+// 
+// Written by Conrad Sanderson - http://conradsanderson.id.au
 
 
 //! \addtogroup fn_svds
@@ -33,7 +35,7 @@ svds_helper
   
   if(arma_config::arpack == false)
     {
-    arma_stop("svds(): use of ARPACK needs to be enabled");
+    arma_stop("svds(): use of ARPACK must be enabled");
     return false;
     }
   
@@ -124,7 +126,7 @@ svds_helper
       }
     }
   
-  arma_debug_warn( (S.n_elem < k), "svds(): warning: found fewer singular values than specified" );
+  if(S.n_elem < k)  { arma_debug_warn("svds(): found fewer singular values than specified"); }
   
   return true;
   }
@@ -154,7 +156,7 @@ svds_helper
   
   if(arma_config::arpack == false)
     {
-    arma_stop("svds(): use of ARPACK needs to be enabled");
+    arma_stop("svds(): use of ARPACK must be enabled");
     return false;
     }
   
@@ -207,7 +209,7 @@ svds_helper
       U.reset();
       S.reset();
       V.reset();
-      arma_bad("svds(): failed to converge", false);
+      arma_debug_warn("svds(): decomposition failed");
       
       return false;
       }
@@ -248,7 +250,7 @@ svds_helper
       }
     }
   
-  arma_debug_warn( (S.n_elem < k), "svds(): warning: found fewer singular values than specified" );
+  if(S.n_elem < k)  { arma_debug_warn("svds(): found fewer singular values than specified"); }
   
   return true;
   }
@@ -275,11 +277,8 @@ svds
   
   const bool status = svds_helper(U, S, V, X.get_ref(), k, tol, true);
   
-  if(status == false)
-    {
-    arma_bad("svds(): failed to converge", false);
-    }
-  
+  if(status == false)  { arma_debug_warn("svds(): decomposition failed"); }
+
   return status;
   }
 
@@ -305,11 +304,8 @@ svds
   Mat<typename T1::elem_type> V;
   
   const bool status = svds_helper(U, S, V, X.get_ref(), k, tol, false);
-
-  if(status == false)
-    {
-    arma_bad("svds(): failed to converge", false);
-    }
+  
+  if(status == false)  { arma_debug_warn("svds(): decomposition failed"); }
   
   return status;
   }
@@ -338,10 +334,7 @@ svds
   
   const bool status = svds_helper(U, S, V, X.get_ref(), k, tol, false);
   
-  if(status == false)
-    {
-    arma_bad("svds(): failed to converge", true);
-    }
+  if(status == false)  { arma_bad("svds(): decomposition failed"); }
   
   return S;
   }
