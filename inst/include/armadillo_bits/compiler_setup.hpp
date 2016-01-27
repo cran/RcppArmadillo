@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2015 National ICT Australia (NICTA)
+// Copyright (C) 2008-2016 National ICT Australia (NICTA)
 // 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -67,9 +67,10 @@
 
 #if defined(__CYGWIN__)
   #if defined(ARMA_USE_CXX11)
-    #undef ARMA_USE_CXX11
-    #undef ARMA_USE_EXTERN_CXX11_RNG
-    #pragma message ("WARNING: disabled use of C++11 features in Armadillo, due to incomplete support for C++11 by Cygwin")
+    #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features;")
+    #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
+    #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
+    #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
   #endif
 #endif
 
