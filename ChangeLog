@@ -1,3 +1,29 @@
+2016-03-15  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.600.4.0
+        * inst/NEWS.Rd: Release 0.6.600.4.0
+
+	* inst/include/*: Upgraded to release 6.600.4 of Armadillo
+
+        * debian/*: Changes for Debian release of 0.6.600.4.0
+
+2016-03-12  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.600.3.1 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.600.3.1 [GitHub only]
+
+	* inst/include/*: Upgraded to release 6.600.4-test of Armadillo
+
+	* configure: Take R 3.3.0 with a complete fallback for LAPACK into
+	consideration when checking for LAPACK features
+
+2016-03-11  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.6.600.2.1 [GitHub only]
+        * inst/NEWS.Rd: Release 0.6.600.2.1 [GitHub only]
+
+	* inst/include/*: Upgraded to release 6.600.3-test of Armadillo
+
 2016-01-26  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.6.500.4.0

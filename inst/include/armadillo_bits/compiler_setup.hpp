@@ -87,7 +87,7 @@
   
   #if defined(ARMA_64BIT_WORD) && defined(SIZE_MAX)
     #if (SIZE_MAX < 0xFFFFFFFFFFFFFFFFull)
-      #pragma message ("WARNING: disabled use of 64 bit integers, as std::size_t is smaller than 64 bits")
+      // #pragma message ("WARNING: disabled use of 64 bit integers, as std::size_t is smaller than 64 bits")
       #undef ARMA_64BIT_WORD
     #endif
   #endif
@@ -383,6 +383,7 @@
   #pragma warning(push)
   
   #pragma warning(disable: 4127)  // conditional expression is constant
+  #pragma warning(disable: 4244)  // possible loss of data when converting types
   #pragma warning(disable: 4510)  // default constructor could not be generated
   #pragma warning(disable: 4511)  // copy constructor can't be generated
   #pragma warning(disable: 4512)  // assignment operator can't be generated
