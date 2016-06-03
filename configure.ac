@@ -14,11 +14,20 @@ AC_PREREQ(2.61)
 ## Process this file with autoconf to produce a configure script.
 AC_INIT(RcppArmadillo, m4_esyscmd_s([awk -e '/^Version:/ {print $2}' DESCRIPTION]))
 
+## Set R_HOME, respecting an environment variable if one is set 
+: ${R_HOME=$(R RHOME)}
+if test -z "${R_HOME}"; then
+    AC_MSG_ERROR([Could not determine R_HOME.])   
+fi
+## Use R to set CXX and CXXFLAGS
+CXX=$(${R_HOME}/bin/R CMD config CXX)
+CXXFLAGS=$("${R_HOME}/bin/R" CMD config CXXFLAGS)
+
 ## We are using C++
 AC_LANG(C++)
 AC_REQUIRE_CPP
 
-## Check the C++ compiler
+## Check the C++ compiler using the CXX value set
 AC_PROG_CXX
 ## If it is g++, we have GXX set so let's examine it
 if test "${GXX}" = yes; then
@@ -32,17 +41,12 @@ if test "${GXX}" = yes; then
         ;;
 	4.6.*|4.7.*|4.8.*|4.9.*|5.*|6.*)
 	     gxx_newer_than_45="-fpermissive"
-             AC_MSG_RESULT([yes (${gxx_version})])
+             AC_MSG_RESULT([(${gxx_version}) yes])
 	;;
     esac
 fi
 
 
-## Next, set R_HOME, respecting an environment variable if set 
-: ${R_HOME=$(R RHOME)}
-if test -z "${R_HOME}"; then
-    AC_MSG_ERROR([Could not determine R_HOME.])   
-fi
 
 ## Check for suitable LAPACK_LIBS
 AC_MSG_CHECKING([LAPACK_LIBS])
