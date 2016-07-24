@@ -249,7 +249,7 @@ auxlib::inv_inplace_lapack(Mat<eT>& out)
     {
     arma_debug_assert_blas_size(out);
     
-    blas_int n_rows = out.n_rows;
+    blas_int n_rows = blas_int(out.n_rows);
     blas_int lwork  = (std::max)(blas_int(podarray_prealloc_n_elem::val), n_rows);
     blas_int info   = 0;
     
@@ -1765,7 +1765,7 @@ auxlib::chol(Mat<eT>& out, const Base<eT,T1>& X, const uword layout)
     const uword out_n_rows = out.n_rows;
     
     char      uplo = (layout == 0) ? 'U' : 'L';
-    blas_int  n    = out_n_rows;
+    blas_int  n    = blas_int(out_n_rows);
     blas_int  info = 0;
     
     arma_extra_debug_print("lapack::potrf()");
@@ -3331,14 +3331,14 @@ auxlib::solve_approx_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
     
     Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols );
     
-    if(size(tmp) == size(B))
+    if(arma::size(tmp) == arma::size(B))
       {
       tmp = B;
       }
     else
       {
       tmp.zeros();
-      tmp(0,0, size(B)) = B;
+      tmp(0,0, arma::size(B)) = B;
       }
     
     char      trans = 'N';
@@ -3408,14 +3408,14 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     
     Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols );
     
-    if(size(tmp) == size(B))
+    if(arma::size(tmp) == arma::size(B))
       {
       tmp = B;
       }
     else
       {
       tmp.zeros();
-      tmp(0,0, size(B)) = B;
+      tmp(0,0, arma::size(B)) = B;
       }
     
     blas_int m     = blas_int(A.n_rows);
@@ -3529,14 +3529,14 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     
     Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols );
     
-    if(size(tmp) == size(B))
+    if(arma::size(tmp) == arma::size(B))
       {
       tmp = B;
       }
     else
       {
       tmp.zeros();
-      tmp(0,0, size(B)) = B;
+      tmp(0,0, arma::size(B)) = B;
       }
     
     blas_int m     = blas_int(A.n_rows);
