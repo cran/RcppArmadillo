@@ -117,10 +117,13 @@
 #endif
 
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(__apple_build_version__)
   #undef  ARMA_BLAS_SDOT_BUG
   #define ARMA_BLAS_SDOT_BUG
+  
   #undef  ARMA_HAVE_POSIX_MEMALIGN
+  #undef  ARMA_USE_EXTERN_CXX11_RNG
+  // TODO: thread local storage (TLS) (eg. "extern thread_local") appears currently broken on Mac OS X
 #endif
 
 
@@ -144,7 +147,7 @@
 #endif
 
 
-#if (defined(__GNUG__) || defined(__GNUC__)) && (defined(__clang__) || defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__))
+#if (defined(__GNUG__) || defined(__GNUC__)) && (defined(__clang__) || defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__) || defined(__ARMCC_VERSION) || defined(__IBMCPP__))
   #undef  ARMA_FAKE_GCC
   #define ARMA_FAKE_GCC
 #endif
@@ -231,7 +234,7 @@
 #endif
 
 
-#if defined(__clang__) && (defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__))
+#if defined(__clang__) && (defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__) || defined(__ARMCC_VERSION) || defined(__IBMCPP__))
   #undef  ARMA_FAKE_CLANG
   #define ARMA_FAKE_CLANG
 #endif
@@ -296,11 +299,6 @@
     #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
   
-  #if defined(__apple_build_version__)
-    #undef ARMA_USE_EXTERN_CXX11_RNG
-    // TODO: check the status of support for "extern thread_local" in clang shipped with Mac OS X
-  #endif
-  
   #if !defined(ARMA_USE_CXX11) && (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L))
     #define ARMA_HAVE_SNPRINTF
     #define ARMA_HAVE_ISFINITE
@@ -351,6 +349,7 @@
   #pragma warning(push)
   
   #pragma warning(disable: 4127)  // conditional expression is constant
+  #pragma warning(disable: 4180)  // qualifier has no meaning
   #pragma warning(disable: 4244)  // possible loss of data when converting types
   #pragma warning(disable: 4510)  // default constructor could not be generated
   #pragma warning(disable: 4511)  // copy constructor can't be generated
@@ -412,7 +411,7 @@
 #endif
 
 
-#if defined(ARMA_USE_CXX11) && defined(__CYGWIN__)
+#if defined(ARMA_USE_CXX11) && defined(__CYGWIN__) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
   #pragma message ("WARNING: Cygwin may have incomplete support for C++11 features.")
 #endif
 
@@ -423,15 +422,16 @@
 #endif
 
 
-#if defined(ARMA_PRINT_CXX11_WARNING)
+#if defined(ARMA_PRINT_CXX11_WARNING) && !defined(ARMA_DONT_PRINT_CXX11_WARNING)
   #pragma message ("WARNING: use of C++11 features has been enabled,")
   #pragma message ("WARNING: but this compiler has INCOMPLETE support for C++11;")
   #pragma message ("WARNING: if something breaks, you get to keep all the pieces.")
   #pragma message ("WARNING: to forcefully prevent Armadillo from using C++11 features,")
   #pragma message ("WARNING: #define ARMA_DONT_USE_CXX11 before #include <armadillo>")
-
-  #undef ARMA_PRINT_CXX11_WARNING
 #endif
+
+
+#undef ARMA_PRINT_CXX11_WARNING
 
 
 #if defined(log2)

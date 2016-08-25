@@ -72,6 +72,11 @@ linspace
     x.set_size(1);
     
     x[0] = eT(end);
+    
+    // NOTE: returning "end" for num <= 1 is kept for compatibility with Matlab & Octave,
+    // NOTE: but for num = 0 this probably causes more problems than it helps
+    
+    // TODO: in version 8.0, return an empty vector when num = 0
     }
   
   return x;
@@ -343,68 +348,6 @@ swap(Cube<eT>& A, Cube<eT>& B)
   arma_extra_debug_sigprint();
   
   A.swap(B);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-arma_inline
-const Op<T1, op_orth>
-orth(const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  typedef typename T1::elem_type eT;
-  
-  return Op<T1, op_orth>(X.get_ref(), eT(tol));
-  }
-
-
-
-template<typename T1>
-inline
-bool
-orth(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  try { out = orth(X,tol); } catch (std::runtime_error&) { return false; }
-  
-  return true;
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-arma_inline
-const Op<T1, op_null>
-null(const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  typedef typename T1::elem_type eT;
-  
-  return Op<T1, op_null>(X.get_ref(), eT(tol));
-  }
-
-
-
-template<typename T1>
-inline
-bool
-null(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0)
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  try { out = null(X,tol); } catch (std::runtime_error&) { return false; }
-  
-  return true;
   }
 
 

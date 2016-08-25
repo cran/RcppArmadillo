@@ -6400,6 +6400,20 @@ Mat<eT>::imbue(functor F)
 
 
 
+template<typename eT>
+inline
+const Mat<eT>&
+Mat<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  arrayops::replace(memptr(), n_elem, old_val, new_val);
+  
+  return *this;
+  }
+
+
+
 //! fill the matrix with the specified value
 template<typename eT>
 arma_hot
@@ -6800,6 +6814,8 @@ Mat<eT>::min(uword& index_of_min_val) const
     {
     arma_debug_check(true, "Mat::min(): object has no elements");
     
+    index_of_min_val = uword(0);
+    
     return Datum<eT>::nan;
     }
   
@@ -6819,6 +6835,8 @@ Mat<eT>::max(uword& index_of_max_val) const
     {
     arma_debug_check(true, "Mat::max(): object has no elements");
     
+    index_of_max_val = uword(0);
+    
     return Datum<eT>::nan;
     }
   
@@ -6837,6 +6855,9 @@ Mat<eT>::min(uword& row_of_min_val, uword& col_of_min_val) const
   if(n_elem == 0)
     {
     arma_debug_check(true, "Mat::min(): object has no elements");
+    
+    row_of_min_val = uword(0);
+    col_of_min_val = uword(0);
     
     return Datum<eT>::nan;
     }
@@ -6863,6 +6884,9 @@ Mat<eT>::max(uword& row_of_max_val, uword& col_of_max_val) const
   if(n_elem == 0)
     {
     arma_debug_check(true, "Mat::max(): object has no elements");
+    
+    row_of_max_val = uword(0);
+    col_of_max_val = uword(0);
     
     return Datum<eT>::nan;
     }

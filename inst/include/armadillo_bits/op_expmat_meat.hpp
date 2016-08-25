@@ -41,7 +41,7 @@ op_expmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_expmat>& expr
 template<typename T1>
 inline
 bool
-op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X)
+op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& expr)
   {
   arma_extra_debug_sigprint();
   
@@ -50,7 +50,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
   
   if(is_op_diagmat<T1>::value)
     {
-    out = X.get_ref();  // force the evaluation of diagmat()
+    out = expr.get_ref();  // force the evaluation of diagmat()
     
     arma_debug_check( (out.is_square() == false), "expmat(): given matrix must be square sized" );
     
@@ -63,7 +63,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     }
   else
     {
-    Mat<eT> A = X.get_ref();
+    Mat<eT> A = expr.get_ref();
     
     arma_debug_check( (A.is_square() == false), "expmat(): given matrix must be square sized" );
     
@@ -111,6 +111,66 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     }
   
   return true;
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_expmat_sym::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_expmat_sym>& in)
+  {
+  arma_extra_debug_sigprint();
+  
+  const bool status = op_expmat_sym::apply_direct(out, in.m);
+  
+  if(status == false)
+    {
+    out.reset();
+    arma_stop_runtime_error("expmat_sym(): transformation failed");
+    }
+  }
+
+
+
+template<typename T1>
+inline
+bool
+op_expmat_sym::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type   T;
+    typedef typename T1::elem_type eT;
+    
+    const unwrap<T1>   U(expr.get_ref());
+    const Mat<eT>& X = U.M;
+    
+    arma_debug_check( (X.is_square() == false), "expmat_sym(): given matrix must be square sized" );
+    
+    Col< T> eigval;
+    Mat<eT> eigvec;
+    
+    const bool status = auxlib::eig_sym_dc(eigval, eigvec, X);
+    
+    if(status == false)  { return false; }
+    
+    eigval = exp(eigval);
+    
+    out = eigvec * diagmat(eigval) * eigvec.t();
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(out);
+    arma_ignore(expr);
+    arma_stop_logic_error("expmat_sym(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
   }
 
 

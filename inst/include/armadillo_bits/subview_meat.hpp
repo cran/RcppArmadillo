@@ -861,6 +861,56 @@ subview<eT>::imbue(functor F)
 template<typename eT>
 inline
 void
+subview<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_extra_debug_sigprint();
+  
+  subview<eT>& s = *this;
+  
+  const uword s_n_cols = s.n_cols;
+  const uword s_n_rows = s.n_rows;
+  
+  if(s_n_rows == 1)
+    {
+    Mat<eT>& A = const_cast< Mat<eT>& >(s.m);
+    
+    const uword A_n_rows = A.n_rows;
+    
+    eT* Aptr = &(A.at(s.aux_row1,s.aux_col1));
+    
+    if(arma_isnan(old_val))
+      {
+      for(uword ucol=0; ucol < s_n_cols; ++ucol)
+        {
+        (*Aptr) = (arma_isnan(*Aptr)) ? new_val : (*Aptr);
+        
+        Aptr += A_n_rows;
+        }
+      }
+    else
+      {
+      for(uword ucol=0; ucol < s_n_cols; ++ucol)
+        {
+        (*Aptr) = ((*Aptr) == old_val) ? new_val : (*Aptr);
+        
+        Aptr += A_n_rows;
+        }
+      }
+    }
+  else
+    {
+    for(uword ucol=0; ucol < s_n_cols; ++ucol)
+      {
+      arrayops::replace(s.colptr(ucol), s_n_rows, old_val, new_val);
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
@@ -2705,6 +2755,42 @@ subview_col<eT>::subvec(const uword in_row1, const uword in_row2) const
 template<typename eT>
 inline
 subview_col<eT>
+subview_col<eT>::subvec(const uword start_row, const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (s.n_cols != 1), "subview_col::subvec(): given size does not specify a column vector" );
+  
+  arma_debug_check( ( (start_row >= subview<eT>::n_rows) || ((start_row + s.n_rows) > subview<eT>::n_rows) ), "subview_col::subvec(): size out of bounds" );
+  
+  const uword base_row1 = this->aux_row1 + start_row;
+  
+  return subview_col<eT>(this->m, this->aux_col1, base_row1, s.n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_col<eT>
+subview_col<eT>::subvec(const uword start_row, const SizeMat& s) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (s.n_cols != 1), "subview_col::subvec(): given size does not specify a column vector" );
+  
+  arma_debug_check( ( (start_row >= subview<eT>::n_rows) || ((start_row + s.n_rows) > subview<eT>::n_rows) ), "subview_col::subvec(): size out of bounds" );
+  
+  const uword base_row1 = this->aux_row1 + start_row;
+  
+  return subview_col<eT>(this->m, this->aux_col1, base_row1, s.n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+subview_col<eT>
 subview_col<eT>::head(const uword N)
   {
   arma_extra_debug_sigprint();
@@ -2804,10 +2890,58 @@ subview_col<eT>::max() const
 
 template<typename eT>
 inline
+eT
+subview_col<eT>::min(uword& index_of_min_val) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(subview<eT>::n_elem == 0)
+    {
+    arma_debug_check(true, "min(): object has no elements");
+    
+    index_of_min_val = uword(0);
+    
+    return Datum<eT>::nan;
+    }
+  else
+    {
+    return op_min::direct_min(colmem, subview<eT>::n_elem, index_of_min_val);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+eT
+subview_col<eT>::max(uword& index_of_max_val) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(subview<eT>::n_elem == 0)
+    {
+    arma_debug_check(true, "max(): object has no elements");
+    
+    index_of_max_val = uword(0);
+    
+    return Datum<eT>::nan;
+    }
+  else
+    {
+    return op_max::direct_max(colmem, subview<eT>::n_elem, index_of_max_val);
+    }
+  }
+
+
+
+template<typename eT>
+inline
 arma_warn_unused
 uword
 subview_col<eT>::index_min() const
   {
+  arma_extra_debug_sigprint();
+  
   uword index = 0;
   
   if(subview<eT>::n_elem == 0)
@@ -2830,6 +2964,8 @@ arma_warn_unused
 uword
 subview_col<eT>::index_max() const
   {
+  arma_extra_debug_sigprint();
+  
   uword index = 0;
   
   if(subview<eT>::n_elem == 0)
@@ -3150,6 +3286,42 @@ subview_row<eT>::subvec(const uword in_col1, const uword in_col2) const
   const uword base_col1 = this->aux_col1 + in_col1;
   
   return subview_row<eT>(this->m, this->aux_row1, base_col1, subview_n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+subview_row<eT>
+subview_row<eT>::subvec(const uword start_col, const SizeMat& s)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (s.n_rows != 1), "subview_row::subvec(): given size does not specify a row vector" );
+  
+  arma_debug_check( ( (start_col >= subview<eT>::n_cols) || ((start_col + s.n_cols) > subview<eT>::n_cols) ), "subview_row::subvec(): size out of bounds" );
+  
+  const uword base_col1 = this->aux_col1 + start_col;
+  
+  return subview_row<eT>(this->m, this->aux_row1, base_col1, s.n_cols);
+  }
+
+
+
+template<typename eT>
+inline
+const subview_row<eT>
+subview_row<eT>::subvec(const uword start_col, const SizeMat& s) const
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_debug_check( (s.n_rows != 1), "subview_row::subvec(): given size does not specify a row vector" );
+  
+  arma_debug_check( ( (start_col >= subview<eT>::n_cols) || ((start_col + s.n_cols) > subview<eT>::n_cols) ), "subview_row::subvec(): size out of bounds" );
+  
+  const uword base_col1 = this->aux_col1 + start_col;
+  
+  return subview_row<eT>(this->m, this->aux_row1, base_col1, s.n_cols);
   }
 
 
