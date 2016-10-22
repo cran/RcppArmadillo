@@ -1,11 +1,26 @@
+2016-10-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.500.0.0
+
+	* DESCRIPTION (Description): Noted minimum of g+++ 4.6 or later
+
+2016-10-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/*: Upgraded to release 7.500.0 of Armadillo
+
+        * debian/*: Debian release of 0.7.500.0.0
+
+	* .gitattributes: Added
+
 2016-08-24  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version): Release 0.7.400.2.0 (CRAN)
-	* DESCRIPTION (Date): Updated
+	* DESCRIPTION (Version, Date): Release 0.7.400.2.0 (CRAN)
 
 	* inst/include/*: Finalised as 7.400.2 of Armadillo
 
         * debian/*: Debian release of 0.7.400.2.0
+
+	* .travis.yml: Switch to using run.sh for Travis CI
 
 2016-08-23  Dirk Eddelbuettel  <edd@debian.org>
 
