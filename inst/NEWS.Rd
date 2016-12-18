@@ -3,6 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.600.1.0 (2016-12-16)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.600.1 (Coup d'Etat Deluxe)
+    \itemize{
+      \item more accurate \code{eigs_sym()} and \code{eigs_gen()}
+      \item expanded \code{floor()}, \code{ceil()}, \code{round()},
+      \code{trunc()}, \code{sign()} to handle sparse matrices 
+      \item added \code{arg()}, \code{atan2()}, \code{hypot()}
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.7.500.1.0 (2016-11-11)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.500.1
+    \item Small improvement to return value treatment
+    \item The \code{sample.h} extension was updated to the newer
+    Armadillo interface. (Closes \ghit{111})
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.500.0.0 (2016-10-20)}{
   \itemize{
     \item Upgraded to Armadillo release 7.500.0 (Coup d'Etat)
