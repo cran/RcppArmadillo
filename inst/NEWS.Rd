@@ -3,9 +3,23 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.800.2.0 (2017-04-12)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.800.2 (Rogue State Redux)
+    \itemize{
+      \item The Armadillo license changed to Apache License 2.0
+    }
+    \item The \code{DESCRIPTION} file now mentions the Apache License
+    2.0, as well as the former MPL2 license used for earlier releases.
+    \item The file \code{src/init.c} file now mentions the Apache License
+    2.0, as well as the former MPL2 license used for earlier releases.
+    \item Symbol registration is enabled in \code{useDynLib}
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.700.0.0 (2017-02-07)}{
   \itemize{
-    \item Upgraded to Armadillo release 7.700.0 ("Rogue State")
+    \item Upgraded to Armadillo release 7.700.0 (Rogue State)
     \itemize{
       \item added \code{polyfit()} and \code{polyval()}
       \item added second form of \code{log_det()} to directly return the
