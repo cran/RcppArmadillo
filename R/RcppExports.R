@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 fastLm <- function(X, y) {
-    .Call('RcppArmadillo_fastLm', PACKAGE = 'RcppArmadillo', X, y)
+    .Call(RcppArmadillo_fastLm, X, y)
 }
 
 #' Report the version of Armadillo 
@@ -14,16 +14,18 @@ fastLm <- function(X, y) {
 #' or a named vector with three elements \code{major}, \code{minor} and \code{patch}.
 #' @seealso Armadillo header file \code{arma_version.hpp}.
 armadillo_version <- function(single) {
-    .Call('RcppArmadillo_armadillo_version', PACKAGE = 'RcppArmadillo', single)
+    .Call(RcppArmadillo_armadillo_version, single)
 }
 
 #' Set the Armadillo Random Number Generator to a random value
 #' 
-#' @details Depending on whether RcppArmadillo was compiled for the C++98 standard 
-#' (currently the default) or for C++11 (optional), two different RNGs may be used. 
-#' This function resets either. For C++98, the system library RNG is used. It may
-#' have poor performance, particularly on older versions of Windows. For C++11, the
-#' RNG included in its library is used.
+#' @details
+#' Depending on whether RcppArmadillo was compiled for the C++98 standard
+#' (currently the default) or for C++11 (optional), two different RNGs may be used.
+#' This function resets either. For C++98, the R programming language's RNG is used.
+#' For C++11, the RNG included in the \code{<random>} library is used only when
+#'  \code{#define ARMA_USE_CXX11_RNG} is placed before \code{#include <RcppArmadillo.h>}.
+#'  Otherwise, the R programming language's RNG will be used.
 #' @return The function is invoked for its side effect and has no return value.
 #' @note This has been found to not work as espected in \pkg{RStudio}
 #' as its code also uses the system RNG library. You may have to either
@@ -31,17 +33,19 @@ armadillo_version <- function(single) {
 #' as the one from R.
 #' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.  
 armadillo_set_seed_random <- function() {
-    invisible(.Call('RcppArmadillo_armadillo_set_seed_random', PACKAGE = 'RcppArmadillo'))
+    invisible(.Call(RcppArmadillo_armadillo_set_seed_random))
 }
 
 #' Set the Armadillo Random Number Generator to the given value
 #' 
 #' @param val The seed used to initialize Armadillo's random number generator.
-#' @details Depending on whether RcppArmadillo was compiled for the C++98 standard 
-#' (currently the default) or for C++11 (optional), two different RNGs may be used. 
-#' This function resets either. For C++98, the system library RNG is used. It may
-#' have poor performance, particularly on older versions of Windows. For C++11, the
-#' RNG included in its library is used.
+#' @details 
+#' Depending on whether RcppArmadillo was compiled for the C++98 standard
+#' (currently the default) or for C++11 (optional), two different RNGs may be used.
+#' This function resets either. For C++98, the R programming language's RNG is used.
+#' For C++11, the RNG included in the \code{<random>} library is used only when
+#'  \code{#define ARMA_USE_CXX11_RNG} is placed before \code{#include <RcppArmadillo.h>}.
+#'  Otherwise, the R programming language's RNG will be used.
 #' @return The function is invoked for its side effect and has no return value. 
 #' @note This has been found to not work as espected in \pkg{RStudio}
 #' as its code also uses the system RNG library. You may have to either
@@ -49,6 +53,6 @@ armadillo_set_seed_random <- function() {
 #' as the one from R.
 #' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.  
 armadillo_set_seed <- function(val) {
-    invisible(.Call('RcppArmadillo_armadillo_set_seed', PACKAGE = 'RcppArmadillo', val))
+    invisible(.Call(RcppArmadillo_armadillo_set_seed, val))
 }
 

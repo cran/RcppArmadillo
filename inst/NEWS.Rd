@@ -3,17 +3,39 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.900.2.0 (2017-06-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.900.2 (Evil Banana Republic)
+    \itemize{
+      \item Expanded \code{clamp()} to handle cubes
+      \item Computationally expensive element-wise functions (such as
+      \code{exp()}, \code{log()}, \code{cos()}, etc) can now be
+      automatically sped up via OpenMP; this requires a C++11/C++14
+      compiler with OpenMP 3.0+ support for GCC and clang compilers
+      \item One caveat: when using GCC, use of \code{-march=native} in
+      conjunction with \code{-fopenmp} may lead to speed regressions on
+      recent processors
+    }
+    \item Added gcc 7 to support compiler check (James Balamuta in \ghpr{128}
+    addressing \ghit{126}).
+    \item A unit test helper function for \code{rmultinom} was
+    corrected (\ghpr{133}).
+    \item OpenMP support was added to the skeleton helper in \code{inline.R}
+  }
+}
+                         
 \section{Changes in RcppArmadillo version 0.7.800.2.0 (2017-04-12)}{
   \itemize{
     \item Upgraded to Armadillo release 7.800.2 (Rogue State Redux)
     \itemize{
       \item The Armadillo license changed to Apache License 2.0
-    }
+    }   
     \item The \code{DESCRIPTION} file now mentions the Apache License
     2.0, as well as the former MPL2 license used for earlier releases.
-    \item The file \code{src/init.c} file now mentions the Apache License
-    2.0, as well as the former MPL2 license used for earlier releases.
+    \item A new file \code{init.c} was added with calls to
+    \code{R_registerRoutines()} and \code{R_useDynamicSymbols()}
     \item Symbol registration is enabled in \code{useDynLib}
+    \item The \code{fastLm} example was updated
   }
 }
 

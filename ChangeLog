@@ -1,3 +1,84 @@
+2017-06-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.2.0
+	* inst/NEWS.Rd: Idem
+
+	* README.md: Use alternate for img.shields.io GPL-2+ badge
+
+	* src/Makevars (CXX_STD): Do not enable C++11 by default to not
+	require too modern a compiler
+
+2017-06-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.900.2
+
+2017-05-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.1.2 (GH-only)
+	* src/RcppExports.cpp: Regenerated under Rcpp 0.12.11 with included
+	package registration
+	* R/RcppExports.R: Regenerated under Rcpp 0.12.11 with unquoted registered
+	function calls
+	* src/init.c: Removed
+
+	* README.md: Switch to https for a few badge URLs
+	* R/inline.R (inlineCxxPlugin): Use '::' to import from Rcpp
+
+2017-05-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/inline.R (inlineCxxPlugin): Also enable OpenMP as a compile-time option
+
+2017-05-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/inline.R (inlineCxxPlugin): Support OpenMP
+	* src/Makevars: Ditto
+	* src/Makevars.win: Ditto
+	* inst/skeleton/Makevars: Ditto
+	* inst/skeleton/Makevars.win: Ditto
+
+2017-05-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.1.1 (GH-only)
+	* inst/unitTests/cpp/rmultinom.cpp: More careful use of Armadillo
+	vectors and Rcpp vectors
+
+2017-05-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.1.0 (GH-only)
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.900.1
+
+2017-05-10  James Joseph Balamuta  <balamut2@illinois.edu>
+
+	* man/armadillo_set_seed.Rd: Clarified RNG usage in C++98 and C++11 modes.
+	* man/armadillo_set_seed_random.Rd: idem
+	* R/RcppExports.R: idem
+	* src/RcppArmadillo.cpp: idem
+
+2017-05-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.900.0.0 (GH-only)
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.900.0
+
+2017-05-06  James Joseph Balamuta  <balamut2@illinois.edu>
+
+	* configure.ac: Added gcc7 to viable gcc compiler list
+	* configure: Idem
+
+2017-05-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Test release 0.7.899.0.0
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.899.0
+
+	* src/Makevars (PKG_LIBS): Enable OpenMP and C++11
+
+2017-04-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/Alt_R_RNG.h (set_seed): Add a simple
+	null-op to suppress a -Wunused warning
+
 2017-04-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.800.2.0
