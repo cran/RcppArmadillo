@@ -3,6 +3,63 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.7.960.1.0 (2017-08-11)}{
+  \itemize{
+    \item Upgraded to Armadillo release 7.960.1 (Northern Banana Republic Deluxe)
+    \itemize{
+      \item faster \code{randn()} when using OpenMP (NB: usually omitted
+      when used fromR)
+      \item faster \code{gmm_diag} class, for Gaussian mixture models
+      with diagonal covariance matrices
+      \item added \code{.sum_log_p()} to the \code{gmm_diag} class
+      \item added \code{gmm_full} class, for Gaussian mixture models
+      with full covariance matrices 
+      \item expanded \code{.each_slice()} to optionally use OpenMP for
+      multi-threaded execution
+    }
+    \item Upgraded to Armadillo release 7.950.0 (Northern Banana Republic)
+    \itemize{
+      \item expanded \code{accu()} and \code{sum()} to use OpenMP for
+      processing expressions with computationally expensive element-wise
+      functions
+      \item expanded \code{trimatu()} and \code{trimatl()} to allow
+      specification of the diagonal which delineates the boundary of the
+      triangular part
+    }
+    \item Enhanced support for sparse matrices (Binxiang Ni as part of
+    Google Summer of Code 2017)
+    \itemize{
+      \item Add support for \code{dtCMatrix} and \code{dsCMatrix}
+      (\ghpr{135})
+      \item Add conversion and unit tests for \code{dgT}, \code{dtT} and
+      \code{dsTMatrix} (\ghpr{136})
+      \item Add conversion and unit tests for \code{dgR}, \code{dtR} and
+      \code{dsRMatrix} (\ghpr{139})
+      \item Add conversion and unit tests for \code{pMatrix} and
+      \code{ddiMatrix} (\ghpr{140})
+      \item Rewrite conversion for \code{dgT}, \code{dtT} and
+      \code{dsTMatrix}, and add file-based tests (\ghpr{142})
+      \item Add conversion and unit tests for \code{indMatrix} (\ghpr{144})
+      \item Rewrite conversion for \code{ddiMatrix} (\ghpr{145})
+      \item Add a warning message for matrices that cannot be converted
+      (\ghpr{147}) 
+      \item Add new vignette for sparse matrix support (\ghpr{152}; Dirk
+      in \ghpr{153})
+      \item Add support for sparse matrix conversion from Python SciPy
+      (\ghpr{158} addressing \ghit{141})
+    }
+    \item Optional return of row or column vectors in collapsed form if
+    appropriate \code{#define} is set (Serguei Sokol in \ghpr{151} and
+    \ghpr{154}) 
+    \item Correct \code{speye()} for non-symmetric cases (Qiang Kou in
+    \ghpr{150} closing \ghit{149}).
+    \item Ensure tests using Scientific Pyton and reticulate are properly
+    conditioned on the packages being present.
+    \item Added \code{.aspell/} directory with small local directory now
+    supported by R-devel.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.7.900.2.0 (2017-06-02)}{
   \itemize{
     \item Upgraded to Armadillo release 7.900.2 (Evil Banana Republic)

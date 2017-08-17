@@ -62,11 +62,19 @@ namespace Rcpp{
     }
 
     template <typename T> SEXP wrap( const arma::Col<T>& data ){
+#if defined(RCPP_ARMADILLO_RETURN_COLVEC_AS_VECTOR) || defined(RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR)
+        return RcppArmadillo::arma_wrap( data ) ;
+#else
         return RcppArmadillo::arma_wrap( data, Dimension( data.n_elem, 1) ) ;
+#endif
     }
 
     template <typename T> SEXP wrap( const arma::Row<T>& data ){
+#if defined(RCPP_ARMADILLO_RETURN_ROWVEC_AS_VECTOR) || defined(RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR)
+        return RcppArmadillo::arma_wrap( data ) ;
+#else
         return RcppArmadillo::arma_wrap(data, Dimension( 1, data.n_elem ) ) ;
+#endif
     }
 
     template <typename T> SEXP wrap( const arma::Cube<T>& data ){
@@ -87,14 +95,15 @@ namespace Rcpp{
         IntegerVector i(sm.row_indices, sm.row_indices + sm.n_nonzero);
         IntegerVector p(sm.col_ptrs, sm.col_ptrs + sm.n_cols+1 ) ;
 
-        std::string klass ;
-        switch( RTYPE ){
-            case REALSXP: klass = "dgCMatrix" ; break ;
-            // case INTSXP : klass = "igCMatrix" ; break ; class not exported
-            case LGLSXP : klass = "lgCMatrix" ; break ;
-            default:
-                throw std::invalid_argument( "RTYPE not matched in conversion to sparse matrix" ) ;
-        }
+        std::string klass = "dgCMatrix";
+        // Since logical sparse matrix is not supported for now, the conditional statement is not currently used. 
+        // switch( RTYPE ){
+        //     case REALSXP: klass = "dgCMatrix" ; break ;
+        //     // case INTSXP : klass = "igCMatrix" ; break ; class not exported
+        //     case LGLSXP : klass = "lgCMatrix" ; break ;
+        //     default:
+        //         throw std::invalid_argument( "RTYPE not matched in conversion to sparse matrix" ) ;
+        // }
         S4 s(klass);
         s.slot("i")   = i;
         s.slot("p")   = p;

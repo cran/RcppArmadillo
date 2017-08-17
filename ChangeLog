@@ -1,3 +1,166 @@
+2017-08-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.7.960.1.0
+	* inst/NEWS.Rd: Idem
+
+	* DESCRIPTION (Author): New co-author Binxinag Ni
+
+2017-08-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/*: Updated to upstream release 7.960.1
+
+	* .aspell/: Added for new R-devel spell checker interface
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.3
+
+2017-08-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.scipy2r.R: Condition test on having SciPy
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.2
+
+2017-08-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Rolled to pre-release 0.7.959.0.1
+	in preparation of 0.7.960.0.0 release "real soon now"
+
+	* tests/doRUnit.R: Small edits and improvements
+
+	* inst/unitTests/runit.sparseConversion.R: Run Kronecker products
+	once in setup under suppressMessages to suppress dispatch messages
+
+2017-08-07  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.scipy2r.R: Whitespace edits
+	* R/SciPy2R.R: Idem; also renamed from py2R, removed one require()
+
+	* .travis.yml (install): Also install reticulate and (r-cran-)jsonlite
+
+2017-08-07  Binxiang Ni  <binxiangni@gmail.com>
+
+	* R/py2r.R: Python to R conversion
+	* inst/unitTests/runit.scipy2r.R: Unit tests
+
+2017-08-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Rolled to fictional pre-release
+	number 0.7.959.0.0 is preparation of 0.7.960.0.0 release
+
+	* inst/NEWS.Rd: Expanded description of GSoC 2017 work by Binxiang
+
+2017-08-03  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloWrap.h: Comment-out unreachable code
+
+2017-08-02  Qiang Kou (KK) <qkou@qkou.info>
+
+	* inst/include/armadillo_bits/SpMat_meat.hpp: Correct use of 'p'
+	in dgCMatrix (by pulling in upstream patch from Armadillo)
+	* inst/unitTests/cpp/sparse.cpp: New speye() unit tests
+	* inst/unitTests/runit.sparse.R: Ditto
+
+2017-08-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo*: Upgraded to Armadillo 7.960.0
+
+2017-08-01  Serguei Sokol  <sokol@insa-toulouse.fr>
+
+	* inst/include/RcppArmadilloWrap.h: Allow collapsed returns of row
+	or column vector if appropriate #define is set
+
+	* inst/unitTests/runit.RcppArmadillo.R: Corresponding unit test
+	* inst/unitTests/cpp/any_as_vec.cpp: Ditto
+	* inst/unitTests/cpp/armadillo.cpp: Ditto
+	* inst/unitTests/cpp/colrow_as_vec.cpp: Ditto
+
+	* R/unit.test.R: Generalization for test helper
+
+2017-07-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/RcppArmadillo-sparseMatrix.Rnw: Use highlight engine
+
+2017-07-31  Binxiang Ni  <binxiangni@gmail.com>
+
+	* vignettes/RcppArmadillo-sparseMatrix.Rnw: New vignette
+
+2017-07-11  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add a stop message for matrices
+	that cannot be converted
+	* inst/unitTests/runit.sparseConversion.R: Add unit tests for matrices
+	that cannot be converted
+
+2017-07-10  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Rewrite conversion for ddiMatrix
+	to support an extreme case
+	* inst/unitTests/runit.sparse.R: Move unit tests for the conversion
+	for sparse matrices to runit.sparseConversion.R
+	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for
+	the conversion for ddiMatrix
+
+2017-07-08  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add conversion for indMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for indMatrix
+	* inst/unitTests/runit.sparseConversion.R: Add more unit tests for
+	the conversion for indMatrix
+
+2017-07-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.sparseConversion.R: Use text= in read.table
+
+2017-07-04  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Rewrite conversion for dgT, dtT
+	& dsTMatrix to support two extreme cases
+	* inst/unitTests/runit.sparseConversion.R: Add new unit tests
+	for conversion of sparse matrices
+
+2017-06-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/AUTHORS: Added
+	* inst/COPYRIGHTS: Idem
+
+2017-06-21  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add conversion for pMatrix &
+	ddiMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for pMatrix & ddiMatrix
+
+2017-06-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* .travis.yml (group): Added as required by Travis CI
+
+2017-06-19  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add conversion for dgR, dtR &
+	dsRMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for dgR, dtR & dsRMatrix
+
+2017-06-18  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add conversion for dgT, dtT &
+	dsTMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for dgT, dtT & dsTMatrix
+
+2017-06-17  Binxiang Ni  <binxiangni@gmail.com>
+
+	* inst/include/RcppArmadilloAs.h: Add conversion for dtC & dsCMatrix
+	* inst/unitTests/runit.sparse.R: Add unit tests for the conversion
+	for dtC & dsCMatrix
+
+2017-06-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Whitespace changes
+	* configure: Regenerated
+
 2017-06-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 0.7.900.2.0

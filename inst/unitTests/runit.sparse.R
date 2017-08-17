@@ -31,10 +31,9 @@ if (.runThisTest) {
               " 0  22   0   0  25  26",
               " 0   0  33  34   0  36",
               "41   0  43  44   0  46")
-    M <- as.matrix(read.table(textConnection(mtxt)))
+    M <- as.matrix(read.table(text=mtxt))
     dimnames(M) <- NULL
     SM <- Matrix(M, sparse=TRUE)
-
 
     test.as.sparse <- function() {
         checkEquals(SM, asSpMat(SM), msg="as<sp_mat>")
@@ -53,7 +52,7 @@ if (.runThisTest) {
         mtxt <- c("0 0 1",
                   "0 2 0",
                   "3 0 0")
-        M <- as.matrix(read.table(textConnection(mtxt)))
+        M <- as.matrix(read.table(text=mtxt))
         dimnames(M) <- NULL
         SM <- Matrix(M, sparse=TRUE)
 
@@ -91,5 +90,16 @@ if (.runThisTest) {
         l  <- list(SM, SM)
         checkEquals(l, sparseList(l), msg="sparseList")
     }
-   
+    
+    test.speye <- function() {
+      SM <- speye(4, 4)
+      SM2 <- sparseMatrix(i = c(1:4), j = c(1:4), x = 1)
+      checkEquals(SM, SM2, msg="speye")
+      SM <- speye(3, 5)
+      SM2 <- sparseMatrix(i = c(1:3), j = c(1:3), x = 1, dims = c(3, 5))
+      checkEquals(SM, SM2, msg="speye")
+      SM <- speye(5, 3)
+      SM2 <- sparseMatrix(i = c(1:3), j = c(1:3), x = 1, dims = c(5, 3))
+      checkEquals(SM, SM2, msg="speye")
+    }
 }

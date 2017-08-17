@@ -77,7 +77,9 @@ namespace traits {
     private:
         MATRIX mat ;
     };
-         
+    
+    // 14 June 2017
+    // Add support for sparse matrices other than dgCMatrix
     template <typename T>
     class Exporter< arma::SpMat<T> > {
     public:
@@ -87,28 +89,514 @@ namespace traits {
             const int  RTYPE = Rcpp::traits::r_sexptype_traits<T>::rtype;
         
             IntegerVector dims = mat.slot("Dim");
-            IntegerVector i = mat.slot("i") ;
-            IntegerVector p = mat.slot("p") ;     
-            Vector<RTYPE> x = mat.slot("x") ;
+            int nrow = dims[0];
+            int ncol = dims[1];
             
-            // Creating an empty SpMat            
-            arma::SpMat<T> res((unsigned) dims[0], (unsigned) dims[1]);
+            // Creating an empty SpMat
+            arma::SpMat<T> res(static_cast<unsigned>(nrow), static_cast<unsigned>(ncol));
             
-            // Making space for the elements
-            res.mem_resize((unsigned) x.size());
-            
-            // Copying elements
-            std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
-            std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
-            std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            // Get the type of sparse matrix
+            std::string type = Rcpp::as<std::string>(mat.slot("class"));
+            if (type == "dgCMatrix") {
+                IntegerVector i = mat.slot("i");
+                IntegerVector p = mat.slot("p");
+                Vector<RTYPE> x = mat.slot("x");
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "dtCMatrix") {
+                IntegerVector i = mat.slot("i");
+                IntegerVector p = mat.slot("p");
+                Vector<RTYPE> x = mat.slot("x");
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (diag == "U") {
+                    res.diag().ones();
+                }
+            }
+            else if (type == "dsCMatrix") {
+                IntegerVector i = mat.slot("i");
+                IntegerVector p = mat.slot("p");
+                Vector<RTYPE> x = mat.slot("x");
+                std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (uplo == "U") {
+                    res = symmatu(res);
+                } else {
+                    res = symmatl(res);
+                }
+            }
+            else if (type == "dgTMatrix") {
+                IntegerVector ti = mat.slot("i");
+                IntegerVector tj = mat.slot("j");
+                Vector<RTYPE> tx = mat.slot("x");
+                
+                // Create a map to sort the i, j, x
+                typedef std::pair<int, int> Key;
+                typedef std::map<Key, double> Map;
+                Map jix;
+                int tnnz = tx.size();
+                for(int idx = 0; idx < tnnz; idx++){
+                    Key p(tj[idx], ti[idx]);
+                    if (jix.find(p) != jix.end()) {
+                        jix[p] += tx[idx];
+                    } else {
+                        jix[p] = tx[idx];
+                    }
+                }
+                
+                // Get the new i, j, x;
+                int nnz = jix.size();
+                std::vector<int> i;
+                std::vector<int> j;
+                std::vector<double> x;
+                IntegerVector p = IntegerVector(ncol + 1);
+                
+                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
+                    j.push_back((tmp -> first).first);
+                    i.push_back((tmp -> first).second);
+                    x.push_back(tmp -> second);
+                }
+                
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = j[idx];
+                    p[col + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "dtTMatrix") {
+                IntegerVector ti = mat.slot("i");
+                IntegerVector tj = mat.slot("j");
+                Vector<RTYPE> tx = mat.slot("x");
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+                
+                // Create a map to sort the i, j, x
+                typedef std::pair<int, int> Key;
+                typedef std::map<Key, double> Map;
+                Map jix;
+                int tnnz = tx.size();
+                for(int idx = 0; idx < tnnz; idx++){
+                    Key p(tj[idx], ti[idx]);
+                    if (jix.find(p) != jix.end()) {
+                        jix[p] += tx[idx];
+                    } else {
+                        jix[p] = tx[idx];
+                    }
+                }
+                
+                // Get the new i, j, x;
+                int nnz = jix.size();
+                std::vector<int> i;
+                std::vector<int> j;
+                std::vector<double> x;
+                IntegerVector p = IntegerVector(ncol + 1);
+                
+                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
+                    j.push_back((tmp -> first).first);
+                    i.push_back((tmp -> first).second);
+                    x.push_back(tmp -> second);
+                }
+                
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = j[idx];
+                    p[col + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (diag == "U"){
+                    res.diag().ones();
+                }
+            }
+            else if (type == "dsTMatrix") {
+                IntegerVector ti = mat.slot("i");
+                IntegerVector tj = mat.slot("j");
+                Vector<RTYPE> tx = mat.slot("x");
+                std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
+                
+                // Create a map to sort the i, j, x
+                typedef std::pair<int, int> Key;
+                typedef std::map<Key, double> Map;
+                Map jix;
+                int tnnz = tx.size();
+                for(int idx = 0; idx < tnnz; idx++){
+                    Key p(tj[idx], ti[idx]);
+                    if (jix.find(p) != jix.end()) {
+                        jix[p] += tx[idx];
+                    } else {
+                        jix[p] = tx[idx];
+                    }
+                }
+                
+                // Get the new i, j, x;
+                int nnz = jix.size();
+                std::vector<int> i;
+                std::vector<int> j;
+                std::vector<double> x;
+                IntegerVector p = IntegerVector(ncol + 1);
+                
+                for(Map::iterator tmp = jix.begin(); tmp != jix.end(); tmp++){
+                    j.push_back((tmp -> first).first);
+                    i.push_back((tmp -> first).second);
+                    x.push_back(tmp -> second);
+                }
+                
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = j[idx];
+                    p[col + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+              
+                if (uplo == "U") {
+                    res = symmatu(res);
+                } else {
+                    res = symmatl(res);
+                }
+            }
+            else if (type == "dgRMatrix") {
+                IntegerVector rj = mat.slot("j");
+                IntegerVector rp = mat.slot("p");
+                Vector<RTYPE> rx = mat.slot("x");
+              
+                int nnz = rx.size();
+                IntegerVector i = IntegerVector(nnz);
+                IntegerVector p = IntegerVector(ncol + 1);
+                Vector<RTYPE> x = Vector<RTYPE>(nnz);
+              
+                // Count the nnz in each column
+                for(int n = 0; n < nnz; n++){
+                    p[rj[n] + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // https://github.com/scipy/scipy/blob/master/scipy/sparse/sparsetools/csr.h#L436
+                // Calculate i&x
+                for(int row = 0; row < nrow; row++){
+                    for(int tmp = rp[row]; tmp < rp[row + 1]; tmp++){
+                        int col = rj[tmp];
+                        int dest = p[col];
+                    
+                        i[dest] = row;
+                        x[dest] = rx[tmp];
+                    
+                        p[col]++;
+                    }
+                }
+                
+                // Fix the p
+                for(int col = 0, last = 0; col <= ncol; col++){
+                    int tmp  = p[col];
+                    p[col] = last;
+                    last = tmp;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "dtRMatrix") {
+                IntegerVector rj = mat.slot("j");
+                IntegerVector rp = mat.slot("p");
+                Vector<RTYPE> rx = mat.slot("x");
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+                
+                int nnz = rx.size();
+                IntegerVector i = IntegerVector(nnz);
+                IntegerVector p = IntegerVector(ncol + 1);
+                Vector<RTYPE> x = Vector<RTYPE>(nnz);
+                
+                // Count the nnz in each column
+                for(int n = 0; n < nnz; n++){
+                    p[rj[n] + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // https://github.com/scipy/scipy/blob/master/scipy/sparse/sparsetools/csr.h#L436
+                // Calculate i&x
+                for(int row = 0; row < nrow; row++){
+                    for(int tmp = rp[row]; tmp < rp[row + 1]; tmp++){
+                        int col = rj[tmp];
+                        int dest = p[col];
+                    
+                        i[dest] = row;
+                        x[dest] = rx[tmp];
+                    
+                        p[col]++;
+                    }
+                }
+                
+                // Fix the p
+                for(int col = 0, last = 0; col <= ncol; col++){
+                    int tmp  = p[col];
+                    p[col] = last;
+                    last = tmp;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (diag == "U"){
+                    res.diag().ones();
+                }
+            }
+            else if (type == "dsRMatrix") {
+                IntegerVector rj = mat.slot("j");
+                IntegerVector rp = mat.slot("p");
+                Vector<RTYPE> rx = mat.slot("x");
+                std::string uplo = Rcpp::as<std::string>(mat.slot("uplo"));
+                
+                int nnz = rx.size();
+                IntegerVector i = IntegerVector(nnz);
+                IntegerVector p = IntegerVector(ncol + 1);
+                Vector<RTYPE> x = Vector<RTYPE>(nnz);
+                
+                // Count the nnz in each column
+                for(int n = 0; n < nnz; n++){
+                    p[rj[n] + 1]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // https://github.com/scipy/scipy/blob/master/scipy/sparse/sparsetools/csr.h#L436
+                // Calculate i&x
+                for(int row = 0; row < nrow; row++){
+                    for(int tmp = rp[row]; tmp < rp[row + 1]; tmp++){
+                        int col = rj[tmp];
+                        int dest = p[col];
+                    
+                        i[dest] = row;
+                        x[dest] = rx[tmp];
+                    
+                        p[col]++;
+                    }
+                }
+                
+                // Fix the p
+                for(int col = 0, last = 0; col <= ncol; col++){
+                    int tmp  = p[col];
+                    p[col] = last;
+                    last = tmp;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+                
+                if (uplo == "U") {
+                    res = symmatu(res);
+                } else {
+                    res = symmatl(res);
+                }
+            }
+            else if (type == "indMatrix") {
+                std::vector<int> i;
+                IntegerVector p(ncol + 1);
+                IntegerVector x(nrow, 1);
+                IntegerVector perm = mat.slot("perm");
+                
+                typedef std::pair<int, int> Key;
+                typedef std::set<Key> Set;
+                Set permiSet;
+                
+                // Sort i;
+                int nnz = perm.size();
+                for(int tmp = 0; tmp < nnz; tmp++){
+                    Key permi(perm[tmp], tmp);
+                    permiSet.insert(permi);
+                }
+                
+                for(Set::iterator tmp = permiSet.begin(); tmp != permiSet.end(); tmp++){
+                    i.push_back(tmp -> second);
+                }
+                
+                // Count the number of nnz in each column
+                for(int idx = 0; idx < nnz; idx++){
+                    int col = perm[idx];
+                    p[col]++;
+                }
+                
+                // Cumsum p
+                for(int col = 0, cumsum = 0; col < ncol + 1; col++){
+                    cumsum += p[col];
+                    p[col] = cumsum;
+                }
+                
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+                
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "pMatrix") {
+                std::vector<int> i;
+                IntegerVector p(ncol + 1);
+                IntegerVector x(ncol, 1);
+                IntegerVector perm = mat.slot("perm");
+                
+                // Sort the row number by the column number
+                typedef std::map <int, int> Map;
+                Map colrow;
+                for(int tmp = 0; tmp < perm.size(); tmp++){
+                    colrow[perm[tmp]] = tmp;
+                }
+                
+                // Calculate i
+                for(Map::iterator tmp = colrow.begin(); tmp != colrow.end(); tmp++){
+                    i.push_back(tmp -> second);
+                }
+              
+                // Calculate p
+                for(int tmp = 0; tmp < p.size(); tmp++){
+                    p[tmp] = tmp;
+                }
+              
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+              
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else if (type == "ddiMatrix") {
+                std::vector<int> i;
+                std::vector<int> p;
+                std::vector<double> x;
+                std::string diag = Rcpp::as<std::string>(mat.slot("diag"));
+                
+                if (diag == "U") {
+                    for(int idx = 0; idx < ncol; idx++){
+                        i.push_back(idx);
+                        p.push_back(idx);
+                        x.push_back(1);
+                    }
+                    p.push_back(ncol);
+                } else {
+                    Vector<RTYPE> tmpx = mat.slot("x");
+                    int tmpp = 0;
+                    for(int idx = 0; idx < ncol; idx++){
+                        p.push_back(tmpp);
+                        if (tmpx[idx] != 0) {
+                            i.push_back(idx);
+                            x.push_back(tmpx[idx]);
+                            tmpp++;
+                        }
+                    }
+                    p.push_back(tmpp);
+                }
+
+                // Making space for the elements
+                res.mem_resize(static_cast<unsigned>(x.size()));
+
+                // Copying elements
+                std::copy(i.begin(), i.end(), arma::access::rwp(res.row_indices));
+                std::copy(p.begin(), p.end(), arma::access::rwp(res.col_ptrs));
+                std::copy(x.begin(), x.end(), arma::access::rwp(res.values));
+            }
+            else {
+                Rcpp::stop(type + " is not supported.");
+            }
             
             // Setting the sentinel
-            arma::access::rw(res.col_ptrs[(unsigned) dims[1] + 1]) =
+            arma::access::rw(res.col_ptrs[static_cast<unsigned>(ncol + 1)]) =
               std::numeric_limits<arma::uword>::max();
                         
             return res;
         }
-                
+        
+        
     private:
         S4 mat ;
     } ;
