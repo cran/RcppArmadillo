@@ -23,9 +23,9 @@
 #define RcppArmadillo__RcppArmadilloConfigGenerated__h
 
 // value on next line may be changed between #undef and #define by the configure script
-@HAVE_GOOD_LAPACK@ @ARMA_CRIPPLED_LAPACK@
+@ARMA_LAPACK@
 
-// from configure test for OpenMP
-@HAVE_OPENMP@
+// from configure test for OpenMP based on how R is configured, and whether g++ new enough
+@ARMA_HAVE_OPENMP@
 
 #endif

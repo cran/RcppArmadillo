@@ -3,6 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.300.1.0 (2017-12-04)}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.300.1 (Tropical Shenanigans)
+    \itemize{
+      \item faster handling of band matrices by \code{solve()}
+      \item faster handling of band matrices by \code{chol()}
+      \item faster \code{randg()} when using OpenMP
+      \item added \code{normpdf()}
+      \item expanded \code{.save()} to allow appending new datasets to existing HDF5 files
+    }
+    \item Includes changes made in several earlier GitHub-only releases
+    (versions 0.8.300.0.0, 0.8.200.2.0 and 0.8.200.1.0).
+    \item Conversion from \code{simple_triplet_matrix} is now supported
+    (Serguei Sokol in \ghpr{192}).  
+    \item Updated configure code to check for g++ 5.4 or later to enable OpenMP.
+    \item Updated the skeleton package to current packaging standards
+    \item Suppress warnings from Armadillo about missing OpenMP support
+    and \code{-fopenmp} flags by setting \code{ARMA_DONT_PRINT_OPENMP_WARNING}
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.100.1.0 (2017-10-10)}{
   \itemize{
     \item Upgraded to Armadillo release 8.100.1 (Feral Pursuits)
