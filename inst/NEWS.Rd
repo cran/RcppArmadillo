@@ -3,9 +3,35 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.500.0 (2018-04-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.500 (Caffeine Raider)
+    \itemize{
+      \item faster handling of sparse matrices by \code{kron()} and \code{repmat()}
+      \item faster transpose of sparse matrices
+      \item faster element access in sparse matrices
+      \item faster row iterators for sparse matrices
+      \item faster handling of compound expressions by \code{trace()}
+      \item more efficient handling of aliasing in submatrix views
+      \item expanded \code{normalise()} to handle sparse matrices
+      \item expanded \code{.transform()} and \code{.for_each()} to handle sparse matrices
+      \item added \code{reverse()} for reversing order of elements
+      \item added \code{repelem()} for replicating elements
+      \item added \code{roots()} for finding the roots of a polynomial
+    }
+    \item Fewer LAPACK compile-time guards are used, new unit tests for underlying
+    features have been added (Keith O'Hara in \ghpr{211} addressing \ghit{207}).
+    \item The configure check for LAPACK features has been updated
+    accordingly (Keith O'Hara in \ghpr{214} addressing \ghit{213}).
+    \item The compile-time check for \code{g++} is now more robust to
+    minimal shell versions (\ghpr{217} addressing \ghit{216}).
+    \item Compiler tests to were added for macOS (Keith O'Hara in \ghpr{219}).
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.400.0.0 (2018-02-19)}{
   \itemize{
-    \item Upgraded to Armadillo release 8.400.rc2 (Entropy Bandit)
+    \item Upgraded to Armadillo release 8.400.0 (Entropy Bandit)
     \itemize{
       \item faster handling of sparse matrices by \code{repmat()}
       \item faster loading of CSV files
