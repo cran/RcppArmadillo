@@ -3,6 +3,43 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.8.600.0.0 (2018-06-28)}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.600.0 (Sabretooth Rugrat)
+    \itemize{
+      \item added \code{hess()} for Hessenberg decomposition
+      \item added \code{.row()}, \code{.rows()}, \code{.col()},
+      \code{.cols()} to subcube views 
+      \item expanded \code{.shed_rows()} and \code{.shed_cols()} to
+      handle cubes 
+      \item expanded \code{.insert_rows()} and \code{.insert_cols()} to
+      handle cubes 
+      \item expanded subcube views to allow non-contiguous access to
+      slices 
+      \item improved tuning of sparse matrix element access operators
+      \item faster handling of tridiagonal matrices by \code{solve()}
+      \item faster multiplication of matrices with differing element
+      types when using OpenMP 
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.8.500.1.1 (2018-05-17) [GH only]}{
+  \itemize{
+    \item Upgraded to Armadillo release 8.500.1 (Caffeine Raider)
+    \itemize{
+      \item bug fix for banded matricex
+    }
+    \item Added \code{slam} to Suggests: as it is used in two unit test
+    functions [CRAN requests]
+    \item The \code{RcppArmadillo.package.skeleton()} function now works
+    with \code{example_code=FALSE} when \CRANpkg{pkgKitten} is present
+    (Santiago Olivella in \ghpr{231} fixing \ghpr{229})
+    \item The LAPACK tests now cover band matrix solvers (Keith O'Hara
+    in \ghpr{230}).
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.8.500.0 (2018-04-21)}{
   \itemize{
     \item Upgraded to Armadillo release 8.500 (Caffeine Raider)

@@ -640,7 +640,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
         {
         const uword* pos_ptr = std::lower_bound(start_ptr, end_ptr, row + aux_row);
 
-        const uword offset = (pos_ptr - start_ptr);
+        const uword offset = uword(pos_ptr - start_ptr);
 
         if (iterator_base::M->m.row_indices[col_offset + offset] == row + aux_row)
           {
@@ -723,7 +723,7 @@ SpSubview<eT>::const_row_iterator::const_row_iterator(const SpSubview<eT>& in_M,
 
         // This is the number of elements in the subview with row index less
         // than in_row.
-        cur_pos += (pos_ptr - first_subview_ptr);
+        cur_pos += uword(pos_ptr - first_subview_ptr);
 
         if (pos_ptr != end_ptr && (*pos_ptr) < aux_row + iterator_base::M->n_rows)
           {
@@ -785,9 +785,9 @@ SpSubview<eT>::const_row_iterator::operator++()
     return *this;
     }
 
-  const uword aux_col = iterator_base::M->aux_col1;
-  const uword aux_row = iterator_base::M->aux_row1;
-  const uword n_cols = iterator_base::M->n_cols;
+  const uword aux_col  = iterator_base::M->aux_col1;
+  const uword aux_row  = iterator_base::M->aux_row1;
+  const uword M_n_cols = iterator_base::M->n_cols;
 
   // Otherwise, we need to search.  We have to loop over all of the columns in
   // the subview.
@@ -795,7 +795,7 @@ SpSubview<eT>::const_row_iterator::operator++()
   uword next_min_col = 0;
   uword next_actual_pos = 0;
 
-  for (uword col = iterator_base::internal_col + 1; col < n_cols; ++col)
+  for (uword col = iterator_base::internal_col + 1; col < M_n_cols; ++col)
     {
     // Find the first element with row greater than or equal to row.
     const uword      col_offset = iterator_base::M->m.col_ptrs[col + aux_col    ];

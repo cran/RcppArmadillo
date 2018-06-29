@@ -351,12 +351,17 @@ spglue_times_misc::sparse_times_dense(Mat<typename T1::elem_type>& out, const T1
       
       if(A_n_rows == B_n_cols)
         {
-        out = Bt * At;
-        out = strans(out);  // since 'out' is square-sized, this will do an inplace transpose
+        spglue_times_misc::dense_times_sparse(out, Bt, At);
+        
+        op_strans::apply_mat(out, out);  // since 'out' is square-sized, this will do an inplace transpose
         }
       else
         {
-        out = strans(Bt * At);
+        Mat<eT> tmp;
+        
+        spglue_times_misc::dense_times_sparse(tmp, Bt, At);
+        
+        op_strans::apply_mat(out, tmp);
         }
       }
     else
@@ -437,7 +442,7 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
             const uword col_offset_delta = col_offset_2 - col_offset_1;
             
             const uvec    indices(const_cast<uword*>(&(Y.row_indices[col_offset_1])), col_offset_delta, false, false);
-            const Col<eT>   Y_col(const_cast<   eT*>(&(Y.values[col_offset_1])     ), col_offset_delta, false, false);
+            const Col<eT>   Y_col(const_cast<   eT*>(&(     Y.values[col_offset_1])), col_offset_delta, false, false);
             
             out.col(i) = X.cols(indices) * Y_col;
             }
