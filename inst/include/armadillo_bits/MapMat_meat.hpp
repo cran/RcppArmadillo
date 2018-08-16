@@ -426,7 +426,7 @@ MapMat<eT>::operator[](const uword index)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::operator[](const uword index) const
@@ -455,7 +455,7 @@ MapMat<eT>::operator()(const uword index)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword index) const
@@ -486,7 +486,7 @@ MapMat<eT>::at(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::at(const uword in_row, const uword in_col) const
@@ -519,7 +519,7 @@ MapMat<eT>::operator()(const uword in_row, const uword in_col)
 
 
 template<typename eT>
-arma_inline
+inline
 arma_warn_unused
 eT
 MapMat<eT>::operator()(const uword in_row, const uword in_col) const
@@ -891,6 +891,38 @@ MapMat_val<eT>::operator eT() const
 
 template<typename eT>
 arma_inline
+typename get_pod_type<eT>::result
+MapMat_val<eT>::real() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const MapMat<eT>& const_parent = parent;
+  
+  return T( access::tmp_real( const_parent.operator[](index) ) );
+  }
+
+
+
+template<typename eT>
+arma_inline
+typename get_pod_type<eT>::result
+MapMat_val<eT>::imag() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const MapMat<eT>& const_parent = parent;
+  
+  return T( access::tmp_imag( const_parent.operator[](index) ) );
+  }
+
+
+
+template<typename eT>
+arma_inline
 void
 MapMat_val<eT>::operator=(const MapMat_val<eT>& x)
   {
@@ -1105,12 +1137,41 @@ SpMat_MapMat_val<eT>::operator eT() const
   {
   arma_extra_debug_sigprint();
   
-  const  SpMat<eT>& const_s_parent = s_parent;
-  const MapMat<eT>& const_m_parent = m_parent;
+  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
   
-  // get the element from the cache if it has more recent data than CSC
+  return const_s_parent.get_value(row,col);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpMat_MapMat_val<eT>::real() const
+  {
+  arma_extra_debug_sigprint();
   
-  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
+  
+  return T( access::tmp_real( const_s_parent.get_value(row,col) ) );
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpMat_MapMat_val<eT>::imag() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = s_parent;  // declare as const for clarity of intent
+  
+  return T( access::tmp_imag( const_s_parent.get_value(row,col) ) );
   }
 
 
@@ -1459,12 +1520,41 @@ SpSubview_MapMat_val<eT>::operator eT() const
   {
   arma_extra_debug_sigprint();
   
-  const  SpMat<eT>& const_s_parent = v_parent.m;
-  const MapMat<eT>& const_m_parent = m_parent;
+  const SpMat<eT>& const_s_parent = v_parent.m;  // declare as const for clarity of intent
   
-  // get the element from the cache if it has more recent data than CSC
+  return const_s_parent.get_value(row,col);
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpSubview_MapMat_val<eT>::real() const
+  {
+  arma_extra_debug_sigprint();
   
-  return (const_s_parent.sync_state == 1) ? const_m_parent.at(row,col) : const_s_parent.get_value(row,col);
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = v_parent.m;  // declare as const for clarity of intent
+  
+  return T( access::tmp_real( const_s_parent.get_value(row,col) ) );
+  }
+
+
+
+template<typename eT>
+inline
+typename get_pod_type<eT>::result
+SpSubview_MapMat_val<eT>::imag() const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const SpMat<eT>& const_s_parent = v_parent.m;  // declare as const for clarity of intent
+  
+  return T( access::tmp_imag( const_s_parent.get_value(row,col) ) );
   }
 
 
