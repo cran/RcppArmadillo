@@ -14,32 +14,23 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_spones
+//! \addtogroup spglue_elem_helper
 //! @{
 
 
 
-//! Generate a sparse matrix with the non-zero values in the same locations as in the given sparse matrix X,
-//! with the non-zero values set to one
-template<typename T1>
-arma_warn_unused
-inline
-SpMat<typename T1::elem_type>
-spones(const SpBase<typename T1::elem_type, T1>& X)
+class spglue_elem_helper
   {
-  arma_extra_debug_sigprint();
+  public:
   
-  typedef typename T1::elem_type eT;
+  template<typename T1, typename T2>
+  arma_hot inline static uword max_n_nonzero_plus(const SpProxy<T1>& pa, const SpProxy<T2>& pb);
   
-  const unwrap_spmat<T1> U(X.get_ref());
-  
-  SpMat<eT> out(arma_layout_indicator(), U.M);
-  
-  arrayops::inplace_set( access::rwp(out.values), eT(1), out.n_nonzero );
-  
-  return out;
-  }
+  template<typename T1, typename T2>
+  arma_hot inline static uword max_n_nonzero_schur(const SpProxy<T1>& pa, const SpProxy<T2>& pb);
+  };
 
 
 
 //! @}
+

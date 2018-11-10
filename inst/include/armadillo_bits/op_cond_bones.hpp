@@ -14,32 +14,17 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_spones
+//! \addtogroup op_cond
 //! @{
 
 
-
-//! Generate a sparse matrix with the non-zero values in the same locations as in the given sparse matrix X,
-//! with the non-zero values set to one
-template<typename T1>
-arma_warn_unused
-inline
-SpMat<typename T1::elem_type>
-spones(const SpBase<typename T1::elem_type, T1>& X)
+class op_cond
   {
-  arma_extra_debug_sigprint();
+  public:
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_spmat<T1> U(X.get_ref());
-  
-  SpMat<eT> out(arma_layout_indicator(), U.M);
-  
-  arrayops::inplace_set( access::rwp(out.values), eT(1), out.n_nonzero );
-  
-  return out;
-  }
-
+  template<typename T1> static inline typename T1::pod_type  cond(const Base<typename T1::elem_type, T1>& X);
+  template<typename T1> static inline typename T1::pod_type rcond(const Base<typename T1::elem_type, T1>& X);
+  };
 
 
 //! @}

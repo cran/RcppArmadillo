@@ -26,21 +26,25 @@ template<typename out_eT, typename T1, typename op_type>
 class mtSpOp : public SpBase<out_eT, mtSpOp<out_eT, T1, op_type> >
   {
   public:
-
+  
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
-
+  
   typedef typename T1::elem_type                in_eT;
-
+  
   static const bool is_row = false;
   static const bool is_col = false;
-
-  inline explicit mtSpOp(const T1& in_m);
-  inline          mtSpOp(const T1& in_m, const uword aux_uword_a, const uword aux_uword_b);
-
+  
+  inline explicit  mtSpOp(const T1& in_m);
+  inline           mtSpOp(const T1& in_m, const uword aux_uword_a, const uword aux_uword_b);
+  inline           mtSpOp(const char junk, const T1& in_m, const out_eT in_aux);
   inline          ~mtSpOp();
-
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const;
+  
   arma_aligned const T1&    m;
+  arma_aligned       out_eT aux_out_eT;   //!< storage of auxiliary data, using the element type as specified by the out_eT template parameter
   arma_aligned       uword  aux_uword_a;
   arma_aligned       uword  aux_uword_b;
   };

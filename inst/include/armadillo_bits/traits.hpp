@@ -1351,17 +1351,12 @@ template<>                   struct is_spop_elem<spop_scalar_times> { static con
 
 template<typename spglue_type> struct is_spglue_elem                { static const bool value = false; };
 template<>                     struct is_spglue_elem<spglue_plus>   { static const bool value = true;  };
-template<>                     struct is_spglue_elem<spglue_plus2>  { static const bool value = true;  };
 template<>                     struct is_spglue_elem<spglue_minus>  { static const bool value = true;  };
-template<>                     struct is_spglue_elem<spglue_minus2> { static const bool value = true;  };
+template<>                     struct is_spglue_elem<spglue_schur>  { static const bool value = true;  };
 
 
 template<typename spglue_type> struct is_spglue_times               { static const bool value = false; };
 template<>                     struct is_spglue_times<spglue_times> { static const bool value = true;  };
-
-
-template<typename spglue_type> struct is_spglue_times2               { static const bool value = false; };
-template<>                     struct is_spglue_times<spglue_times2> { static const bool value = true;  };
 
 
 

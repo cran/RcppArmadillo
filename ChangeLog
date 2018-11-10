@@ -1,3 +1,49 @@
+2018-11-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 0.9.200.4.0
+        * inst/NEWS.Rd: Release 0.9.199.4.0
+
+2018-11-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/*: Armadillo 9.200.4
+
+2018-10-27  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.199.2.0 [github-only]
+        * inst/NEWS.Rd: Release 0.9.199.2.0
+
+	* inst/include/armadillo_bits/*: Armadillo 9.200.RC3
+
+2018-10-13  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.199.1.1 [github-only]
+        * inst/NEWS.Rd: Release 0.9.199.1.1
+
+        * inst/include/armadillo_bits/*: Armadillo 9.200.RC2 (gitlab)
+
+2018-10-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/unitTests/runit.sparseConversion.R (test.stop): Comment-out a
+	test which consistently fails on fedora-clang at CRAN, and only there
+
+2018-10-03  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.199.1.0 [github-only]
+        * inst/NEWS.Rd: Release 0.9.199.1.0
+
+        * inst/include/armadillo_bits/*: Armadillo 9.200.RC2
+
+2018-09-20  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION: Release 0.9.199.0.0 [github-only]
+        * inst/NEWS.Rd: Release 0.9.199.0.0
+
+        * inst/include/armadillo_bits/*: Armadillo 9.200.RC1
+
+2018-09-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .travis.yml: Switch Travis CI to R 3.5 repo
+
 2018-08-16  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.9.100.5.0

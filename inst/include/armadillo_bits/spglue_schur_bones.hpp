@@ -14,20 +14,20 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spglue_minus
+//! \addtogroup spglue_schur
 //! @{
 
 
 
-class spglue_minus
+class spglue_schur
   {
   public:
   
   template<typename T1, typename T2>
-  arma_hot inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_minus>& X);
+  arma_hot inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_schur>& X);
   
   template<typename eT, typename T1, typename T2>
-  arma_hot inline static void apply_noalias(SpMat<eT>& result, const SpProxy<T1>& pa, const SpProxy<T2>& pb);
+  arma_hot inline static void apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T2>& pb);
   
   template<typename eT>
   arma_hot inline static void apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B);
@@ -35,21 +35,27 @@ class spglue_minus
 
 
 
-class spglue_minus_mixed
+class spglue_schur_misc
   {
   public:
   
   template<typename T1, typename T2>
-  inline static void sparse_minus_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
+  inline static void dense_schur_sparse(SpMat<typename T1::elem_type>& out, const T1& x, const T2& y);
+  };
+
+
+
+class spglue_schur_mixed
+  {
+  public:
   
   template<typename T1, typename T2>
-  inline static void sparse_minus_dense(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type >::result>& out, const T1& X, const T2& Y);
+  inline static void sparse_schur_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >& out, const T1& X, const T2& Y);
   
   template<typename T1, typename T2>
-  inline static void dense_minus_sparse(Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type >::result>& out, const T1& X, const T2& Y);
+  inline static void dense_schur_sparse(SpMat< typename promote_type<typename T1::elem_type, typename T2::elem_type >::result>& out, const T1& X, const T2& Y);
   };
 
 
 
 //! @}
-

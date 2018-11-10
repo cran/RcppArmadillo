@@ -347,6 +347,15 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline void reset();
   
+  //! don't use this unless you're writing internal Armadillo code
+  inline void reserve(const uword in_rows, const uword in_cols, const uword new_n_nonzero);
+  
+  //! don't use this unless you're writing internal Armadillo code
+  inline SpMat(const arma_reserve_indicator&, const uword in_rows, const uword in_cols, const uword new_n_nonzero);
+  
+  //! don't use this unless you're writing internal Armadillo code
+  template<typename eT2>
+  inline SpMat(const arma_layout_indicator&, const SpMat<eT2>& x);
   
   template<typename T1> inline void set_real(const SpBase<pod_type,T1>& X);
   template<typename T1> inline void set_imag(const SpBase<pod_type,T1>& X);
@@ -544,8 +553,14 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline       col_iterator begin_col(const uword col_num);
   inline const_col_iterator begin_col(const uword col_num) const;
   
+  inline       col_iterator begin_col_no_sync(const uword col_num);
+  inline const_col_iterator begin_col_no_sync(const uword col_num) const;
+  
   inline       col_iterator end_col(const uword col_num);
   inline const_col_iterator end_col(const uword col_num) const;
+  
+  inline       col_iterator end_col_no_sync(const uword col_num);
+  inline const_col_iterator end_col_no_sync(const uword col_num) const;
   
   inline       row_iterator begin_row(const uword row_num = 0);
   inline const_row_iterator begin_row(const uword row_num = 0) const;
@@ -589,10 +604,15 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<              typename T1, typename Functor> arma_hot inline void init_xform   (const SpBase<eT, T1>& x, const Functor& func);
   template<typename eT2, typename T1, typename Functor> arma_hot inline void init_xform_mt(const SpBase<eT2,T1>& x, const Functor& func);
   
+  //! don't use this unless you're writing internal Armadillo code
+  arma_inline bool is_alias(const SpMat<eT>& X) const;
+  
   
   protected:
   
-  inline void init(uword in_rows, uword in_cols);
+  inline void                init(uword in_rows, uword in_cols, const uword new_n_nonzero = 0);
+  inline void arma_cold init_cold(uword in_rows, uword in_cols, const uword new_n_nonzero = 0);
+  
   inline void init(const std::string& text);
   inline void init(const  SpMat<eT>& x);
   inline void init(const MapMat<eT>& x);
