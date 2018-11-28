@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.200.5.0 (2018-11-09)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.200.5 (Carpe Noctem)
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.200.4.0 (2018-11-09)}{
   \itemize{
     \item Upgraded to Armadillo release 9.200.4 (Carpe Noctem)
@@ -25,6 +31,7 @@
     }
     \item Commented-out sparse matrix test consistently failing on the
     fedora-clang machine CRAN, and only there. No fix without access.
+    \item The 'Unit test' vignette is no longer included.
   }
 }
 
