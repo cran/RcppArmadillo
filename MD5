@@ -1,5 +1,5 @@
-b60c7b82173848a8925be6df4652af0e *ChangeLog
-35ac4893d74e3255ebccf184f304dd1f *DESCRIPTION
+db04afe3d2b7e9ff0f99dcde5eaa82c1 *ChangeLog
+a23e967be8d9001ee0b656e9d8686f70 *DESCRIPTION
 4333fca027d34ea48fdb884592b76b10 *NAMESPACE
 f03478825c1d0b7be9851a821a30bf67 *R/RcppArmadillo.package.skeleton.R
 8306cfe1528c541fed782352a0e447d8 *R/RcppExports.R
@@ -16,14 +16,14 @@ fd5c2e86fbabda2d1b54ae657237d293 *configure.ac
 a176169a58643ff39de12fff6e63b11f *inst/AUTHORS
 b6608a0367c7f14e162caddc1e7a581b *inst/CITATION
 ab2552793bb68fff3fc1447dad76543b *inst/COPYRIGHTS
-f882d49d45431811573d04433ddd4b1e *inst/NEWS.Rd
+c4410b945dabd4fb809aab02b6cf0fae *inst/NEWS.Rd
 662c1aa30653a4d2667c81c1acd84c87 *inst/announce/ANNOUNCE-0.2.0.txt
 0e090615ca7019263be6e7fa4b49511c *inst/doc/RcppArmadillo-intro.R
 402a4d64216687bf7003685cfead3306 *inst/doc/RcppArmadillo-intro.Rnw
-e803b7547d35f3a795b10beeb97fc2be *inst/doc/RcppArmadillo-intro.pdf
+b9db11476c90ee4617b43c18c979e80c *inst/doc/RcppArmadillo-intro.pdf
 48d8fc34ff41de14e3c56131c23c1a2c *inst/doc/RcppArmadillo-sparseMatrix.R
 d0a141853a5a11daf1aa553c14d3b544 *inst/doc/RcppArmadillo-sparseMatrix.Rmd
-6e9f9a19786ff077f30ad58bfc0edb85 *inst/doc/RcppArmadillo-sparseMatrix.pdf
+7a2a528128dc1d23e452c4f59b7f5d91 *inst/doc/RcppArmadillo-sparseMatrix.pdf
 8d34688380e7e57ef537920baa72431e *inst/examples/fastLm.r
 93037baec9a906713b4ca11046a1b0fc *inst/examples/kalman/FirstKalmanR.R
 4a7b51922e6d94f6dc6075eb5c0bf09f *inst/examples/kalman/Kalman.cpp
@@ -498,7 +498,7 @@ e971b3066d57fb37976a727c9b660221 *inst/include/armadillo_bits/op_unique_meat.hpp
 4ac5d7c280f34499c4552aa8edfb5364 *inst/include/armadillo_bits/op_vectorise_bones.hpp
 699b734046df498549566c65e12fff17 *inst/include/armadillo_bits/op_vectorise_meat.hpp
 1173e96765caf07ebcb892d34e0d5943 *inst/include/armadillo_bits/op_wishrnd_bones.hpp
-c5e7e42558dff9c4ae79807cf7ddf380 *inst/include/armadillo_bits/op_wishrnd_meat.hpp
+90570ec3ada1bf644f001b450ccac4ea *inst/include/armadillo_bits/op_wishrnd_meat.hpp
 5fc7db426a4a2248532023d5091062fd *inst/include/armadillo_bits/operator_cube_div.hpp
 535c57f5c926f7dde05547100a7cf3e7 *inst/include/armadillo_bits/operator_cube_minus.hpp
 19e75a6a0dd08c0efbbd36fbdb121815 *inst/include/armadillo_bits/operator_cube_plus.hpp
@@ -627,7 +627,7 @@ fb1b346e7482620f9f594e9dbdd92d16 *inst/unitTests/runit.RcppArmadillo.R
 dd2750eda609f96c87bcee812c3634ba *inst/unitTests/runit.fastLm.R
 72645628d5398cb248ed1d006a8aedcd *inst/unitTests/runit.rmultinom.R
 f195c1e9c0761d1e95e9774cbf9757fa *inst/unitTests/runit.rng.R
-a0902b1a6e38b1b8446a698d27eef0fc *inst/unitTests/runit.sample.R
+c2ade18555252492cf22c6acdd7b043a *inst/unitTests/runit.sample.R
 c864858259dc264a4c7e487d5f7611d5 *inst/unitTests/runit.scipy2r.R
 9935c6607e5b83677c464ec5c2151714 *inst/unitTests/runit.sparse.R
 5d1dc627545044a8286afa9700965652 *inst/unitTests/runit.sparseConversion.R
