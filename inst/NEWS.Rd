@@ -3,6 +3,26 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.300.2.0 (2019-03-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.300.2 (Fomo Spiral)
+    \itemize{
+      \item Faster handling of compound complex matrix expressions by
+      \code{trace()} 
+      \item More efficient handling of element access for inplace
+      modifications in sparse matrices 
+      \item Added \code{.is_sympd()} to check whether a matrix is
+      symmetric/hermitian positive definite 
+      \item Added \code{interp2()} for 2D data interpolation
+      \item Added \code{expm1()} and \code{log1p()}
+      \item Expanded \code{.is_sorted()} with options "strictascend" and
+      "strictdescend" 
+      \item Expanded \code{eig_gen()} to optionally perform balancing
+      prior to decomposition 
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.200.7.1 (2019-03-08)}{
   \itemize{
     \item Explicit setting of \code{RNGversion("3.5.0")} in one unit
