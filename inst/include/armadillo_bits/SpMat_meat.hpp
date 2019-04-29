@@ -800,6 +800,31 @@ SpMat<eT>::operator/=(const SpMat<eT>& x)
 
 
 
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL)
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+
+  typedef typename T1::elem_type T;
+
+  // Make sure the type is compatible.
+  arma_type_check(( is_same_type< eT, T >::no ));
+
+  op_type::apply(*this, expr);
+  }
+
+
+
 // Construct a complex matrix out of two non-complex matrices
 template<typename eT>
 template<typename T1, typename T2>
@@ -823,8 +848,8 @@ SpMat<eT>::SpMat
   typedef typename T1::elem_type T;
   
   // Make sure eT is complex and T is not (compile-time check).
-  arma_type_check(( is_complex<eT>::value == false ));
-  arma_type_check(( is_complex< T>::value == true  ));
+  arma_type_check(( is_cx<eT>::no  ));
+  arma_type_check(( is_cx< T>::yes ));
   
   // Compile-time abort if types are not compatible.
   arma_type_check(( is_same_type< std::complex<T>, eT >::no ));
@@ -1613,7 +1638,7 @@ SpMat<eT>::SpMat(const SpOp<T1, spop_type>& X)
   , col_ptrs(NULL)
   {
   arma_extra_debug_sigprint_this(this);
-
+  
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spop_type::apply(*this, X);
@@ -1631,7 +1656,7 @@ SpMat<eT>&
 SpMat<eT>::operator=(const SpOp<T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spop_type::apply(*this, X);
@@ -1753,13 +1778,128 @@ SpMat<eT>::SpMat(const SpGlue<T1, T2, spglue_type>& X)
   , col_ptrs(NULL)
   {
   arma_extra_debug_sigprint_this(this);
-
+  
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spglue_type::apply(*this, X);
   
   sync_csc();          // in case apply() used element accessors
   invalidate_cache();  // in case apply() modified the CSC representation
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename spglue_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator=(const SpGlue<T1, T2, spglue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  spglue_type::apply(*this, X);
+  
+  sync_csc();          // in case apply() used element accessors
+  invalidate_cache();  // in case apply() modified the CSC representation
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename spglue_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator+=(const SpGlue<T1, T2, spglue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  sync_csc();
+  
+  const SpMat<eT> m(X);
+  
+  return (*this).operator+=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename spglue_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator-=(const SpGlue<T1, T2, spglue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  sync_csc();
+  
+  const SpMat<eT> m(X);
+  
+  return (*this).operator-=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename spglue_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator*=(const SpGlue<T1, T2, spglue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  sync_csc();
+  
+  const SpMat<eT> m(X);
+  
+  return (*this).operator*=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename spglue_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator%=(const SpGlue<T1, T2, spglue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  sync_csc();
+  
+  const SpMat<eT> m(X);
+  
+  return (*this).operator%=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename spglue_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator/=(const SpGlue<T1, T2, spglue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
+  sync_csc();
+  
+  const SpMat<eT> m(X);
+  
+  return (*this).operator/=(m);
   }
 
 
@@ -1778,7 +1918,7 @@ SpMat<eT>::SpMat(const mtSpOp<eT, T1, spop_type>& X)
   , col_ptrs(NULL)
   {
   arma_extra_debug_sigprint_this(this);
-
+  
   spop_type::apply(*this, X);
   
   sync_csc();          // in case apply() used element accessors
@@ -1794,7 +1934,7 @@ SpMat<eT>&
 SpMat<eT>::operator=(const mtSpOp<eT, T1, spop_type>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   spop_type::apply(*this, X);
   
   sync_csc();          // in case apply() used element accessors
@@ -1893,12 +2033,33 @@ SpMat<eT>::operator/=(const mtSpOp<eT, T1, spop_type>& X)
 template<typename eT>
 template<typename T1, typename T2, typename spglue_type>
 inline
+SpMat<eT>::SpMat(const mtSpGlue<eT, T1, T2, spglue_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL)
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  spglue_type::apply(*this, X);
+  
+  sync_csc();          // in case apply() used element accessors
+  invalidate_cache();  // in case apply() modified the CSC representation
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename spglue_type>
+inline
 SpMat<eT>&
-SpMat<eT>::operator=(const SpGlue<T1, T2, spglue_type>& X)
+SpMat<eT>::operator=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
-
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   spglue_type::apply(*this, X);
   
@@ -1914,11 +2075,9 @@ template<typename eT>
 template<typename T1, typename T2, typename spglue_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator+=(const SpGlue<T1, T2, spglue_type>& X)
+SpMat<eT>::operator+=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
-  
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   sync_csc();
   
@@ -1933,11 +2092,9 @@ template<typename eT>
 template<typename T1, typename T2, typename spglue_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator-=(const SpGlue<T1, T2, spglue_type>& X)
+SpMat<eT>::operator-=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
-  
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   sync_csc();
   
@@ -1952,11 +2109,9 @@ template<typename eT>
 template<typename T1, typename T2, typename spglue_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator*=(const SpGlue<T1, T2, spglue_type>& X)
+SpMat<eT>::operator*=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
-  
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   sync_csc();
   
@@ -1971,11 +2126,9 @@ template<typename eT>
 template<typename T1, typename T2, typename spglue_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator%=(const SpGlue<T1, T2, spglue_type>& X)
+SpMat<eT>::operator%=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
-  
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   sync_csc();
   
@@ -1990,11 +2143,9 @@ template<typename eT>
 template<typename T1, typename T2, typename spglue_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator/=(const SpGlue<T1, T2, spglue_type>& X)
+SpMat<eT>::operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   {
   arma_extra_debug_sigprint();
-  
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   sync_csc();
   
@@ -3769,6 +3920,15 @@ SpMat<eT>::reshape(const uword in_rows, const uword in_cols)
   
   if( (n_rows == in_rows) && (n_cols == in_cols) )  { return; }
   
+  if(vec_state == 1)  { arma_debug_check( (in_cols != 1), "SpMat::reshape(): object is a column vector; requested size is not compatible" ); }
+  if(vec_state == 2)  { arma_debug_check( (in_rows != 1), "SpMat::reshape(): object is a row vector; requested size is not compatible"    ); }
+  
+  if(n_nonzero == 0)
+    {
+    (*this).zeros(in_rows, in_cols);
+    return;
+    }
+  
   sync_csc();
   invalidate_cache();
   
@@ -5407,30 +5567,55 @@ SpMat<eT>::steal_mem_simple(SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(this != &x)
+  if(this == &x)  { return; }
+  
+  bool layout_ok = false;
+  
+  if((*this).vec_state == x.vec_state)
     {
-    if(values     )  { memory::release(access::rw(values));      }
-    if(row_indices)  { memory::release(access::rw(row_indices)); }
-    if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
-    
-    access::rw(n_rows)    = x.n_rows;
-    access::rw(n_cols)    = x.n_cols;
-    access::rw(n_elem)    = x.n_elem;
-    access::rw(n_nonzero) = x.n_nonzero;
-    
-    access::rw(values)      = x.values;
-    access::rw(row_indices) = x.row_indices;
-    access::rw(col_ptrs)    = x.col_ptrs;
-    
-    // Set other matrix to empty.
-    access::rw(x.n_rows)    = 0;
-    access::rw(x.n_cols)    = 0;
-    access::rw(x.n_elem)    = 0;
-    access::rw(x.n_nonzero) = 0;
-    
-    access::rw(x.values)      = NULL;
-    access::rw(x.row_indices) = NULL;
-    access::rw(x.col_ptrs)    = NULL;
+    layout_ok = true;
+    }
+  else
+    {
+    if( ((*this).vec_state == 1) && (x.n_cols == 1) )  { layout_ok = true; }
+    if( ((*this).vec_state == 2) && (x.n_rows == 1) )  { layout_ok = true; }
+    }
+  
+  if(layout_ok)
+    {
+    if(x.n_nonzero == 0)
+      {
+      (*this).zeros(x.n_rows, x.n_cols);
+      }
+    else
+      {
+      if(values     )  { memory::release(access::rw(values));      }
+      if(row_indices)  { memory::release(access::rw(row_indices)); }
+      if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
+      
+      access::rw(n_rows)    = x.n_rows;
+      access::rw(n_cols)    = x.n_cols;
+      access::rw(n_elem)    = x.n_elem;
+      access::rw(n_nonzero) = x.n_nonzero;
+      
+      access::rw(values)      = x.values;
+      access::rw(row_indices) = x.row_indices;
+      access::rw(col_ptrs)    = x.col_ptrs;
+      
+      // Set other matrix to empty.
+      access::rw(x.n_rows)    = 0;
+      access::rw(x.n_cols)    = 0;
+      access::rw(x.n_elem)    = 0;
+      access::rw(x.n_nonzero) = 0;
+      
+      access::rw(x.values)      = NULL;
+      access::rw(x.row_indices) = NULL;
+      access::rw(x.col_ptrs)    = NULL;
+      }
+    }
+  else
+    {
+    (*this).operator=(x);
     }
   }
 

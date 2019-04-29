@@ -342,6 +342,66 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 bool
+SpBase<elem_type,derived>::is_symmetric() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<derived> tmp( (*this).get_ref() );
+  
+  return tmp.M.is_symmetric();
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+SpBase<elem_type,derived>::is_symmetric(const typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<derived> tmp( (*this).get_ref() );
+  
+  return tmp.M.is_symmetric(tol);
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+SpBase<elem_type,derived>::is_hermitian() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<derived> tmp( (*this).get_ref() );
+  
+  return tmp.M.is_hermitian();
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+SpBase<elem_type,derived>::is_hermitian(const typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<derived> tmp( (*this).get_ref() );
+  
+  return tmp.M.is_hermitian(tol);
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
 SpBase<elem_type,derived>::is_finite() const
   {
   arma_extra_debug_sigprint();
@@ -367,6 +427,26 @@ SpBase<elem_type,derived>::is_finite() const
     }
   
   return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+const SpOp<derived,spop_vectorise_col>
+SpBase<elem_type, derived>::as_col() const
+  {
+  return SpOp<derived,spop_vectorise_col>( (*this).get_ref() );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+const SpOp<derived,spop_vectorise_row>
+SpBase<elem_type, derived>::as_row() const
+  {
+  return SpOp<derived,spop_vectorise_row>( (*this).get_ref() );
   }
 
 

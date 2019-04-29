@@ -146,6 +146,11 @@ struct Base
   inline arma_warn_unused bool is_colvec() const;
   inline arma_warn_unused bool is_rowvec() const;
   inline arma_warn_unused bool is_finite() const;
+  inline arma_warn_unused bool has_inf()   const;
+  inline arma_warn_unused bool has_nan()   const;
+  
+  arma_inline const Op<derived,op_vectorise_col> as_col() const;
+  arma_inline const Op<derived,op_vectorise_row> as_row() const;
   };
 
 
