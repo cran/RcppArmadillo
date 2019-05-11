@@ -3,14 +3,29 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.400.3.0 (2019-05-09)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.400.3 (Surrogate Miscreant)
+    \itemize{
+      \item check for symmetric / hermitian matrices (used by
+      decomposition functions) has been made more robust
+      \item \code{linspace()} and \code{logspace()} now honour requests
+      for generation of vectors with zero elements
+      \item fix for vectorisation / flattening of complex sparse matrices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.400.2.0 (2019-04-28)}{
   \itemize{
     \item Upgraded to Armadillo release 9.400.2 (Surrogate Miscreant)
     \itemize{
       \item faster \code{cov()} and \code{cor()}
+      \item added \code{.as_col()} and \code{.as_row()}
       \item expanded \code{.shed_rows()} / \code{.shed_cols()} /
       \code{.shed_slices()} to remove rows/columns/slices specified in a
       vector 
+      \item expanded \code{vectorise()} to handle sparse matrices
       \item expanded element-wise versions of \code{max()} and
       \code{min()} to handle sparse matrices
       \item optimised handling of sparse matrix expressions:
@@ -19,7 +34,7 @@
       \code{expmat_sym()}, \code{logmat_sympd()}, \code{sqrtmat_sympd()},
       \code{inv_sympd()} to print a warning if the given matrix is not
       symmetric 
-      more consistent detection of vector expressions
+      \item more consistent detection of vector expressions
     }
   }
 }
