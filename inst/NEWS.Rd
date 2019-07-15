@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.600.4.0 (2019-07-14)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.600.4 (Napa Invasion)
+    \itemize{
+      \item faster handling of sparse submatrices
+      \item faster handling of sparse diagonal views
+      \item faster handling of sparse matrices by \code{symmatu()} and \code{symmatl()}
+      \item faster handling of sparse matrices by \code{join_cols()}
+      \item expanded \code{clamp()} to handle sparse matrices
+      \item added \code{.clean()} to replace elements below a threshold with zeros
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.500.2.0 (2019-06-11)}{
   \itemize{
     \item Upgraded to Armadillo release 9.500.2 (Riot Compact)

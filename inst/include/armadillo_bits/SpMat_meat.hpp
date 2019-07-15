@@ -646,8 +646,7 @@ SpMat<eT>::operator*=(const eT val)
     }
   else
     {
-    // Everything will be zero.
-    init(n_rows, n_cols);
+    (*this).zeros();
     }
   
   return *this;
@@ -2791,17 +2790,9 @@ SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
-    (
-    (in_row1 >= n_rows) || (in_row2 >= n_rows),
-    "SpMat::swap_rows(): out of bounds"
-    );
-
-  // Sanity check.
-  if (in_row1 == in_row2)
-    {
-    return;
-    }
+  arma_debug_check( ((in_row1 >= n_rows) || (in_row2 >= n_rows)), "SpMat::swap_rows(): out of bounds" );
+  
+  if(in_row1 == in_row2)  { return; }
   
   sync_csc();
   invalidate_cache();
@@ -2904,13 +2895,25 @@ SpMat<eT>::swap_cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
-  // slow but works
-  for(uword lrow = 0; lrow < n_rows; ++lrow)
-    {
-    const eT tmp = at(lrow, in_col1);
-    at(lrow, in_col1) = eT( at(lrow, in_col2) );
-    at(lrow, in_col2) = tmp;
-    }
+  arma_debug_check( ((in_col1 >= n_cols) || (in_col2 >= n_cols)), "SpMat::swap_cols(): out of bounds" );
+  
+  if(in_col1 == in_col2)  { return; }
+  
+  // TODO: this is a rudimentary implementation
+  
+  SpMat<eT> tmp = (*this);
+  
+  tmp.col(in_col1) = (*this).col(in_col2);
+  tmp.col(in_col2) = (*this).col(in_col1);
+  
+  steal_mem(tmp);
+  
+  // for(uword lrow = 0; lrow < n_rows; ++lrow)
+  //   {
+  //   const eT tmp = at(lrow, in_col1);
+  //   at(lrow, in_col1) = eT( at(lrow, in_col2) );
+  //   at(lrow, in_col2) = tmp;
+  //   }
   }
 
 
@@ -4202,11 +4205,34 @@ SpMat<eT>::replace(const eT old_val, const eT new_val)
 template<typename eT>
 inline
 const SpMat<eT>&
+SpMat<eT>::clean(const typename get_pod_type<eT>::result threshold)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(n_nonzero == 0)  { return *this; }
+  
+  sync_csc();
+  invalidate_cache();
+  
+  arrayops::clean(access::rwp(values), n_nonzero, threshold);
+  
+  remove_zeros();
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+const SpMat<eT>&
 SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  if(n_nonzero != 0)
+  const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) );
+  
+  if(already_done == false)
     {
     init(n_rows, n_cols);
     }
@@ -4244,7 +4270,7 @@ SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
-  const bool already_done = ( (n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) );
+  const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) );
   
   if(already_done == false)
     {
@@ -4989,7 +5015,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
   #if defined(ARMA_USE_OPENMP)
     if(x.sync_state == 1)
       {
-      #pragma omp critical
+      #pragma omp critical (arma_SpMat_init)
       if(x.sync_state == 1)
         {
         (*this).init(x.cache);
@@ -5035,6 +5061,8 @@ SpMat<eT>::init(const MapMat<eT>& x)
   const uword x_n_nz   = x.get_n_nonzero();
   
   init(x_n_rows, x_n_cols, x_n_nz);
+  
+  if(x_n_nz == 0)  { return; }
   
   typename MapMat<eT>::map_type& x_map_ref = *(x.map_ptr);
   
@@ -5603,27 +5631,6 @@ SpMat<eT>::steal_mem(SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  if(this != &x)
-    {
-    x.sync_csc();
-    
-    steal_mem_simple(x);
-    
-    invalidate_cache();
-    
-    x.invalidate_cache();
-    }
-  }
-
-
-
-template<typename eT>
-inline
-void
-SpMat<eT>::steal_mem_simple(SpMat<eT>& x)
-  {
-  arma_extra_debug_sigprint();
-  
   if(this == &x)  { return; }
   
   bool layout_ok = false;
@@ -5640,40 +5647,53 @@ SpMat<eT>::steal_mem_simple(SpMat<eT>& x)
   
   if(layout_ok)
     {
-    if(x.n_nonzero == 0)
-      {
-      (*this).zeros(x.n_rows, x.n_cols);
-      }
-    else
-      {
-      if(values     )  { memory::release(access::rw(values));      }
-      if(row_indices)  { memory::release(access::rw(row_indices)); }
-      if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
-      
-      access::rw(n_rows)    = x.n_rows;
-      access::rw(n_cols)    = x.n_cols;
-      access::rw(n_elem)    = x.n_elem;
-      access::rw(n_nonzero) = x.n_nonzero;
-      
-      access::rw(values)      = x.values;
-      access::rw(row_indices) = x.row_indices;
-      access::rw(col_ptrs)    = x.col_ptrs;
-      
-      // Set other matrix to empty.
-      access::rw(x.n_rows)    = 0;
-      access::rw(x.n_cols)    = 0;
-      access::rw(x.n_elem)    = 0;
-      access::rw(x.n_nonzero) = 0;
-      
-      access::rw(x.values)      = NULL;
-      access::rw(x.row_indices) = NULL;
-      access::rw(x.col_ptrs)    = NULL;
-      }
+    x.sync_csc();
+    
+    steal_mem_simple(x);
+    
+    x.invalidate_cache();
+    
+    invalidate_cache();
     }
   else
     {
     (*this).operator=(x);
     }
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpMat<eT>::steal_mem_simple(SpMat<eT>& x)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(this == &x)  { return; }
+  
+  if(values     )  { memory::release(access::rw(values));      }
+  if(row_indices)  { memory::release(access::rw(row_indices)); }
+  if(col_ptrs   )  { memory::release(access::rw(col_ptrs));    }
+  
+  access::rw(n_rows)    = x.n_rows;
+  access::rw(n_cols)    = x.n_cols;
+  access::rw(n_elem)    = x.n_elem;
+  access::rw(n_nonzero) = x.n_nonzero;
+  
+  access::rw(values)      = x.values;
+  access::rw(row_indices) = x.row_indices;
+  access::rw(col_ptrs)    = x.col_ptrs;
+  
+  // Set other matrix to empty.
+  access::rw(x.n_rows)    = 0;
+  access::rw(x.n_cols)    = 0;
+  access::rw(x.n_elem)    = 0;
+  access::rw(x.n_nonzero) = 0;
+  
+  access::rw(x.values)      = NULL;
+  access::rw(x.row_indices) = NULL;
+  access::rw(x.col_ptrs)    = NULL;
   }
 
 
@@ -6218,25 +6238,47 @@ inline
 arma_hot
 arma_warn_unused
 bool
+SpMat<eT>::try_set_value_csc(const uword in_row, const uword in_col, const eT in_val)
+  {
+  const eT* val_ptr = find_value_csc(in_row, in_col);
+  
+  // element not found, ie. it's zero; fail if trying to set it to non-zero value
+  if(val_ptr == NULL)  { return (in_val == eT(0)); }
+  
+  // fail if trying to erase an existing element
+  if(in_val == eT(0))  { return false; }
+  
+  access::rw(*val_ptr) = in_val;
+  
+  invalidate_cache();
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+arma_hot
+arma_warn_unused
+bool
 SpMat<eT>::try_add_value_csc(const uword in_row, const uword in_col, const eT in_val)
   {
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
-  if(val_ptr != NULL)
-    {
-    const eT new_val = eT(*val_ptr) + in_val;
-    
-    if(new_val != eT(0))
-      {
-      access::rw(*val_ptr) = new_val;
-      
-      invalidate_cache();
-      
-      return true;
-      }
-    }
+  // element not found, ie. it's zero; fail if trying to add a non-zero value
+  if(val_ptr == NULL)  { return (in_val == eT(0)); }
   
-  return false;
+  const eT new_val = eT(*val_ptr) + in_val;
+  
+  // fail if trying to erase an existing element
+  if(new_val == eT(0))  { return false; }
+  
+  access::rw(*val_ptr) = new_val;
+  
+  invalidate_cache();
+  
+  return true;
   }
 
 
@@ -6250,21 +6292,19 @@ SpMat<eT>::try_sub_value_csc(const uword in_row, const uword in_col, const eT in
   {
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
-  if(val_ptr != NULL)
-    {
-    const eT new_val = eT(*val_ptr) - in_val;
-    
-    if(new_val != eT(0))
-      {
-      access::rw(*val_ptr) = new_val;
-      
-      invalidate_cache();
-      
-      return true;
-      }
-    }
+  // element not found, ie. it's zero; fail if trying to subtract a non-zero value
+  if(val_ptr == NULL)  { return (in_val == eT(0)); }
   
-  return false;
+  const eT new_val = eT(*val_ptr) - in_val;
+  
+  // fail if trying to erase an existing element
+  if(new_val == eT(0))  { return false; }
+  
+  access::rw(*val_ptr) = new_val;
+  
+  invalidate_cache();
+  
+  return true;
   }
 
 
@@ -6278,21 +6318,19 @@ SpMat<eT>::try_mul_value_csc(const uword in_row, const uword in_col, const eT in
   {
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
-  if(val_ptr != NULL)
-    {
-    const eT new_val = eT(*val_ptr) * in_val;
-    
-    if(new_val != eT(0))
-      {
-      access::rw(*val_ptr) = new_val;
-      
-      invalidate_cache();
-      
-      return true;
-      }
-    }
+  // element not found, ie. it's zero; succeed if given value is finite; zero multiplied by anything is zero, except for nan and inf
+  if(val_ptr == NULL)  { return arma_isfinite(in_val); }
   
-  return false;
+  const eT new_val = eT(*val_ptr) * in_val;
+  
+  // fail if trying to erase an existing element
+  if(new_val == eT(0))  { return false; }
+  
+  access::rw(*val_ptr) = new_val;
+  
+  invalidate_cache();
+  
+  return true;
   }
 
 
@@ -6306,21 +6344,19 @@ SpMat<eT>::try_div_value_csc(const uword in_row, const uword in_col, const eT in
   {
   const eT* val_ptr = find_value_csc(in_row, in_col);
   
-  if(val_ptr != NULL)
-    {
-    const eT new_val = eT(*val_ptr) / in_val;
-    
-    if(new_val != eT(0))
-      {
-      access::rw(*val_ptr) = new_val;
-      
-      invalidate_cache();
-      
-      return true;
-      }
-    }
+  // element not found, ie. it's zero; succeed if given value is not zero and not nan; zero divided by anything is zero, except for zero and nan
+  if(val_ptr == NULL)  { return ((in_val != eT(0)) && (arma_isnan(in_val) == false)); }
   
-  return false;
+  const eT new_val = eT(*val_ptr) / in_val;
+  
+  // fail if trying to erase an existing element
+  if(new_val == eT(0))  { return false; }
+  
+  access::rw(*val_ptr) = new_val;
+  
+  invalidate_cache();
+  
+  return true;
   }
 
 
@@ -6497,6 +6533,7 @@ SpMat<eT>::invalidate_cache() const
   if(sync_state == 0)  { return; }
   
   cache.reset();
+  
   sync_state = 0;
   }
 
@@ -6534,33 +6571,48 @@ SpMat<eT>::sync_cache() const
   // data races are prevented via the mutex
   
   #if defined(ARMA_USE_OPENMP)
+    {
     if(sync_state == 0)
       {
-      #pragma omp critical
-      if(sync_state == 0)
+      #pragma omp critical (arma_SpMat_cache)
         {
-        cache      = (*this);
-        sync_state = 2;
+        sync_cache_simple();
         }
       }
+    }
   #elif defined(ARMA_USE_CXX11)
+    {
     if(sync_state == 0)
       {
       cache_mutex.lock();
-      if(sync_state == 0)
-        {
-        cache      = (*this);
-        sync_state = 2;
-        }
+      
+      sync_cache_simple();
+      
       cache_mutex.unlock();
       }
+    }
   #else
-    if(sync_state == 0)
-      {
-      cache      = (*this);
-      sync_state = 2;
-      }
+    {
+    sync_cache_simple();
+    }
   #endif
+  }
+
+
+
+
+template<typename eT>
+inline
+void
+SpMat<eT>::sync_cache_simple() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(sync_state == 0)
+    {
+    cache      = (*this);
+    sync_state = 2;
+    }
   }
 
 
@@ -6573,6 +6625,39 @@ SpMat<eT>::sync_csc() const
   {
   arma_extra_debug_sigprint();
   
+  #if defined(ARMA_USE_OPENMP)
+    if(sync_state == 1)
+      {
+      #pragma omp critical (arma_SpMat_cache)
+        {
+        sync_csc_simple();
+        }
+      }
+  #elif defined(ARMA_USE_CXX11)
+    if(sync_state == 1)
+      {
+      cache_mutex.lock();
+      
+      sync_csc_simple();
+      
+      cache_mutex.unlock();
+      }
+  #else
+    {
+    sync_csc_simple();
+    }
+  #endif
+  }
+
+
+
+template<typename eT>
+inline
+void
+SpMat<eT>::sync_csc_simple() const
+  {
+  arma_extra_debug_sigprint();
+  
   // method:
   // 1. construct temporary matrix to prevent the cache from getting zapped
   // 2. steal memory from the temporary matrix
@@ -6582,50 +6667,18 @@ SpMat<eT>::sync_csc() const
   
   // see also the note in sync_cache() above
   
-  #if defined(ARMA_USE_OPENMP)
-    if(sync_state == 1)
-      {
-      #pragma omp critical
-      if(sync_state == 1)
-        {
-        SpMat<eT> tmp(cache);
-        
-        SpMat<eT>& x = const_cast< SpMat<eT>& >(*this);
-        
-        x.steal_mem_simple(tmp);
-        
-        sync_state = 2;
-        }
-      }
-  #elif defined(ARMA_USE_CXX11)
-    if(sync_state == 1)
-      {
-      cache_mutex.lock();
-      if(sync_state == 1)
-        {
-        SpMat<eT> tmp(cache);
-        
-        SpMat<eT>& x = const_cast< SpMat<eT>& >(*this);
-        
-        x.steal_mem_simple(tmp);
-        
-        sync_state = 2;
-        }
-      cache_mutex.unlock();
-      }
-  #else
-    if(sync_state == 1)
-      {
-      SpMat<eT> tmp(cache);
-      
-      SpMat<eT>& x = const_cast< SpMat<eT>& >(*this);
-      
-      x.steal_mem_simple(tmp);
-      
-      sync_state = 2;
-      }
-  #endif
+  if(sync_state == 1)
+    {
+    SpMat<eT>& x = const_cast< SpMat<eT>& >(*this);
+    
+    SpMat<eT> tmp(cache);
+    
+    x.steal_mem_simple(tmp);
+    
+    sync_state = 2;
+    }
   }
+
 
 
 
