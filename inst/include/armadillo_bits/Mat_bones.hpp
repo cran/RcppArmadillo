@@ -339,6 +339,14 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename op_type> inline Mat& operator%=(const mtOp<eT, T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator/=(const mtOp<eT, T1, op_type>& X);
 
+  template<typename T1, typename op_type> inline             Mat(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat&  operator=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator+=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator-=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator*=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator%=(const CubeToMatOp<T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator/=(const CubeToMatOp<T1, op_type>& X);
+  
   template<typename T1, typename op_type> inline             Mat(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat&  operator=(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator+=(const SpToDOp<T1, op_type>& X);
@@ -717,6 +725,12 @@ class Mat : public Base< eT, Mat<eT> >
   inline void  clear();
   inline bool  empty() const;
   inline uword size()  const;
+  
+  inline       eT& front();
+  inline const eT& front() const;
+  
+  inline       eT& back();
+  inline const eT& back() const;
   
   inline void swap(Mat& B);
   

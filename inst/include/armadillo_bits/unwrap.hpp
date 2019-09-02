@@ -18,6 +18,9 @@
 //! @{
 
 
+// TODO: document the conditions and restrictions for the use of each unwrap variant:
+// TODO: unwrap, unwrap_check, quasi_unwrap, partial_unwrap, partial_unwrap_check
+
 
 template<typename T1>
 struct unwrap_default
@@ -319,8 +322,8 @@ struct quasi_unwrap< subview<eT> >
   {
   inline
   quasi_unwrap(const subview<eT>& A)
-    : sv( A                  )
-    , M ( A, (A.n_cols == 1) )  // reuse memory if the subview has only one column
+    : sv( A                                                  )
+    , M ( A, ((A.aux_row1 == 0) && (A.n_rows == A.m.n_rows)) )  // reuse memory if the subview is a contiguous chunk
     {
     arma_extra_debug_sigprint();
     }
@@ -330,10 +333,10 @@ struct quasi_unwrap< subview<eT> >
   
   static const bool is_const     = true;
   static const bool has_subview  = true;
-  static const bool has_orig_mem = false;
+  static const bool has_orig_mem = false;  // NOTE: set to false as this is the general case; original memory is only used when the subview is a contiguous chunk
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( (sv.n_cols == 1) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( ((sv.aux_row1 == 0) && (sv.n_rows == sv.m.n_rows)) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
   };
 
 
@@ -714,6 +717,58 @@ struct quasi_unwrap< Op<subview_col<eT>, op_htrans> >
   
   using quasi_unwrap_subview_col_htrans_extra::M;
   using quasi_unwrap_subview_col_htrans_extra::is_alias;
+  };
+
+
+
+template<typename T1>
+struct quasi_unwrap< CubeToMatOp<T1, op_vectorise_cube_col> >
+  {
+  typedef typename T1::elem_type eT;
+  
+  inline
+  quasi_unwrap(const CubeToMatOp<T1, op_vectorise_cube_col>& A)
+    : U( A.m )
+    , M( const_cast<eT*>(U.M.memptr()), U.M.n_elem, 1, false, true )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const unwrap_cube<T1> U;
+  const Mat<eT>         M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  };
+
+
+
+template<typename T1>
+struct quasi_unwrap< SpToDOp<T1, op_nonzeros_spmat> >
+  {
+  typedef typename T1::elem_type eT;
+  
+  inline
+  quasi_unwrap(const SpToDOp<T1, op_nonzeros_spmat>& A)
+    : U( A.m )
+    , M( const_cast<eT*>(U.M.values), U.M.n_nonzero, 1, false, true )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const unwrap_spmat<T1> U;
+  const Mat<eT>          M;
+  
+  static const bool is_const     = true;
+  static const bool has_subview  = true;
+  static const bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
   };
 
 
@@ -1217,6 +1272,33 @@ struct partial_unwrap< Col<eT> >
   static const bool do_times = false;
   
   const Col<eT>& M;
+  };
+
+
+
+template<typename eT>
+struct partial_unwrap< subview<eT> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const subview<eT>& A)
+    : sv( A                                                  )
+    , M ( A, ((A.aux_row1 == 0) && (A.n_rows == A.m.n_rows)) )  // reuse memory if the subview is a contiguous chunk
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline eT get_val() const { return eT(1); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return ( ((sv.aux_row1 == 0) && (sv.n_rows == sv.m.n_rows)) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false ); }
+  
+  static const bool do_trans = false;
+  static const bool do_times = false;
+  
+  const subview<eT>& sv;
+  const Mat<eT>      M;
   };
 
 

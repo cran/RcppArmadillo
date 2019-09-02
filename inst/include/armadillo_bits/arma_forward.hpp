@@ -113,6 +113,22 @@ class gen_randn;
 
 
 
+class spop_strans;
+class spop_htrans;
+class spop_vectorise_row;
+class spop_vectorise_col;
+
+class spglue_plus;
+class spglue_minus;
+class spglue_schur;
+class spglue_times;
+class spglue_max;
+class spglue_min;
+class spglue_rel_lt;
+class spglue_rel_gt;
+
+
+
 class op_internal_equ;
 class op_internal_plus;
 class op_internal_minus;
@@ -212,10 +228,11 @@ template<const bool, const bool, const bool>             class gemv;
 
 template<                 typename eT, typename gen_type> class  Gen; 
 
-template<                 typename T1, typename  op_type> class      Op; 
-template<                 typename T1, typename eop_type> class     eOp;
-template<                 typename T1, typename  op_type> class SpToDOp; 
-template<typename out_eT, typename T1, typename  op_type> class    mtOp;
+template<                 typename T1, typename  op_type> class          Op; 
+template<                 typename T1, typename eop_type> class         eOp;
+template<                 typename T1, typename  op_type> class     SpToDOp; 
+template<                 typename T1, typename  op_type> class CubeToMatOp;
+template<typename out_eT, typename T1, typename  op_type> class        mtOp;
 
 template<                 typename T1, typename T2, typename  glue_type> class   Glue;
 template<                 typename T1, typename T2, typename eglue_type> class  eGlue;
@@ -239,17 +256,12 @@ template<typename T1> class ProxyCube;
 
 template<typename T1> class diagmat_proxy;
 
-class spop_strans;
-class spop_htrans;
-class spop_vectorise_row;
-class spop_vectorise_col;
+template<typename T1> struct unwrap;
+template<typename T1> struct unwrap_cube;
+template<typename T1> struct unwrap_spmat;
 
-class spglue_plus;
-class spglue_minus;
-class spglue_schur;
-class spglue_times;
-class spglue_max;
-class spglue_min;
+
+
 
 struct state_type
   {

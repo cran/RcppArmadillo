@@ -3,6 +3,23 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.700.2.0 (2019-09-01)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.700.2 (Gangster Democracy)
+    \itemize{
+      \item faster handling of cubes by \code{vectorise()}
+      \item faster faster handling of sparse matrices by \code{nonzeros()}
+      \item faster row-wise \code{index_min()} and \code{index_max()}
+      \item expanded \code{join_rows()} and \code{join_cols()} to handle joining up to 4 matrices
+      \item expanded \code{.save()} and \code{.load()} to allow storing sparse matrices in CSV format
+      \item added \code{randperm()} to generate a vector with random
+      permutation of a sequence of integers 
+    }
+    \item Expanded the list of known good \code{gcc} and \code{clang}
+    versions in \code{configure.ac}
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.600.4.0 (2019-07-14)}{
   \itemize{
     \item Upgraded to Armadillo release 9.600.4 (Napa Invasion)
