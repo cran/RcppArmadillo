@@ -3,9 +3,24 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.800.4.0 (2020-20-24)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.800.4 (Horizon Scraper)
+    \itemize{
+      \item fixes for incorrect type promotion in \code{normpdf()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.800.3.0 (2019-12-04)}{
   \itemize{
     \item Upgraded to Armadillo release 9.800.3 (Horizon Scraper)
+    \itemize{
+      \item fixes for matrix row iterators
+      \item better detection of non-hermitian matrices by
+      \code{eig_sym()}, \code{inv_sympd()}, \code{chol()},
+      \code{expmat_sym()}  
+    }
     \item The \code{sample} function passes the prob vector as const allowing
     subsequent calls (Christian Gunning in \ghpr{276} fixing \ghit{275})
   }
