@@ -3,6 +3,23 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.9.900.1.0 (2020-06-08)}{
+  \itemize{
+    \item Upgraded to Armadillo release 9.900.1 (Nocturnal Misbehaviour)
+    \itemize{
+      \item faster \code{solve()} for under/over-determined systems
+      \item faster \code{eig_gen()} and \code{eig_pair()} for large matrices
+      \item expanded \code{eig_gen()} and \code{eig_pair()} to
+      optionally provide left and right eigenvectors
+    }
+    \item Switch Travis CI testing to R 4.0.0, use bionic as base distro
+    and test R 3.6.3 and 4.0.0 in a matrix (Dirk in \ghpr{298}).
+    \item Add two badges to README for indirect use and the CSDA paper.
+    \item Adapt \code{RcppArmadillo.package.skeleton()} to a change in R
+    4.0.0 affecting what it exports in \code{NAMESPACE}.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.9.880.1.0 (2020-05-15)}{
   \itemize{
     \item Upgraded to Armadillo release 9.880.1 (Roasted Mocha Detox)
@@ -13,7 +30,7 @@
       to disable use of \code{std::mutex} 
     }
     \item OpenMP capability is tested explicitly (Kevin Ushey and Dirk
-    in \ghpr{294}, ghpr{295}, and \ghpr{296} all fixing \ghit{290}).
+    in \ghpr{294}, \ghpr{295}, and \ghpr{296} all fixing \ghit{290}).
   }
 }
 
