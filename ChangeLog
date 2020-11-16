@@ -1,3 +1,38 @@
+2020-11-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 0.10.1.2.0
+	* configure.ac: Idem
+	* configure: Idem
+
+	* inst/tinytest/test_sparseConversion.R: Skipping parts on Windows
+
+2020-11-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Armadillo 10.1.2
+
+2020-10-26  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* src/RcppArmadillo.cpp: Rewrite version number accessors to be more
+	rebust of upstream and compiler settings
+
+	* .editorconfig: Added for standardized editor behaviour
+	* .Rbuildignore: Exclude .editorconfig
+
+2020-10-24  Condrad Sanderson  <conradsand.arma@gmail.com>
+
+	* inst/include/RcppArmadilloForward.h: Switch to quoted #include
+
+2020-10-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll minor version
+
+	* src/RcppArmadillo.cpp: Remove three redundant const int
+
+	* configure.ac: No longer use m4 to get version number
+	* configure: Regenerated
+
 2020-10-09  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION: Release 0.10.1.0.0
