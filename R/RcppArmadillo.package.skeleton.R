@@ -1,6 +1,6 @@
 ## RcppArmadillo.package.skeleton.R: makes a skeleton for a package that wants to use RcppArmadillo
 ##
-## Copyright (C)  2010 - 2019  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -83,7 +83,7 @@ RcppArmadillo.package.skeleton <- function(name="anRpackage", list=character(),
     if (!any(grepl("^exportPattern", lines))) {
         lines <- c(lines, "exportPattern(\"^[[:alpha:]]+\")")
     }
-    if (! grepl("useDynLib", lines)) {
+    if (!any(grepl("useDynLib", lines))) {
         lines <- c(sprintf("useDynLib(%s, .registration=TRUE)", name),
                    "importFrom(Rcpp, evalCpp)",        ## ensures Rcpp instantiation
                    lines)
