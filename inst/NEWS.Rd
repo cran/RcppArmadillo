@@ -3,12 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.2.1.0 (2021-02-09)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.2.1 (Cicada Swarm)
+    \itemize{
+      \item faster handling of subcubes
+      \item added \code{tgamma()}
+      \item added \code{.brief_print()} for abridged printing of matrices & cubes
+      \item expanded forms of \code{trimatu()} and \code{trimatl()} with
+      diagonal specification to handle sparse matrices
+      \item expanded \code{eigs_sym()} and \code{eigs_gen()} with optional shift-invert mode
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.1.2.2 (2021-01-08)}{
   \itemize{
     \item Correct one unit test for \pkg{Matrix} 1.3.0-caused changed
     (Binxiang in \ghpr{319} and Dirk in \ghpr{322}).
     \item Suppress one further warning from \pkg{Matrix} (Dirk)
     \item Apply an upstream \code{NaN} correction (Conrad in \ghpr{321})
+    \item Added GitHub Actions CI using \code{run.sh} from r-ci (Dirk)
   }
 }
 

@@ -476,7 +476,9 @@ Cube<eT>::operator=(const eT val)
   arma_extra_debug_sigprint();
   
   init_warm(1,1,1);
+  
   access::rw(mem[0]) = val;
+  
   return *this;
   }
 
@@ -604,9 +606,9 @@ Cube<eT>::Cube(eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, cons
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(prealloc_mat == true)  { arma_debug_warn("Cube::Cube(): parameter 'prealloc_mat' ignored as it's no longer used"); }
+  if(prealloc_mat)  { arma_debug_warn("Cube::Cube(): parameter 'prealloc_mat' ignored as it's no longer used"); }
   
-  if(copy_aux_mem == true)
+  if(copy_aux_mem)
     {
     init_cold();
     
@@ -1923,7 +1925,7 @@ Cube<eT>::shed_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( row_num >= n_rows, "Cube::shed_row(): index out of bounds");
+  arma_debug_check( row_num >= n_rows, "Cube::shed_row(): index out of bounds" );
   
   shed_rows(row_num, row_num);
   }
@@ -1938,7 +1940,7 @@ Cube<eT>::shed_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( col_num >= n_cols, "Cube::shed_col(): index out of bounds");
+  arma_debug_check( col_num >= n_cols, "Cube::shed_col(): index out of bounds" );
   
   shed_cols(col_num, col_num);
   }
@@ -1953,7 +1955,7 @@ Cube<eT>::shed_slice(const uword slice_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( slice_num >= n_slices, "Cube::shed_slice(): index out of bounds");
+  arma_debug_check( slice_num >= n_slices, "Cube::shed_slice(): index out of bounds" );
   
   shed_slices(slice_num, slice_num);
   }
@@ -2145,7 +2147,7 @@ Cube<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero
   const uword B_n_rows = t_n_rows - row_num;
   
   // insertion at row_num == n_rows is in effect an append operation
-  arma_debug_check( (row_num > t_n_rows), "Cube::insert_rows(): index out of bounds");
+  arma_debug_check( (row_num > t_n_rows), "Cube::insert_rows(): index out of bounds" );
   
   if(N > 0)
     {
@@ -2161,7 +2163,7 @@ Cube<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero
       out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
       }
     
-    if(set_to_zero == true)
+    if(set_to_zero)
       {
       out.rows(row_num, row_num + N - 1).zeros();
       }
@@ -2185,7 +2187,7 @@ Cube<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero
   const uword B_n_cols = t_n_cols - col_num;
   
   // insertion at col_num == n_cols is in effect an append operation
-  arma_debug_check( (col_num > t_n_cols), "Cube::insert_cols(): index out of bounds");
+  arma_debug_check( (col_num > t_n_cols), "Cube::insert_cols(): index out of bounds" );
   
   if(N > 0)
     {
@@ -2201,7 +2203,7 @@ Cube<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero
       out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
       }
     
-    if(set_to_zero == true)
+    if(set_to_zero)
       {
       out.cols(col_num, col_num + N - 1).zeros();
       }
@@ -2227,7 +2229,7 @@ Cube<eT>::insert_slices(const uword slice_num, const uword N, const bool set_to_
   const uword B_n_slices = t_n_slices - slice_num;
   
   // insertion at slice_num == n_slices is in effect an append operation
-  arma_debug_check( (slice_num > t_n_slices), "Cube::insert_slices(): index out of bounds");
+  arma_debug_check( (slice_num > t_n_slices), "Cube::insert_slices(): index out of bounds" );
   
   if(N > 0)
     {
@@ -2243,7 +2245,7 @@ Cube<eT>::insert_slices(const uword slice_num, const uword N, const bool set_to_
       out.slices(slice_num + N, t_n_slices + N - 1) = slices(slice_num, t_n_slices-1);
       }
     
-    if(set_to_zero == true)
+    if(set_to_zero)
       {
       //out.slices(slice_num, slice_num + N - 1).zeros();
       
@@ -2278,7 +2280,7 @@ Cube<eT>::insert_rows(const uword row_num, const BaseCube<eT,T1>& X)
   const uword B_n_rows = t_n_rows - row_num;
   
   // insertion at row_num == n_rows is in effect an append operation
-  arma_debug_check( (row_num  >  t_n_rows), "Cube::insert_rows(): index out of bounds");
+  arma_debug_check( (row_num  >  t_n_rows), "Cube::insert_rows(): index out of bounds" );
   
   arma_debug_check
     (
@@ -2327,7 +2329,7 @@ Cube<eT>::insert_cols(const uword col_num, const BaseCube<eT,T1>& X)
   const uword B_n_cols = t_n_cols - col_num;
   
   // insertion at col_num == n_cols is in effect an append operation
-  arma_debug_check( (col_num  >  t_n_cols), "Cube::insert_cols(): index out of bounds");
+  arma_debug_check( (col_num  >  t_n_cols), "Cube::insert_cols(): index out of bounds" );
   
   arma_debug_check
     (
@@ -2378,7 +2380,7 @@ Cube<eT>::insert_slices(const uword slice_num, const BaseCube<eT,T1>& X)
   const uword B_n_slices = t_n_slices - slice_num;
   
   // insertion at slice_num == n_slices is in effect an append operation
-  arma_debug_check( (slice_num  >  t_n_slices), "Cube::insert_slices(): index out of bounds");
+  arma_debug_check( (slice_num  >  t_n_slices), "Cube::insert_slices(): index out of bounds" );
   
   arma_debug_check
     (
@@ -2864,6 +2866,7 @@ Cube<eT>::Cube(const GlueCube<T1, T2, glue_type>& X)
   , mat_ptrs(nullptr)
   {
   arma_extra_debug_sigprint_this(this);
+  
   this->operator=(X);
   }
 
@@ -3202,6 +3205,7 @@ const eT&
 Cube<eT>::at_alt(const uword i) const
   {
   const eT* mem_aligned = mem;
+  
   memory::mark_as_aligned(mem_aligned);
   
   return mem_aligned[i];
@@ -3216,7 +3220,8 @@ arma_warn_unused
 eT&
 Cube<eT>::operator() (const uword i)
   {
-  arma_debug_check( (i >= n_elem), "Cube::operator(): index out of bounds");
+  arma_debug_check( (i >= n_elem), "Cube::operator(): index out of bounds" );
+  
   return access::rw(mem[i]);
   }
 
@@ -3229,7 +3234,8 @@ arma_warn_unused
 const eT&
 Cube<eT>::operator() (const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "Cube::operator(): index out of bounds");
+  arma_debug_check( (i >= n_elem), "Cube::operator(): index out of bounds" );
+  
   return mem[i];
   }
 
@@ -3355,6 +3361,7 @@ const Cube<eT>&
 Cube<eT>::operator++()
   {
   Cube_aux::prefix_pp(*this);
+  
   return *this;
   }
 
@@ -3467,7 +3474,7 @@ Cube<eT>::in_range(const span& x) const
   {
   arma_extra_debug_sigprint();
   
-  if(x.whole == true)
+  if(x.whole)
     {
     return true;
     }
@@ -3517,7 +3524,7 @@ Cube<eT>::in_range(const span& row_span, const span& col_span, const span& slice
   const bool slices_ok = slice_span.whole ? true : ( (in_slice1 <= in_slice2) && (in_slice2 < n_slices) );
   
   
-  return ( (rows_ok == true) && (cols_ok == true) && (slices_ok == true) );
+  return ( rows_ok && cols_ok && slices_ok );
   }
 
 
@@ -3615,93 +3622,6 @@ const eT*
 Cube<eT>::slice_colptr(const uword uslice, const uword col) const
   {
   return &mem[ uslice*n_elem_slice + col*n_rows ];
-  }
-
-
-
-//! print contents of the cube (to the cout stream),
-//! optionally preceding with a user specified line of text.
-//! the precision and cell width are modified.
-//! on return, the stream's state are restored to their original values.
-template<typename eT>
-arma_cold
-inline
-void
-Cube<eT>::impl_print(const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(extra_text.length() != 0)
-    {
-    get_cout_stream() << extra_text << '\n';
-    }
-  
-  arma_ostream::print(get_cout_stream(), *this, true);
-  }
-
-
-//! print contents of the cube to a user specified stream,
-//! optionally preceding with a user specified line of text.
-//! the precision and cell width are modified.
-//! on return, the stream's state are restored to their original values.
-template<typename eT>
-arma_cold
-inline
-void
-Cube<eT>::impl_print(std::ostream& user_stream, const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(extra_text.length() != 0)
-    {
-    user_stream << extra_text << '\n';
-    }
-  
-  arma_ostream::print(user_stream, *this, true);
-  }
-
-
-
-//! print contents of the cube (to the cout stream),
-//! optionally preceding with a user specified line of text.
-//! the stream's state are used as is and are not modified
-//! (i.e. the precision and cell width are not modified).
-template<typename eT>
-arma_cold
-inline
-void
-Cube<eT>::impl_raw_print(const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(extra_text.length() != 0)
-    {
-    get_cout_stream() << extra_text << '\n';
-    }
-  
-  arma_ostream::print(get_cout_stream(), *this, false);
-  }
-
-
-
-//! print contents of the cube to a user specified stream,
-//! optionally preceding with a user specified line of text.
-//! the stream's state are used as is and are not modified.
-//! (i.e. the precision and cell width are not modified).
-template<typename eT>
-arma_cold
-inline
-void
-Cube<eT>::impl_raw_print(std::ostream& user_stream, const std::string& extra_text) const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(extra_text.length() != 0)
-    {
-    user_stream << extra_text << '\n';
-    }
-  
-  arma_ostream::print(user_stream, *this, false);
   }
 
 
@@ -4433,7 +4353,7 @@ Cube<eT>::save(const hdf5_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_hdf5_binary(*this, spec, err_msg);
     }
   
-  if((print_status == true) && (save_okay == false))
+  if(print_status && (save_okay == false))
     {
     if(err_msg.length() > 0)
       {
@@ -4546,7 +4466,7 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
       load_okay = false;
     }
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -4558,10 +4478,7 @@ Cube<eT>::load(const std::string name, const file_type type, const bool print_st
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -4602,7 +4519,7 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type, const bool print_sta
     }
   
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -4614,10 +4531,7 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type, const bool print_sta
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -4667,7 +4581,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
       load_okay = false;
     }
   
-  if( (print_status == true) && (load_okay == false) )
+  if( print_status && (load_okay == false) )
     {
     if(err_msg.length() > 0)
       {
@@ -4679,10 +4593,7 @@ Cube<eT>::load(std::istream& is, const file_type type, const bool print_status)
       }
     }
   
-  if(load_okay == false)
-    {
-    (*this).soft_reset();
-    }
+  if(load_okay == false)  { (*this).soft_reset(); }
   
   return load_okay;
   }
@@ -4850,7 +4761,7 @@ Cube<eT>::begin_slice(const uword slice_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "begin_slice(): index out of bounds");
+  arma_debug_check( (slice_num >= n_slices), "begin_slice(): index out of bounds" );
   
   return slice_memptr(slice_num);
   }
@@ -4864,7 +4775,7 @@ Cube<eT>::begin_slice(const uword slice_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "begin_slice(): index out of bounds");
+  arma_debug_check( (slice_num >= n_slices), "begin_slice(): index out of bounds" );
   
   return slice_memptr(slice_num);
   }
@@ -4878,7 +4789,7 @@ Cube<eT>::end_slice(const uword slice_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "end_slice(): index out of bounds");
+  arma_debug_check( (slice_num >= n_slices), "end_slice(): index out of bounds" );
   
   return slice_memptr(slice_num) + n_elem_slice;
   }
@@ -4892,7 +4803,7 @@ Cube<eT>::end_slice(const uword slice_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (slice_num >= n_slices), "end_slice(): index out of bounds");
+  arma_debug_check( (slice_num >= n_slices), "end_slice(): index out of bounds" );
   
   return slice_memptr(slice_num) + n_elem_slice;
   }
@@ -5304,7 +5215,7 @@ arma_warn_unused
 eT&
 Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator() (const uword i)
   {
-  arma_debug_check( (i >= fixed_n_elem), "Cube::operator(): index out of bounds");
+  arma_debug_check( (i >= fixed_n_elem), "Cube::operator(): index out of bounds" );
   
   return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
@@ -5318,7 +5229,7 @@ arma_warn_unused
 const eT&
 Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::operator() (const uword i) const
   {
-  arma_debug_check( (i >= fixed_n_elem), "Cube::operator(): index out of bounds");
+  arma_debug_check( (i >= fixed_n_elem), "Cube::operator(): index out of bounds" );
   
   return (use_extra) ? mem_local_extra[i] : mem_local[i];
   }
