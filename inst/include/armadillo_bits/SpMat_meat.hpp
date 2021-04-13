@@ -324,7 +324,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
   
-  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object is not a vector"                  );
+  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
   arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
   arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
 
@@ -397,7 +397,7 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
   
-  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object is not a vector"                  );
+  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
   arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
   arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
   
@@ -466,7 +466,7 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
   
-  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object is not a vector"                  );
+  arma_debug_check( (vals.is_vec() == false),     "SpMat::SpMat(): given 'values' object must be a vector"                 );
   arma_debug_check( (locs.n_rows != 2),           "SpMat::SpMat(): locations matrix must have two rows"                    );
   arma_debug_check( (locs.n_cols != vals.n_elem), "SpMat::SpMat(): number of locations is different than number of values" );
   
@@ -551,9 +551,9 @@ SpMat<eT>::SpMat
   const Mat<uword>& colptr = colptr_tmp.M;
   const Mat<eT>&      vals = vals_tmp.M;
   
-  arma_debug_check( (rowind.is_vec() == false), "SpMat::SpMat(): given 'rowind' object is not a vector" );
-  arma_debug_check( (colptr.is_vec() == false), "SpMat::SpMat(): given 'colptr' object is not a vector" );
-  arma_debug_check( (vals.is_vec()   == false), "SpMat::SpMat(): given 'values' object is not a vector" );
+  arma_debug_check( (rowind.is_vec() == false), "SpMat::SpMat(): given 'rowind' object must be a vector" );
+  arma_debug_check( (colptr.is_vec() == false), "SpMat::SpMat(): given 'colptr' object must be a vector" );
+  arma_debug_check( (vals.is_vec()   == false), "SpMat::SpMat(): given 'values' object must be a vector" );
   
   // Resize to correct number of elements (this also sets n_nonzero)
   init_cold(in_n_rows, in_n_cols, vals.n_elem);
@@ -2261,7 +2261,7 @@ SpMat<eT>::row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check(row_num >= n_rows, "SpMat::row(): out of bounds");
+  arma_debug_check_bounds(row_num >= n_rows, "SpMat::row(): out of bounds");
   
   return SpSubview_row<eT>(*this, row_num);
   }
@@ -2275,7 +2275,7 @@ SpMat<eT>::row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check(row_num >= n_rows, "SpMat::row(): out of bounds");
+  arma_debug_check_bounds(row_num >= n_rows, "SpMat::row(): out of bounds");
   
   return SpSubview_row<eT>(*this, row_num);
   }
@@ -2297,7 +2297,7 @@ SpMat<eT>::operator()(const uword row_num, const span& col_span)
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (row_num >= n_rows)
     ||
@@ -2326,7 +2326,7 @@ SpMat<eT>::operator()(const uword row_num, const span& col_span) const
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (row_num >= n_rows)
     ||
@@ -2347,7 +2347,7 @@ SpMat<eT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check(col_num >= n_cols, "SpMat::col(): out of bounds");
+  arma_debug_check_bounds(col_num >= n_cols, "SpMat::col(): out of bounds");
   
   return SpSubview_col<eT>(*this, col_num);
   }
@@ -2361,7 +2361,7 @@ SpMat<eT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check(col_num >= n_cols, "SpMat::col(): out of bounds");
+  arma_debug_check_bounds(col_num >= n_cols, "SpMat::col(): out of bounds");
   
   return SpSubview_col<eT>(*this, col_num);
   }
@@ -2383,7 +2383,7 @@ SpMat<eT>::operator()(const span& row_span, const uword col_num)
   const uword in_row2       =                          row_span.b;
   const uword submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (col_num >= n_cols)
     ||
@@ -2412,7 +2412,7 @@ SpMat<eT>::operator()(const span& row_span, const uword col_num) const
   const uword in_row2       =                          row_span.b;
   const uword submat_n_rows = row_all ? local_n_rows : in_row2 - in_row1 + 1;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (col_num >= n_cols)
     ||
@@ -2433,7 +2433,7 @@ SpMat<eT>::rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpMat::rows(): indices out of bounds or incorrectly used"
@@ -2453,7 +2453,7 @@ SpMat<eT>::rows(const uword in_row1, const uword in_row2) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpMat::rows(): indices out of bounds or incorrectly used"
@@ -2473,7 +2473,7 @@ SpMat<eT>::cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpMat::cols(): indices out of bounds or incorrectly used"
@@ -2493,7 +2493,7 @@ SpMat<eT>::cols(const uword in_col1, const uword in_col2) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpMat::cols(): indices out of bounds or incorrectly used"
@@ -2513,7 +2513,7 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2,
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "SpMat::submat(): indices out of bounds or incorrectly used"
@@ -2534,7 +2534,7 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const uword in_row2,
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_col1 >  in_col2) || (in_row2 >= n_rows) || (in_col2 >= n_cols),
     "SpMat::submat(): indices out of bounds or incorrectly used"
@@ -2561,7 +2561,7 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s)
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
     "SpMat::submat(): indices or size out of bounds"
@@ -2585,7 +2585,7 @@ SpMat<eT>::submat(const uword in_row1, const uword in_col1, const SizeMat& s) co
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((in_row1 >= l_n_rows) || (in_col1 >= l_n_cols) || ((in_row1 + s_n_rows) > l_n_rows) || ((in_col1 + s_n_cols) > l_n_cols)),
     "SpMat::submat(): indices or size out of bounds"
@@ -2617,7 +2617,7 @@ SpMat<eT>::submat(const span& row_span, const span& col_span)
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1; 
   
-  arma_debug_check
+  arma_debug_check_bounds
     (    
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||   
@@ -2652,7 +2652,7 @@ SpMat<eT>::submat(const span& row_span, const span& col_span) const
   const uword in_col2       =                          col_span.b;
   const uword submat_n_cols = col_all ? local_n_cols : in_col2 - in_col1 + 1; 
   
-  arma_debug_check
+  arma_debug_check_bounds
     (    
     ( row_all ? false : ((in_row1 > in_row2) || (in_row2 >= local_n_rows)) )
     ||   
@@ -2721,7 +2721,7 @@ SpMat<eT>::head_rows(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -2735,7 +2735,7 @@ SpMat<eT>::head_rows(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_rows), "SpMat::head_rows(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, N, n_cols);
   }
@@ -2749,7 +2749,7 @@ SpMat<eT>::tail_rows(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -2765,7 +2765,7 @@ SpMat<eT>::tail_rows(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_rows), "SpMat::tail_rows(): size out of bounds" );
   
   const uword start_row = n_rows - N;
   
@@ -2781,7 +2781,7 @@ SpMat<eT>::head_cols(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -2795,7 +2795,7 @@ SpMat<eT>::head_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_cols), "SpMat::head_cols(): size out of bounds" );
   
   return SpSubview<eT>(*this, 0, 0, n_rows, N);
   }
@@ -2809,7 +2809,7 @@ SpMat<eT>::tail_cols(const uword N)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -2825,7 +2825,7 @@ SpMat<eT>::tail_cols(const uword N) const
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
+  arma_debug_check_bounds( (N > n_cols), "SpMat::tail_cols(): size out of bounds" );
   
   const uword start_col = n_cols - N;
   
@@ -2871,7 +2871,7 @@ SpMat<eT>::diag(const sword in_id)
   const uword row_offset = (in_id < 0) ? uword(-in_id) : 0;
   const uword col_offset = (in_id > 0) ? uword( in_id) : 0;
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "SpMat::diag(): requested diagonal out of bounds"
@@ -2895,7 +2895,7 @@ SpMat<eT>::diag(const sword in_id) const
   const uword row_offset = uword( (in_id < 0) ? -in_id : 0 );
   const uword col_offset = uword( (in_id > 0) ?  in_id : 0 );
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)),
     "SpMat::diag(): requested diagonal out of bounds"
@@ -2915,7 +2915,7 @@ SpMat<eT>::swap_rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ((in_row1 >= n_rows) || (in_row2 >= n_rows)), "SpMat::swap_rows(): out of bounds" );
+  arma_debug_check_bounds( ((in_row1 >= n_rows) || (in_row2 >= n_rows)), "SpMat::swap_rows(): out of bounds" );
   
   if(in_row1 == in_row2)  { return; }
   
@@ -3020,7 +3020,7 @@ SpMat<eT>::swap_cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check( ((in_col1 >= n_cols) || (in_col2 >= n_cols)), "SpMat::swap_cols(): out of bounds" );
+  arma_debug_check_bounds( ((in_col1 >= n_cols) || (in_col2 >= n_cols)), "SpMat::swap_cols(): out of bounds" );
   
   if(in_col1 == in_col2)  { return; }
   
@@ -3050,7 +3050,7 @@ SpMat<eT>::shed_row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check (row_num >= n_rows, "SpMat::shed_row(): out of bounds");
+  arma_debug_check_bounds(row_num >= n_rows, "SpMat::shed_row(): out of bounds");
   
   shed_rows (row_num, row_num);
   }
@@ -3064,7 +3064,7 @@ SpMat<eT>::shed_col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check (col_num >= n_cols, "SpMat::shed_col(): out of bounds");
+  arma_debug_check_bounds(col_num >= n_cols, "SpMat::shed_col(): out of bounds");
   
   shed_cols(col_num, col_num);
   }
@@ -3078,7 +3078,7 @@ SpMat<eT>::shed_rows(const uword in_row1, const uword in_row2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_row1 > in_row2) || (in_row2 >= n_rows),
     "SpMat::shed_rows(): indices out of bounds or incorectly used"
@@ -3164,7 +3164,7 @@ SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_check
+  arma_debug_check_bounds
     (
     (in_col1 > in_col2) || (in_col2 >= n_cols),
     "SpMat::shed_cols(): indices out of bounds or incorrectly used"
@@ -3299,7 +3299,7 @@ arma_warn_unused
 SpMat_MapMat_val<eT>
 SpMat<eT>::operator()(const uword i)
   {
-  arma_debug_check( (i >= n_elem), "SpMat::operator(): out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "SpMat::operator(): out of bounds" );
   
   const uword in_col = i / n_rows;
   const uword in_row = i % n_rows;
@@ -3315,7 +3315,7 @@ arma_warn_unused
 eT
 SpMat<eT>::operator()(const uword i) const
   {
-  arma_debug_check( (i >= n_elem), "SpMat::operator(): out of bounds" );
+  arma_debug_check_bounds( (i >= n_elem), "SpMat::operator(): out of bounds" );
   
   return get_value(i);
   }
@@ -3355,7 +3355,7 @@ arma_warn_unused
 SpMat_MapMat_val<eT>
 SpMat<eT>::operator()(const uword in_row, const uword in_col)
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
   
   return SpMat_MapMat_val<eT>((*this), cache, in_row, in_col);
   }
@@ -3368,7 +3368,7 @@ arma_warn_unused
 eT
 SpMat<eT>::operator()(const uword in_row, const uword in_col) const
   {
-  arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
+  arma_debug_check_bounds( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds" );
   
   return get_value(in_row, in_col);
   }
@@ -4077,7 +4077,7 @@ SpMat<eT>::replace(const eT old_val, const eT new_val)
   
   if(old_val == eT(0))
     {
-    arma_debug_warn("SpMat::replace(): replacement not done, as old_val = 0");
+    arma_debug_warn_level(1, "SpMat::replace(): replacement not done, as old_val = 0");
     }
   else
     {
@@ -4513,7 +4513,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::save(const std::string name, const file_type type, const bool print_status) const
+SpMat<eT>::save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -4524,7 +4524,7 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
   switch(type)
     {
     case csv_ascii:
-      return (*this).save(csv_name(name), type, print_status);
+      return (*this).save(csv_name(name), type);
       break;
     
     case arma_binary:
@@ -4536,11 +4536,11 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::save(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("SpMat::save(): couldn't write to ", name); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write; file: ", name); }
   
   return save_okay;
   }
@@ -4551,13 +4551,13 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_status) const
+SpMat<eT>::save(const csv_name& spec, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
   if(type != csv_ascii)
     {
-    arma_debug_check(true, "SpMat::save(): unsupported file type for csv_name()");
+    arma_stop_runtime_error("SpMat::save(): unsupported file type for csv_name()");
     return false;
     }
   
@@ -4577,7 +4577,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     {
     if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
       {
-      if(print_status)  { arma_debug_warn("SpMat::save(): given header must have a vector layout"); }
+      arma_debug_warn_level(1, "SpMat::save(): given header must have a vector layout");
       return false;
       }
     
@@ -4587,7 +4587,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
       
       if(token.find(',') != std::string::npos)
         {
-        if(print_status)  { arma_debug_warn("SpMat::save(): token within the header contains a comma: '", token, "'"); }
+        arma_debug_warn_level(1, "SpMat::save(): token within the header contains a comma: '", token, "'");
         return false;
         }
       }
@@ -4596,7 +4596,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     
     if(spec.header_ro.n_elem != save_n_cols)
       {
-      if(print_status)  { arma_debug_warn("SpMat::save(): size mistmach between header and matrix"); }
+      arma_debug_warn_level(1, "SpMat::save(): size mistmach between header and matrix");
       return false;
       }
     }
@@ -4614,10 +4614,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
     save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
-  if(print_status && (save_okay == false))
-    {
-    arma_debug_warn("SpMat::save(): couldn't write to ", spec.filename);
-    }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write; file: ", spec.filename); }
   
   return save_okay;
   }
@@ -4629,7 +4626,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status) const
+SpMat<eT>::save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
@@ -4652,11 +4649,11 @@ SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status)
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::save(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::save(): unsupported file type");
       save_okay = false;
     }
   
-  if(print_status && (save_okay == false))  { arma_debug_warn("SpMat::save(): couldn't write to the given stream"); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "SpMat::save(): couldn't write to stream"); }
   
   return save_okay;
   }
@@ -4668,7 +4665,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::load(const std::string name, const file_type type, const bool print_status)
+SpMat<eT>::load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
@@ -4684,7 +4681,7 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     //   break;
     
     case csv_ascii:
-      return (*this).load(csv_name(name), type, print_status);
+      return (*this).load(csv_name(name), type);
       break;
     
     case arma_binary:
@@ -4696,19 +4693,19 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::load(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
-  if(print_status && (load_okay == false))
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("SpMat::load(): ", err_msg, name);
+      arma_debug_warn_level(3, "SpMat::load(): ", err_msg, "; file: ", name);
       }
     else
       {
-      arma_debug_warn("SpMat::load(): couldn't read ", name);
+      arma_debug_warn_level(3, "SpMat::load(): couldn't read; file: ", name);
       }
     }
   
@@ -4723,13 +4720,13 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_status)
+SpMat<eT>::load(const csv_name& spec, const file_type type)
   {
   arma_extra_debug_sigprint();
   
   if(type != csv_ascii)
     {
-    arma_debug_check(true, "SpMat::load(): unsupported file type for csv_name()");
+    arma_stop_runtime_error("SpMat::load(): unsupported file type for csv_name()");
     return false;
     }
   
@@ -4770,27 +4767,24 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
     load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
     }
   
-  if(print_status)
+  if(load_okay == false)
     {
-    if(load_okay == false)
+    if(err_msg.length() > 0)
       {
-      if(err_msg.length() > 0)
-        {
-        arma_debug_warn("SpMat::load(): ", err_msg, spec.filename);
-        }
-      else
-        {
-        arma_debug_warn("SpMat::load(): couldn't read ", spec.filename);
-        }
+      arma_debug_warn_level(3, "SpMat::load(): ", err_msg, "; file: ", spec.filename);
       }
     else
       {
-      const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
-      
-      if(with_header && (spec.header_rw.n_elem != load_n_cols))
-        {
-        arma_debug_warn("SpMat::load(): size mistmach between header and matrix");
-        }
+      arma_debug_warn_level(3, "SpMat::load(): couldn't read; file: ", spec.filename);
+      }
+    }
+  else
+    {
+    const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+    
+    if(with_header && (spec.header_rw.n_elem != load_n_cols))
+      {
+      arma_debug_warn_level(3, "SpMat::load(): size mistmach between header and matrix");
       }
     }
   
@@ -4811,7 +4805,7 @@ template<typename eT>
 inline
 arma_cold
 bool
-SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
+SpMat<eT>::load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
@@ -4839,19 +4833,19 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       break;
     
     default:
-      if(print_status)  { arma_debug_warn("SpMat::load(): unsupported file type"); }
+      arma_debug_warn_level(1, "SpMat::load(): unsupported file type");
       load_okay = false;
     }
   
-  if(print_status && (load_okay == false))
+  if(load_okay == false)
     {
     if(err_msg.length() > 0)
       {
-      arma_debug_warn("SpMat::load(): ", err_msg, "the given stream");
+      arma_debug_warn_level(3, "SpMat::load(): ", err_msg);
       }
     else
       {
-      arma_debug_warn("SpMat::load(): couldn't load from the given stream");
+      arma_debug_warn_level(3, "SpMat::load(): couldn't load from stream");
       }
     }
   
@@ -4871,7 +4865,7 @@ SpMat<eT>::quiet_save(const std::string name, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(name, type, false);
+  return (*this).save(name, type);
   }
 
 
@@ -4885,7 +4879,7 @@ SpMat<eT>::quiet_save(std::ostream& os, const file_type type) const
   {
   arma_extra_debug_sigprint();
   
-  return (*this).save(os, type, false);
+  return (*this).save(os, type);
   }
 
 
@@ -4899,7 +4893,7 @@ SpMat<eT>::quiet_load(const std::string name, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(name, type, false);
+  return (*this).load(name, type);
   }
 
 
@@ -4913,7 +4907,7 @@ SpMat<eT>::quiet_load(std::istream& is, const file_type type)
   {
   arma_extra_debug_sigprint();
   
-  return (*this).load(is, type, false);
+  return (*this).load(is, type);
   }
 
 
