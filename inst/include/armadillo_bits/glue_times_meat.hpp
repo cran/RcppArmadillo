@@ -81,7 +81,7 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
   
   typedef typename T1::elem_type eT;
   
-  if(strip_inv<T1>::do_inv == true)
+  if(strip_inv<T1>::do_inv)
     {
     // replace inv(A)*B with solve(A,B)
     
@@ -260,7 +260,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
   
   typedef typename T1::elem_type eT;
   
-  if(strip_inv<T1>::do_inv == true)
+  if(strip_inv<T1>::do_inv)
     {
     // replace inv(A)*B*C with solve(A,B*C);
     
@@ -312,7 +312,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     }
   
   
-  if(strip_inv<T2>::do_inv == true)
+  if(strip_inv<T2>::do_inv)
     {
     // replace A*inv(B)*C with A*solve(B,C)
     
@@ -521,9 +521,9 @@ glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>
   {
   arma_extra_debug_sigprint();
   
-  const sword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
+  constexpr uword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
   
-  arma_extra_debug_print(arma_str::format("N_mat = %d") % N_mat);
+  arma_extra_debug_print(arma_str::format("N_mat = %u") % N_mat);
   
   glue_times_redirect<N_mat>::apply(out, X);
   }

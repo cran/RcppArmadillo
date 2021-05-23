@@ -3,7 +3,29 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.10.3.0.0 (2021-04-12)}{
+\section{Changes in RcppArmadillo version 0.10.5.0 (2021-05-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.5 (Antipodean Fortress)
+    \itemize{
+      \item added \code{.clamp()} member function
+      \item expanded the standalone \code{clamp()} function to handle complex values
+      \item more efficient use of OpenMP
+      \item vector, matrix and cube constructors now initialise elements
+      to zero by default; use the \code{fill::none} specifier,
+      eg. \code{mat X(4,5,fill::none)}, to disable element initialisation
+    }
+    \item Added \code{codecov.yml} to exclude Armadillo from coverage analysis
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.10.4.1.0 (2021-04-23)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.4.1 (Pressure Cooker)
+    \item GitHub-only release
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.10.4.0.0 (2021-04-12)}{
   \itemize{
     \item Upgraded to Armadillo release 10.4.0 (Pressure Cooker)
     \itemize{
@@ -16,8 +38,8 @@
       failed decompositions, failed saving/loading, etc, no longer emit
       warnings
     }
-    \item Apply one upstream correction for \code{arma::randn} draws
-    when using alternative (here R) generator
+    \item Apply one upstream corrections for \code{arma::randn} draws
+    when using alternative (here R) generator, and \code{arma::randg}.
   }
 }
 
