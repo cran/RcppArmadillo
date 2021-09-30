@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -427,7 +429,6 @@ arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
 
 template<typename T1>
 inline
-static
 void
 arma_warn_level(const uword level, const T1& arg1)
   {
@@ -937,7 +938,7 @@ arma_assert_same_size(const ProxyCube<eT1>& A, const ProxyCube<eT2>& B, const ch
 
 
 //
-// functions for checking whether a cube or subcube can be interpreted as a matrix (i.e. single slice)
+// functions for checking whether a cube or subcube can be interpreted as a matrix (ie. single slice)
 
 
 

@@ -1,3 +1,71 @@
+2021-09-29  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.0.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+        * inst/include/armadillo_bits/arma_version.hpp: Armadillo 10.7.0
+
+2021-09-29  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.6.99.3
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+        * inst/include/armadillo_bits/: Armadillo 10.7-RC2
+
+2021-09-27  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.6.99.2
+	* DESCRIPTION (Author): Add Conrad
+	* README.md (Rcpp): Idem
+
+	* inst/include/RcppArmadilloAs.h: Update copyright header,
+	remove two editor settings lines as we long switched to editorconfig
+	* inst/include/RcppArmadilloConfigGenerated.h.in: Idem
+	* inst/include/RcppArmadilloConfig.h: Idem
+	* inst/include/RcppArmadilloForward.h: Idem
+	* inst/include/RcppArmadillo.h: Idem
+	* inst/include/RcppArmadilloSugar.h: Idem
+	* inst/include/RcppArmadilloWrap.h: Idem
+
+2021-09-27  Condrad Sanderson  <conradsand.arma@gmail.com>
+
+	* inst/include/RcppArmadilloForward.h: Adjust for Armadillo 10.7 and
+	subview_cols
+	* inst/include/RcppArmadilloWrap.h: Idem
+
+2021-09-26  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.6.99.1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+        * inst/include/armadillo_bits/: Armadillo 10.7-RC1
+
+	* README.md: Added total downloads badge
+
+2021-08-05  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.6.2.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+        * inst/include/armadillo_bits/: Armadillo 10.6.2
+
+2021-07-19  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.6.1.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+        * inst/include/armadillo_bits/: Armadillo 10.6.1
+
 2021-07-16  Dirk Eddelbuettel  <edd@debian.org>
 
         * DESCRIPTION (Version, Date): RcppArmadillo 0.10.6.0.0
