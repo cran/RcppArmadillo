@@ -1,4 +1,73 @@
+2021-12-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Armadillo 10.7.5
+
+2021-11-23  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.4.0
+        * inst/NEWS.Rd: Idem
+
+	* inst/include/armadillo_bits/: Armadillo 10.7.4
+
+2021-11-18  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.3.1
+
+	* inst/include/RcppArmadilloConfig.h: Simplify to using just one new
+	#define for the two changes to Fields import/export
+	* inst/include/RcppArmadilloAs.h (get): Updated
+	* inst/include/RcppArmadilloWrap.h (wrap): Idem
+	* inst/tinytest/cpp/fields_new.cpp: Idem
+
+2021-11-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/cpp/fields.cpp: Added tests for R -> C++
+	* inst/tinytest/cpp/fields_new.cpp: Idem
+	* inst/tinytest/test_fields.R: Idem
+	* inst/tinytest/test_fields_new.R: Idem
+
+2021-11-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/cpp/fields.cpp: Additional test using 3d field
+	working in 'new' but not in 'old' setup
+	* inst/tinytest/cpp/fields_new.cpp: Idem
+	* inst/tinytest/test_fields.R: Idem
+	* inst/tinytest/test_fields_new.R: Idem
+
+	* inst/tinytest/cpp/fields.cpp: Initial tests for R -> C++
+	* inst/tinytest/test_fields.R: Idem
+
+2021-11-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/cpp/fields_new.cpp: Test for 'new' (i.e. corrected)
+	fields behaviour currently requiring #define (for C++ to R)
+	* inst/tinytest/test_fields_new.R: Idem
+
+2021-11-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_fields.R: Added 1-d field tests (for C++ to R)
+	* inst/tinytest/cpp/fields.cpp: Idem
+
+2021-11-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_fields.R: Added field tests (for C++ to R)
+	* inst/tinytest/cpp/fields.cpp: Idem
+
+2021-11-09  Jonathan Berrisch  <jonathan@berrisch.biz>
+
+	* inst/include/RcppArmadilloAs.h: Update arma::field conversion
+	* inst/include/RcppArmadilloWrap.h: Idem
+	* inst/include/RcppArmadilloConfig.h: Define guards for changes
+	* inst/tinytest/test_rcpparmadillo.R: New tests
+
+2021-11-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* local/armafield.cpp: Add an arma::field test file
+
 2021-11-04  Dirk Eddelbuettel  <edd@debian.org>
+
+        * DESCRIPTION (Version, Date): RcppArmadillo 0.10.7.3.0
+        * inst/NEWS.Rd: Idem
 
 	* inst/include/armadillo_bits/: Armadillo 10.7.3
 
