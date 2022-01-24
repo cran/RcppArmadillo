@@ -16,41 +16,25 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_rank
+
+//! \addtogroup op_rank
 //! @{
 
 
 
-template<typename T1>
-arma_warn_unused
-inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, uword >::result
-rank(const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol = 0)
+class op_rank
+  : public traits_op_default
   {
-  arma_extra_debug_sigprint();
+  public:
   
-  uword out = uword(0);
+  template<typename T1> inline static bool apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol);
   
-  const bool status = op_rank::apply(out, expr.get_ref(), tol);
+  template<typename eT> inline static bool  apply_gen(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol);
   
-  if(status == false)  { arma_stop_runtime_error("rank(): failed"); return uword(0); }
+  template<typename eT> inline static bool  apply_sym(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol);
   
-  return out;
-  }
-
-
-
-template<typename T1>
-inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
-rank(uword& out, const Base<typename T1::elem_type,T1>& expr, const typename T1::pod_type tol = 0)
-  {
-  arma_extra_debug_sigprint();
-  
-  out = uword(0);
-  
-  return op_rank::apply(out, expr.get_ref(), tol);
-  }
+  template<typename eT> inline static bool apply_diag(uword& out, Mat<eT>& A, typename get_pod_type<eT>::result tol);
+  };
 
 
 

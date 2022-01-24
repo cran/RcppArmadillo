@@ -89,7 +89,7 @@ op_inv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::e
   if(is_triu || is_tril)  { return auxlib::inv_tr(out, ((is_triu) ? uword(0) : uword(1))); }
 
   #if defined(ARMA_OPTIMISE_SYMPD)
-    const bool try_sympd = sympd_helper::guess_sympd_anysize(out);
+    const bool try_sympd = sympd_helper::guess_sympd(out);
   #else
     const bool try_sympd = false;
   #endif
@@ -306,6 +306,7 @@ op_inv_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
   arma_extra_debug_sigprint();
   
   typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
   out = expr.get_ref();
   
@@ -326,6 +327,30 @@ op_inv_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     if(status)  { arrayops::copy(out.memptr(), tmp.memptr(), tmp.n_elem); return true; }
     
     // fallthrough if optimisation failed
+    }
+  
+  if((is_cx<eT>::no) && (is_op_diagmat<T1>::value || out.is_diagmat()))
+    {
+    arma_extra_debug_print("op_inv_sympd: detected diagonal matrix");
+    
+    // specialised handling of real matrices only;
+    // currently auxlib::inv_sympd() does not enforce that 
+    // imaginary components of diagonal elements must be zero;
+    // strictly enforcing this constraint may break existing user software.
+    
+    const uword N = (std::min)(out.n_rows, out.n_cols);
+    
+    for(uword i=0; i<N; ++i)
+      {
+            eT&      out_ii = out.at(i,i);
+      const  T  real_out_ii = access::tmp_real(out_ii);
+      
+      if(real_out_ii <= T(0))  { return false; }
+      
+      out_ii = eT(T(1) / real_out_ii);
+      }
+      
+    return true;
     }
   
   return auxlib::inv_sympd(out);

@@ -3,6 +3,32 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.10.8.1.0 (2022-01-23)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.8.1 (Realm Raider)
+    \itemize{
+      \item fix interaction between OpenBLAS and LAPACK
+      \item emit warning if \code{find()} is incorrectly used to locate
+      NaN elements
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.10.8.0.0 (2022-01-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 10.8 (Realm Raider)
+    \itemize{
+      \item faster handling of symmetric matrices by \code{pinv()} and
+      \code{rank()}
+      \item faster handling of diagonal matrices by \code{inv_sympd()},
+      \code{pinv()}, \code{rank()}
+      \item expanded \code{norm()} to handle integer vectors and
+      matrices
+      \item added \code{datum::tau} to replace \code{2π}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.10.7.5.0 (2021-12-16)}{
   \itemize{
     \item Upgraded to Armadillo release 10.7.5

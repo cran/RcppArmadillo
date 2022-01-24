@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 10
-#define ARMA_VERSION_MINOR 7
-#define ARMA_VERSION_PATCH 5
-#define ARMA_VERSION_NAME  "Entropy Maximiser"
+#define ARMA_VERSION_MINOR 8
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "Realm Raider"
 
 
 
