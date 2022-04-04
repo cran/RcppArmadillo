@@ -215,6 +215,8 @@ inline
 bool
 guess_sympd(const Mat<eT>& A)
   {
+  arma_extra_debug_sigprint();
+  
   // analyse matrices with size >= 4x4
   
   if((A.n_rows != A.n_cols) || (A.n_rows < uword(4)))  { return false; }
@@ -229,6 +231,8 @@ inline
 bool
 guess_sympd(const Mat<eT>& A, const uword min_n_rows)
   {
+  arma_extra_debug_sigprint();
+  
   if((A.n_rows != A.n_cols) || (A.n_rows < min_n_rows))  { return false; }
   
   return guess_sympd_worker(A);
@@ -439,6 +443,38 @@ analyse_matrix(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>& A)
   analyse_matrix_worker(is_approx_sym, is_approx_sympd, A);
   
   if(is_approx_sym == false)  { is_approx_sympd = false; }
+  }
+
+
+
+template<typename eT>
+inline
+bool
+check_diag_imag(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming matrix A is square-sized
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const T tol = T(10000) * std::numeric_limits<T>::epsilon();  // allow some leeway
+  
+  const eT* colmem = A.memptr();
+  
+  const uword N = A.n_rows;
+  
+  for(uword i=0; i<N; ++i)
+    {
+    const eT& A_ii      = colmem[i];
+    const  T  A_ii_imag = access::tmp_imag(A_ii);
+    
+    if(std::abs(A_ii_imag) > tol)  { return false; }
+    
+    colmem += N;
+    }
+  
+  return true;
   }
 
 
