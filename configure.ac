@@ -11,7 +11,7 @@
 AC_PREREQ([2.69])
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT([RcppArmadillo],[0.10.8.2.0],[edd@debian.org])
+AC_INIT([RcppArmadillo],[0.11.1.1.0],[edd@debian.org])
 
 ## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}
@@ -184,6 +184,7 @@ arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
 
 if test x"${openmp_already_works}" = x"yes"; then
     arma_have_openmp="#define ARMA_USE_OPENMP 1"
+    openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
 fi
 
 if test x"${can_use_openmp}" = x"yes"; then
