@@ -22,7 +22,7 @@
 #endif
 //// The level of warning messages printed to ARMA_CERR_STREAM.
 //// Must be an integer >= 0. The default value is 2.
-//// 0 = no warnings
+//// 0 = no warnings; generally not recommended
 //// 1 = only critical warnings about arguments and/or data which are likely to lead to incorrect results
 //// 2 = as per level 1, and warnings about poorly conditioned systems (low rcond) detected by solve(), spsolve(), etc
 //// 3 = as per level 2, and warnings about failed decompositions, failed saving/loading, etc
@@ -159,8 +159,8 @@
   //// Comment out the above line if you don't want automatic checking for nonfinite matrices
 #endif
 
-// #define ARMA_USE_HDF5_ALT
-#if defined(ARMA_USE_HDF5_ALT) && defined(ARMA_USE_WRAPPER)
+// #define ARMA_USE_HDF5_CMAKE
+#if defined(ARMA_USE_HDF5_CMAKE) && defined(ARMA_USE_WRAPPER)
   #undef  ARMA_USE_HDF5
   #define ARMA_USE_HDF5
   
@@ -263,7 +263,7 @@
 
 #if defined(ARMA_DONT_USE_WRAPPER)
   #undef ARMA_USE_WRAPPER
-  #undef ARMA_USE_HDF5_ALT
+  #undef ARMA_USE_HDF5_CMAKE
 #endif
 
 #if defined(ARMA_DONT_USE_FORTRAN_HIDDEN_ARGS)
@@ -310,7 +310,7 @@
 
 #if defined(ARMA_DONT_USE_HDF5)
   #undef ARMA_USE_HDF5
-  #undef ARMA_USE_HDF5_ALT
+  #undef ARMA_USE_HDF5_CMAKE
 #endif
 
 #if defined(ARMA_DONT_OPTIMISE_BAND) || defined(ARMA_DONT_OPTIMISE_SOLVE_BAND)
@@ -329,10 +329,17 @@
   #undef ARMA_CHECK_NONFINITE
 #endif
 
-// #if defined(ARMA_DONT_PRINT_ERRORS)
-//     #pragma message ("WARNING: support for ARMA_DONT_PRINT_ERRORS option has been removed;")
-//     #pragma message ("WARNING: use ARMA_WARN_LEVEL and ARMA_DONT_PRINT_EXCEPTIONS options instead.")
-// #endif
+#if defined(ARMA_DONT_PRINT_ERRORS)
+  #pragma message ("INFO: support for ARMA_DONT_PRINT_ERRORS option has been removed")
+  
+  #if defined(ARMA_PRINT_EXCEPTIONS)
+    #pragma message ("INFO: suggest to use ARMA_WARN_LEVEL and ARMA_DONT_PRINT_EXCEPTIONS options instead")
+  #else
+    #pragma message ("INFO: suggest to use ARMA_WARN_LEVEL option instead")
+  #endif
+  
+  #pragma message ("INFO: see the documentation for details")
+#endif
 
 #if defined(ARMA_DONT_PRINT_EXCEPTIONS)
   #undef ARMA_PRINT_EXCEPTIONS

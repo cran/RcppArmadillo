@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
-// 
+//
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,19 +41,19 @@
 
 #undef arma_fortran_sans_prefix_B
 #undef arma_fortran_with_prefix_B
- 
+
 #if defined(ARMA_BLAS_UNDERSCORE)
   #define arma_fortran_sans_prefix_B(function) function##_
-  
-  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)  
+
+  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
     #define arma_fortran_with_prefix_B(function) wrapper2_##function##_
   #else
     #define arma_fortran_with_prefix_B(function) wrapper_##function##_
   #endif
 #else
   #define arma_fortran_sans_prefix_B(function) function
-  
-  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)  
+
+  #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
     #define arma_fortran_with_prefix_B(function) wrapper2_##function
   #else
     #define arma_fortran_with_prefix_B(function) wrapper_##function
@@ -114,7 +114,7 @@
 #if defined(__APPLE__) || defined(__apple_build_version__)
   #undef  ARMA_BLAS_SDOT_BUG
   #define ARMA_BLAS_SDOT_BUG
-  
+
   // #undef  ARMA_HAVE_POSIX_MEMALIGN
   // NOTE: posix_memalign() is available since macOS 10.6 (late 2009 onwards)
 #endif
@@ -130,10 +130,10 @@
 #if defined (__GNUG__)
   #define ARMA_FNSIG  __PRETTY_FUNCTION__
 #elif defined (_MSC_VER)
-  #define ARMA_FNSIG  __FUNCSIG__ 
+  #define ARMA_FNSIG  __FUNCSIG__
 #elif defined(__INTEL_COMPILER)
   #define ARMA_FNSIG  __FUNCTION__
-#else 
+#else
   #define ARMA_FNSIG  __func__
 #endif
 
@@ -147,7 +147,7 @@
   #if (defined(__GNUG__) || defined(__GNUC__)) && (defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__) || defined(__ARMCC_VERSION) || defined(__IBMCPP__))
     #undef  ARMA_DETECTED_FAKE_GCC
     #define ARMA_DETECTED_FAKE_GCC
-    
+
     #pragma message ("WARNING: this compiler is pretending to be GCC but it may not be fully compatible;")
     #pragma message ("WARNING: to allow this compiler to use GCC features such as data alignment attributes,")
     #pragma message ("WARNING: #define ARMA_ALLOW_FAKE_GCC before #include <armadillo>")
@@ -156,18 +156,18 @@
 
 
 #if defined(__GNUG__) && (!defined(__clang__) && !defined(ARMA_DETECTED_FAKE_GCC))
-  
+
   // #pragma message ("using GCC extensions")
-  
+
   #undef  ARMA_GCC_VERSION
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-  
+
   #if (ARMA_GCC_VERSION < 40800)
     #error "*** newer compiler required; need gcc 4.8 or later ***"
   #endif
-  
+
   #define ARMA_GOOD_COMPILER
-  
+
   #undef  arma_hot
   #undef  arma_cold
   #undef  arma_aligned
@@ -177,30 +177,30 @@
   #undef  arma_malloc
   #undef  arma_inline
   #undef  arma_noinline
-  
+
   #define arma_hot                __attribute__((__hot__))
   #define arma_cold               __attribute__((__cold__))
   #define arma_aligned            __attribute__((__aligned__))
   #define arma_align_mem          __attribute__((__aligned__(16)))
   #define arma_warn_unused        __attribute__((__warn_unused_result__))
-  #define arma_deprecated         __attribute__((__deprecated__))
+  #define arma_deprecated         /*__attribute__((__deprecated__))*/
   #define arma_malloc             __attribute__((__malloc__))
   #define arma_inline      inline __attribute__((__always_inline__))
   #define arma_noinline           __attribute__((__noinline__))
-  
+
   #undef  ARMA_HAVE_ALIGNED_ATTRIBUTE
   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
-  
+
   #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
   #define ARMA_HAVE_GCC_ASSUME_ALIGNED
-  
+
   // gcc's vectoriser can handle elaborate loops
   #undef ARMA_SIMPLE_LOOPS
-  
+
   #if defined(__OPTIMIZE_SIZE__)
     #define ARMA_SIMPLE_LOOPS
   #endif
-  
+
 #endif
 
 
@@ -208,7 +208,7 @@
   #if defined(__clang__) && (defined(__INTEL_COMPILER) || defined(__NVCC__) || defined(__CUDACC__) || defined(__PGI) || defined(__PATHSCALE__) || defined(__ARMCC_VERSION) || defined(__IBMCPP__))
     #undef  ARMA_DETECTED_FAKE_CLANG
     #define ARMA_DETECTED_FAKE_CLANG
-    
+
     #pragma message ("WARNING: this compiler is pretending to be Clang but it may not be fully compatible;")
     #pragma message ("WARNING: to allow this compiler to use Clang features such as data alignment attributes,")
     #pragma message ("WARNING: #define ARMA_ALLOW_FAKE_CLANG before #include <armadillo>")
@@ -217,56 +217,56 @@
 
 
 #if defined(__clang__) && !defined(ARMA_DETECTED_FAKE_CLANG)
-  
+
   // #pragma message ("using Clang extensions")
-  
+
   #define ARMA_GOOD_COMPILER
-  
+
   #if !defined(__has_attribute)
     #define __has_attribute(x) 0
   #endif
-  
+
   #if __has_attribute(__aligned__)
     #undef  arma_aligned
     #undef  arma_align_mem
-    
+
     #define arma_aligned   __attribute__((__aligned__))
     #define arma_align_mem __attribute__((__aligned__(16)))
-    
+
     #undef  ARMA_HAVE_ALIGNED_ATTRIBUTE
     #define ARMA_HAVE_ALIGNED_ATTRIBUTE
   #endif
-  
+
   #if __has_attribute(__warn_unused_result__)
     #undef  arma_warn_unused
     #define arma_warn_unused __attribute__((__warn_unused_result__))
   #endif
-  
+
   #if __has_attribute(__deprecated__)
     #undef  arma_deprecated
-    #define arma_deprecated __attribute__((__deprecated__))
+    #define arma_deprecated /*__attribute__((__deprecated__))*/
   #endif
-  
+
   #if __has_attribute(__malloc__)
     #undef  arma_malloc
     #define arma_malloc __attribute__((__malloc__))
   #endif
-  
+
   #if __has_attribute(__always_inline__)
     #undef  arma_inline
     #define arma_inline inline __attribute__((__always_inline__))
   #endif
-  
+
   #if __has_attribute(__noinline__)
     #undef  arma_noinline
     #define arma_noinline __attribute__((__noinline__))
   #endif
-  
+
   #if __has_attribute(__hot__)
     #undef  arma_hot
     #define arma_hot __attribute__((__hot__))
   #endif
-  
+
   #if __has_attribute(__minsize__)
     #undef  arma_cold
     #define arma_cold __attribute__((__minsize__))
@@ -274,45 +274,45 @@
     #undef  arma_cold
     #define arma_cold __attribute__((__cold__))
   #endif
-  
+
   #if defined(__has_builtin) && __has_builtin(__builtin_assume_aligned)
     #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
     #define ARMA_HAVE_GCC_ASSUME_ALIGNED
   #endif
-  
+
 #endif
 
 
 #if defined(__INTEL_COMPILER)
-  
+
   #if (__INTEL_COMPILER == 9999)
     #error "*** newer compiler required ***"
   #endif
-  
+
   #if (__INTEL_COMPILER < 1500)
     #error "*** newer compiler required ***"
   #endif
-  
+
   #undef  ARMA_HAVE_GCC_ASSUME_ALIGNED
   #undef  ARMA_HAVE_ICC_ASSUME_ALIGNED
   #define ARMA_HAVE_ICC_ASSUME_ALIGNED
-  
+
 #endif
 
 
 #if defined(_MSC_VER)
-  
+
   #if (_MSC_VER < 1900)
     #error "*** newer compiler required ***"
   #endif
-  
+
   #undef  arma_deprecated
   #define arma_deprecated __declspec(deprecated)
   // #undef  arma_inline
   // #define arma_inline inline __forceinline
-  
+
   #pragma warning(push)
-  
+
   #pragma warning(disable: 4127)  // conditional expression is constant
   #pragma warning(disable: 4180)  // qualifier has no meaning
   #pragma warning(disable: 4244)  // possible loss of data when converting types (see also 4305)
@@ -332,46 +332,46 @@
   #pragma warning(disable: 4714)  // __forceinline can't be inlined
   #pragma warning(disable: 4800)  // value forced to bool
   #pragma warning(disable: 4519)  // C++11: default template args are only allowed on a class template
-  
+
   #if defined(ARMA_HAVE_CXX17)
   #pragma warning(disable: 26812)  // unscoped enum
   #pragma warning(disable: 26819)  // unannotated fallthrough
   #endif
-  
+
   // #if (_MANAGED == 1) || (_M_CEE == 1)
-  //   
-  //   // don't do any alignment when compiling in "managed code" mode 
-  //   
+  //
+  //   // don't do any alignment when compiling in "managed code" mode
+  //
   //   #undef  arma_aligned
   //   #define arma_aligned
-  //   
+  //
   //   #undef  arma_align_mem
   //   #define arma_align_mem
-  //  
+  //
   // #elif (_MSC_VER >= 1700)
-  //   
+  //
   //   #undef  arma_align_mem
   //   #define arma_align_mem __declspec(align(16))
-  //   
+  //
   //   #define ARMA_HAVE_ALIGNED_ATTRIBUTE
-  //   
+  //
   //   // disable warnings: "structure was padded due to __declspec(align(16))"
   //   #pragma warning(disable: 4324)
-  //   
+  //
   // #endif
-  
+
 #endif
 
 
 #if defined(__SUNPRO_CC)
-  
+
   // http://www.oracle.com/technetwork/server-storage/solarisstudio/training/index-jsp-141991.html
   // http://www.oracle.com/technetwork/server-storage/solarisstudio/documentation/cplusplus-faq-355066.html
-  
+
   #if (__SUNPRO_CC < 0x5140)
     #error "*** newer compiler required ***"
   #endif
-  
+
 #endif
 
 
@@ -399,7 +399,7 @@
 
 #if defined(ARMA_PRINT_OPENMP_WARNING) && !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
   #pragma message ("WARNING: use of OpenMP disabled; compiler support for OpenMP 3.1+ not detected")
-  
+
   #if (defined(_OPENMP) && (_OPENMP < 201107))
     #pragma message ("NOTE: your compiler appears to have an ancient version of OpenMP")
     #pragma message ("NOTE: consider upgrading to a better compiler")
@@ -447,7 +447,7 @@
 
 
 
-// 
+//
 // whoever defined macros with the names "min" and "max" should be permanently removed from the gene pool
 
 #if defined(min) || defined(max)

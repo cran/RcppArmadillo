@@ -3,6 +3,41 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.2.3.1 (2022-08-16)}{
+  \itemize{
+    \item Accomodate upcoming pkg{Matrix} 1.4-2 deprecation for
+    conversion (Dirk in \ghpr{387})
+    \item CRAN release with small upstream changes in Armadillo
+    11.2.{1,2,3} made since the last CRAN release 0.11.2.0.0
+    (Dirk in \ghpr{383}, \ghpr{384} and \ghpr{386})
+    \item Undefine \code{arma_deprecated} warning as it affects a number
+    of CRAN packages which will likely need a small transition
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.11.2.2.0 (2022-07-04) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2.2 (Classic Roast)
+    \itemize{
+      \item fix incorrect and/or slow convergence in single-threaded
+      versions of \code{kmeans()}, \code{gmm_diag::learn()},
+      \code{gmm_full::learn()}
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.11.2.1.0 (2022-06-28) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2.1 (Classic Roast)
+    \itemize{
+      \item old style matrix initialisation via the \code{<<} operator
+      will now emit a compile-time deprecation warning
+      \item use of the old and inactive \code{ARMA_DONT_PRINT_ERRORS}
+      option will now emit a compile-time deprecation warning
+      \item the option \code{ARMA_WARN_LEVEL} can be used instead
+    }
+  }
+}
 
 \section{Changes in RcppArmadillo version 0.11.2.0.0 (2022-06-10)}{
   \itemize{
