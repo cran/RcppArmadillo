@@ -3,15 +3,39 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.2.4.0 (2022-09-09}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2.4 (Classic Roast)
+    \itemize{
+      \item fix handling of \code{std::move()} involving matrices
+      constructed with auxiliary memory
+    }
+    \item In the \code{fastLm()} examples, use \code{arma::dot()} to
+    compute to the inner product (as proposed by Conrad), plus small edits
+    \item Support optional \code{#define} named \code{RCPPARMADILLO_FORCE_DEPRECATE}
+    to suppress use of \code{ARMA_IGNORE_DEPRECATED_MARKER} permitting
+    use and development under deprecation
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.2.3.1 (2022-08-16)}{
   \itemize{
-    \item Accomodate upcoming pkg{Matrix} 1.4-2 deprecation for
+    \item Accomodate upcoming \pkg{Matrix} 1.4-2 deprecation for
     conversion (Dirk in \ghpr{387})
     \item CRAN release with small upstream changes in Armadillo
     11.2.{1,2,3} made since the last CRAN release 0.11.2.0.0
     (Dirk in \ghpr{383}, \ghpr{384} and \ghpr{386})
     \item Undefine \code{arma_deprecated} warning as it affects a number
     of CRAN packages which will likely need a small transition
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.11.2.3.0 (2022-07-12) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.2.3 (Classic Roast)
+    \itemize{
+      \item fix \code{Cube::insert_slices()} to accept \code{Cube::slice()} as input
+    }
   }
 }
 

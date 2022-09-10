@@ -1,3 +1,36 @@
+2022-09-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version): RcppArmadillo 0.11.2.4.0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/armadillo: Armadillo 11.2.4
+	* inst/include/armadillo_bits/: Idem
+
+2022-09-01  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 0.11.2.3.1.1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* README.md: Edited fastLm() example for more compact display
+	* src/fastLm.cpp: Idem
+
+	* inst/include/RcppArmadilloForward.h: Permit opt-out of deprecation
+	suppresion (useful to develop under full deprecation warnings)
+
+2022-08-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/compiler_setup.hpp: Use version from
+	merge request #119 with optional use of ARMA_IGNORE_DEPRECATED_MARKER
+
+2022-08-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/fastLm.cpp: Using dot() as proposed by Conrad in #388
+	* README.md: Idem
+
 2022-08-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version): RcppArmadillo 0.11.2.3.1
