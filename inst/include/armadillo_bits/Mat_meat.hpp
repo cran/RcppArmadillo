@@ -351,7 +351,11 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   const uhword t_vec_state = vec_state;
   const uhword t_mem_state = mem_state;
   
-  arma_debug_set_error( err_state, err_msg, (t_mem_state == 3), "Mat::init(): size is fixed and hence cannot be changed" );
+  const char* error_message_1 = "Mat::init(): size is fixed and hence cannot be changed";
+  const char* error_message_2 = "Mat::init(): requested size is not compatible with column vector layout";
+  const char* error_message_3 = "Mat::init(): requested size is not compatible with row vector layout";
+  
+  arma_debug_set_error( err_state, err_msg, (t_mem_state == 3), error_message_1 );
   
   if(t_vec_state > 0)
     {
@@ -362,17 +366,17 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
       }
     else
       {
-      if(t_vec_state == 1)  { arma_debug_set_error( err_state, err_msg, (in_n_cols != 1), "Mat::init(): requested size is not compatible with column vector layout" ); }
-      if(t_vec_state == 2)  { arma_debug_set_error( err_state, err_msg, (in_n_rows != 1), "Mat::init(): requested size is not compatible with row vector layout"    ); }
+      if(t_vec_state == 1)  { arma_debug_set_error( err_state, err_msg, (in_n_cols != 1), error_message_2 ); }
+      if(t_vec_state == 2)  { arma_debug_set_error( err_state, err_msg, (in_n_rows != 1), error_message_3 ); }
       }
     }
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
   #if defined(ARMA_64BIT_WORD)
-    const char* error_message = "Mat::init(): requested size is too large";
+    const char* error_message_4 = "Mat::init(): requested size is too large";
   #else
-    const char* error_message = "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
+    const char* error_message_4 = "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
   #endif
   
   arma_debug_set_error
@@ -384,7 +388,7 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
         ? ( (double(in_n_rows) * double(in_n_cols)) > double(ARMA_MAX_UWORD) )
         : false
       ),
-    error_message
+    error_message_4
     );
   
   arma_debug_check(err_state, err_msg);
@@ -794,14 +798,6 @@ Mat<eT>::operator=(Mat<eT>&& X)
   
   (*this).steal_mem(X, true);
   
-  if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) && (this != &X) )
-    {
-    access::rw(X.n_rows) = 0;
-    access::rw(X.n_cols) = 0;
-    access::rw(X.n_elem) = 0;
-    access::rw(X.mem)    = nullptr;
-    }
-  
   return *this;
   }
 
@@ -937,7 +933,7 @@ Mat<eT>::init(const std::initializer_list<eT>& list)
   
   set_size(1, N);
   
-  arrayops::copy( memptr(), list.begin(), N );
+  if(N > 0)  { arrayops::copy( memptr(), list.begin(), N ); }
   }
 
 
@@ -1236,8 +1232,8 @@ Mat<eT>::steal_mem(Mat<eT>& x, const bool is_move)
     access::rw(mem_state) = x_mem_state;
     access::rw(mem)       = x.mem;
     
-    access::rw(x.n_rows)    = 0;
-    access::rw(x.n_cols)    = 0;
+    access::rw(x.n_rows)    = (x_vec_state == 2) ? 1 : 0;
+    access::rw(x.n_cols)    = (x_vec_state == 1) ? 1 : 0;
     access::rw(x.n_elem)    = 0;
     access::rw(x.n_alloc)   = 0;
     access::rw(x.mem_state) = 0;
@@ -1248,6 +1244,14 @@ Mat<eT>::steal_mem(Mat<eT>& x, const bool is_move)
     arma_extra_debug_print("Mat::steal_mem(): copying memory");
     
     (*this).operator=(x);
+    
+    if( (is_move) && (x_mem_state == 0) && (x_n_alloc <= arma_config::mat_prealloc) )
+      {
+      access::rw(x.n_rows) = (x_vec_state == 2) ? 1 : 0;
+      access::rw(x.n_cols) = (x_vec_state == 1) ? 1 : 0;
+      access::rw(x.n_elem) = 0;
+      access::rw(x.mem)    = nullptr;
+      }
     }
   }
 
@@ -2758,7 +2762,7 @@ Mat<eT>::operator%=(const SpBase<eT, T1>& m)
   typename SpProxy<T1>::const_iterator_type it_end = p.end();
   
   // We have to zero everything that isn't being used.
-  arrayops::inplace_set(memptr(), eT(0), (it.col() * n_rows) + it.row());
+  arrayops::fill_zeros(memptr(), (it.col() * n_rows) + it.row());
   
   while(it != it_end)
     {
@@ -2772,7 +2776,7 @@ Mat<eT>::operator%=(const SpBase<eT, T1>& m)
       ? (p.get_n_cols() * n_rows)
       : (it.col() * n_rows) + it.row();
     
-    arrayops::inplace_set(memptr() + cur_loc + 1, eT(0), (next_loc - cur_loc - 1));
+    arrayops::fill_zeros(memptr() + cur_loc + 1, (next_loc - cur_loc - 1));
     }
   
   return *this;
@@ -4539,12 +4543,25 @@ Mat<eT>::shed_cols(const Base<uword, T1>& indices)
 
 
 
-//! insert N rows at the specified row position,
-//! optionally setting the elements of the inserted rows to zero
 template<typename eT>
+arma_deprecated
 inline
 void
 Mat<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_rows(row_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::insert_rows(const uword row_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -4557,37 +4574,46 @@ Mat<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   // insertion at row_num == n_rows is in effect an append operation
   arma_debug_check_bounds( (row_num > t_n_rows), "Mat::insert_rows(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Mat<eT> out(t_n_rows + N, t_n_cols, arma_nozeros_indicator());
+  
+  if(A_n_rows > 0)
     {
-    Mat<eT> out(t_n_rows + N, t_n_cols, arma_nozeros_indicator());
-    
-    if(A_n_rows > 0)
-      {
-      out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
-      }
-    
-    if(B_n_rows > 0)
-      {
-      out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
-      }
-    
-    if(set_to_zero)
-      {
-      out.rows(row_num, row_num + N - 1).zeros();
-      }
-    
-    steal_mem(out);
+    out.rows(0, A_n_rows-1) = rows(0, A_n_rows-1);
     }
+  
+  if(B_n_rows > 0)
+    {
+    out.rows(row_num + N, t_n_rows + N - 1) = rows(row_num, t_n_rows-1);
+    }
+  
+  out.rows(row_num, row_num + N - 1).zeros();
+  
+  steal_mem(out);
   }
 
 
 
-//! insert N columns at the specified column position,
-//! optionally setting the elements of the inserted columns to zero
 template<typename eT>
+arma_deprecated
 inline
 void
 Mat<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_cols(col_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::insert_cols(const uword col_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -4600,27 +4626,23 @@ Mat<eT>::insert_cols(const uword col_num, const uword N, const bool set_to_zero)
   // insertion at col_num == n_cols is in effect an append operation
   arma_debug_check_bounds( (col_num > t_n_cols), "Mat::insert_cols(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Mat<eT> out(t_n_rows, t_n_cols + N, arma_nozeros_indicator());
+  
+  if(A_n_cols > 0)
     {
-    Mat<eT> out(t_n_rows, t_n_cols + N, arma_nozeros_indicator());
-    
-    if(A_n_cols > 0)
-      {
-      out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
-      }
-    
-    if(B_n_cols > 0)
-      {
-      out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
-      }
-    
-    if(set_to_zero)
-      {
-      out.cols(col_num, col_num + N - 1).zeros();
-      }
-    
-    steal_mem(out);
+    out.cols(0, A_n_cols-1) = cols(0, A_n_cols-1);
     }
+  
+  if(B_n_cols > 0)
+    {
+    out.cols(col_num + N, t_n_cols + N - 1) = cols(col_num, t_n_cols-1);
+    }
+  
+  out.cols(col_num, col_num + N - 1).zeros();
+  
+  steal_mem(out);
   }
 
 
@@ -4650,6 +4672,9 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
   bool  err_state = false;
   char* err_msg   = nullptr;
   
+  const char* error_message_1 = "Mat::insert_rows(): index out of bounds";
+  const char* error_message_2 = "Mat::insert_rows(): given object has an incompatible number of columns";
+  
   // insertion at row_num == n_rows is in effect an append operation
   
   arma_debug_set_error
@@ -4657,7 +4682,7 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     (row_num > t_n_rows),
-    "Mat::insert_rows(): index out of bounds"
+    error_message_1
     );
   
   arma_debug_set_error
@@ -4665,7 +4690,7 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     ( (C_n_cols != t_n_cols) && ( (t_n_rows > 0) || (t_n_cols > 0) ) && ( (C_n_rows > 0) || (C_n_cols > 0) ) ),
-    "Mat::insert_rows(): given object has an incompatible number of columns"
+    error_message_2
     );
   
   arma_debug_check_bounds(err_state, err_msg);
@@ -4723,6 +4748,9 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
   bool  err_state = false;
   char* err_msg   = nullptr;
   
+  const char* error_message_1 = "Mat::insert_cols(): index out of bounds";
+  const char* error_message_2 = "Mat::insert_cols(): given object has an incompatible number of rows";
+  
   // insertion at col_num == n_cols is in effect an append operation
   
   arma_debug_set_error
@@ -4730,7 +4758,7 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     (col_num > t_n_cols),
-    "Mat::insert_cols(): index out of bounds"
+    error_message_1
     );
   
   arma_debug_set_error
@@ -4738,7 +4766,7 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
     err_state,
     err_msg,
     ( (C_n_rows != t_n_rows) && ( (t_n_rows > 0) || (t_n_cols > 0) ) && ( (C_n_rows > 0) || (C_n_cols > 0) ) ),
-    "Mat::insert_cols(): given object has an incompatible number of rows"
+    error_message_2
     );
   
   arma_debug_check_bounds(err_state, err_msg);
@@ -10028,17 +10056,14 @@ Mat_aux::set_real(Mat< std::complex<T> >& out, const Base<T,T1>& X)
     
     const uword N = out.n_elem;
     
-    for(uword i=0; i<N; ++i)
-      {
-      out_mem[i] = std::complex<T>( A[i], out_mem[i].imag() );
-      }
+    for(uword i=0; i<N; ++i)  { out_mem[i].real(A[i]); }
     }
   else
     {
     for(uword col=0; col < local_n_cols; ++col)
     for(uword row=0; row < local_n_rows; ++row)
       {
-      (*out_mem) = std::complex<T>( P.at(row,col), (*out_mem).imag() );
+      (*out_mem).real(P.at(row,col));
       out_mem++;
       }
     }
@@ -10072,17 +10097,14 @@ Mat_aux::set_imag(Mat< std::complex<T> >& out, const Base<T,T1>& X)
     
     const uword N = out.n_elem;
     
-    for(uword i=0; i<N; ++i)
-      {
-      out_mem[i] = std::complex<T>( out_mem[i].real(), A[i] );
-      }
+    for(uword i=0; i<N; ++i)  { out_mem[i].imag(A[i]); }
     }
   else
     {
     for(uword col=0; col < local_n_cols; ++col)
     for(uword row=0; row < local_n_rows; ++row)
       {
-      (*out_mem) = std::complex<T>( (*out_mem).real(), P.at(row,col) );
+      (*out_mem).imag(P.at(row,col));
       out_mem++;
       }
     }

@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.11.4.0.1 (2022-10-01}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.4.0 (Ship of Theseus)
+    \itemize{
+      \item faster handling of compound expressions by \code{sum()}
+      \item extended \code{pow()} with various forms of element-wise power operations
+      \item added \code{find_nan()} to find indices of NaN elements
+    }
+    \item Also applied fixes to avoid g++-12 warnings affecting just a
+    handful of CRAN packages.
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.11.2.4.0 (2022-09-09}{
   \itemize{
     \item Upgraded to Armadillo release 11.2.4 (Classic Roast)
