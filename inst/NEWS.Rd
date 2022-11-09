@@ -3,7 +3,30 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 0.11.4.0.1 (2022-10-01}{
+\section{Changes in RcppArmadillo version 0.11.4.2.1 (2022-11-08)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.4.2 (Ship of Theseus)
+    \itemize{
+      \item more robust handling of corner cases in multi-threaded contexts
+    }
+    \item Internal header organisation with new sub-directories while
+    providing full compatibility via existing paths (\ghpr{395} \ghpr{396})
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.11.4.1.0 (2022-10-10) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 11.4.1 (Ship of Theseus)
+    \itemize{
+      \item fix data race in \code{Cube::slice()}
+      \item workarounds for false warnings emitted by GCC 12 when
+      compiling with \code{FORTIFY_SOURCE} enabled (already in
+      RcppArmadillo 0.11.4.0.1 too)
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.11.4.0.1 (2022-10-01)}{
   \itemize{
     \item Upgraded to Armadillo release 11.4.0 (Ship of Theseus)
     \itemize{
@@ -16,7 +39,7 @@
   }
 }
 
-\section{Changes in RcppArmadillo version 0.11.2.4.0 (2022-09-09}{
+\section{Changes in RcppArmadillo version 0.11.2.4.0 (2022-09-09)}{
   \itemize{
     \item Upgraded to Armadillo release 11.2.4 (Classic Roast)
     \itemize{

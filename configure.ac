@@ -11,7 +11,7 @@
 AC_PREREQ([2.69])
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT([RcppArmadillo],[0.11.4.0.1],[edd@debian.org])
+AC_INIT([RcppArmadillo],[0.11.4.2.1],[edd@debian.org])
 
 ## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}
@@ -207,5 +207,5 @@ fi
 AC_SUBST([ARMA_LAPACK],["${arma_lapack}"])
 AC_SUBST([ARMA_HAVE_OPENMP], ["${arma_have_openmp}"])
 AC_SUBST([OPENMP_FLAG], ["${openmp_flag}"])
-AC_CONFIG_FILES([inst/include/RcppArmadilloConfigGenerated.h src/Makevars])
+AC_CONFIG_FILES([inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h src/Makevars])
 AC_OUTPUT
