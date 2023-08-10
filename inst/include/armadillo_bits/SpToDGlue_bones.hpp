@@ -16,29 +16,30 @@
 // ------------------------------------------------------------------------
 
 
-namespace newarp
-{
+//! \addtogroup SpToDGlue
+//! @{
 
 
-//! Define matrix operations on existing matrix objects
-template<typename eT>
-class SparseGenMatProd
+
+template<typename T1, typename T2, typename glue_type>
+class SpToDGlue : public Base< typename T1::elem_type, SpToDGlue<T1, T2, glue_type> >
   {
-  private:
-  
-  const SpMat<eT>& op_mat;
-        SpMat<eT>  op_mat_st;
-  
-  
   public:
   
-  const uword n_rows;  // number of rows of the underlying matrix
-  const uword n_cols;  // number of columns of the underlying matrix
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
   
-  inline SparseGenMatProd(const SpMat<eT>& mat_obj);
+  inline explicit SpToDGlue(const T1& in_A, const T2& in_B);
+  inline         ~SpToDGlue();
   
-  inline void perform_op(eT* x_in, eT* y_out) const;
+  const T1& A;  //!< first operand;  must be derived from Base or SpBase
+  const T2& B;  //!< second operand; must be derived from Base or SpBase
+  
+  static constexpr bool is_row  = glue_type::template traits<T1,T2>::is_row;
+  static constexpr bool is_col  = glue_type::template traits<T1,T2>::is_col;
+  static constexpr bool is_xvec = glue_type::template traits<T1,T2>::is_xvec;
   };
 
 
-}  // namespace newarp
+
+//! @}

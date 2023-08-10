@@ -16,29 +16,29 @@
 // ------------------------------------------------------------------------
 
 
-namespace newarp
-{
+//! \addtogroup SpToDGlue
+//! @{
 
 
-//! Define matrix operations on existing matrix objects
-template<typename eT>
-class SparseGenMatProd
+
+template<typename T1, typename T2, typename glue_type>
+inline
+SpToDGlue<T1,T2,glue_type>::SpToDGlue(const T1& in_A, const T2& in_B)
+  : A(in_A)
+  , B(in_B)
   {
-  private:
-  
-  const SpMat<eT>& op_mat;
-        SpMat<eT>  op_mat_st;
-  
-  
-  public:
-  
-  const uword n_rows;  // number of rows of the underlying matrix
-  const uword n_cols;  // number of columns of the underlying matrix
-  
-  inline SparseGenMatProd(const SpMat<eT>& mat_obj);
-  
-  inline void perform_op(eT* x_in, eT* y_out) const;
-  };
+  arma_extra_debug_sigprint();
+  }
 
 
-}  // namespace newarp
+
+template<typename T1, typename T2, typename glue_type>
+inline
+SpToDGlue<T1,T2,glue_type>::~SpToDGlue()
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+//! @}

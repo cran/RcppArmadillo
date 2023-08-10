@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.1.0 (2023-07-26)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.1 (Cortisol Retox)
+    \itemize{
+      \item faster multiplication of dense vectors by sparse matrices (and
+      vice versa)
+      \item faster \code{eigs_sym()} and \code{eigs_gen()}
+      \item faster \code{conv()} and \code{conv2()} when using OpenMP
+      \item added \code{diags()} and \code{spdiags()} for generating band
+      matrices from set of vectors
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.4.1.0 (2023-06-17)}{
   \itemize{
     \item Upgraded to Armadillo release 12.4.1 (Cortisol Profusion Redux)

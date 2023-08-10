@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 12
-#define ARMA_VERSION_MINOR 4
+#define ARMA_VERSION_MINOR 6
 #define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Cortisol Profusion Redux"
+#define ARMA_VERSION_NAME  "Cortisol Retox"
 
 
 
