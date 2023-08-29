@@ -3,6 +3,33 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 0.12.6.3.0 (2023-08-28)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.3 (Cortisol Retox)
+    \itemize{
+      \item Fix for corner-case in loading CSV files with headers
+      \item For consistent file handling, all \code{.load()} functions now
+      open text files in binary mode
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 0.12.6.2.0 (2023-08-08)}{
+  \itemize{
+    \item Upgraded to Armadillo release 12.6.2 (Cortisol Retox)
+    \itemize{
+      \item use thread-safe Mersenne Twister as the default RNG on all
+      platforms
+      \item use unique RNG seed for each thread within multi-threaded
+      execution (such as OpenMP)
+      \item explicitly document \code{arma_rng::set_seed()} and
+      \code{arma_rng::set_seed_random() }
+    }
+    \item None of the changes above affect R use as \pkg{RcppArmadillo}
+    connects the RNGs used by R to Armadillo
+  }
+}
+
 \section{Changes in RcppArmadillo version 0.12.6.1.0 (2023-07-26)}{
   \itemize{
     \item Upgraded to Armadillo release 12.6.1 (Cortisol Retox)
