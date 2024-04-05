@@ -5,7 +5,7 @@
 [![License](https://eddelbuettel.github.io/badges/GPL2+.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![CRAN](https://www.r-pkg.org/badges/version/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo)
 [![Debian package](https://img.shields.io/debian/v/r-cran-rcpparmadillo/sid?color=brightgreen)](https://packages.debian.org/sid/r-cran-rcpparmadillo)
-[![r-universe](https://rcppcore.r-universe.dev/badges/RcppArmadillo)](https://eddelbuettel.r-universe.dev/rcpparmadillo)
+[![r-universe](https://rcppcore.r-universe.dev/badges/RcppArmadillo)](https://rcppcore.r-universe.dev/rcpparmadillo)
 [![Dependencies](https://tinyverse.netlify.com/badge/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo)
 [![Coverage Status](https://codecov.io/gh/RcppCore/RcppArmadillo/graph/badge.svg)](https://app.codecov.io/github/RcppCore/RcppArmadillo?branch=master)
 [![Last Commit](https://img.shields.io/github/last-commit/RcppCore/RcppArmadillo)](https://github.com/RcppCore/RcppArmadillo)
@@ -14,7 +14,6 @@
 [![CRAN use](https://jangorecki.gitlab.io/rdeps/RcppArmadillo/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=RcppArmadillo)
 [![CRAN indirect](https://jangorecki.gitlab.io/rdeps/RcppArmadillo/indirect_usage.svg?sanitize=true)](https://cran.r-project.org/package=RcppArmadillo)
 [![BioConductor use](https://jangorecki.gitlab.io/rdeps/RcppArmadillo/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=RcppArmadillo)
-[![StackOverflow](https://img.shields.io/badge/stackoverflow-rcpp-orange.svg)](https://stackoverflow.com/questions/tagged/rcpp)
 [![CSDA](https://img.shields.io/badge/CSDA-10.1016%2Fj.csda.2013.02.005-brightgreen)](https://doi.org/10.1016/j.csda.2013.02.005)
 
 ### Synopsis
@@ -67,7 +66,7 @@ the switch saves about 15% of total compilation time.
 
 The package is mature yet under active development with releases to [CRAN][cran] about once every
 other month, and widely-used by other CRAN packages as can be seen from the [CRAN package page][cran
-pkg].  As of February 2024, there are 1118 CRAN packages using RcppArmadillo.
+pkg].  As of April 2024, there are 1135 CRAN packages using RcppArmadillo.
 
 ### Documentation
 
