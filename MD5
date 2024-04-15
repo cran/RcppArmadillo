@@ -1,5 +1,5 @@
-4e944c7644798b46231466d8ba2037ef *ChangeLog
-24aee0cf604d4ddce07f7fe7c7b1fcc9 *DESCRIPTION
+099c9e87c2894deeca305ba5e0203017 *ChangeLog
+9389bb8b2d5e209f5021171bbdfed0cb *DESCRIPTION
 bef7b527614eed15bf7dbcbb1c5a15a4 *NAMESPACE
 536db52b819cae7ec1dce9868f4bddef *R/RcppArmadillo.package.skeleton.R
 1598e95bf0372bdd47a0e04253a89533 *R/RcppExports.R
@@ -17,12 +17,12 @@ e7dd9155e5720ada0da7096fd9c26beb *configure.ac
 a176169a58643ff39de12fff6e63b11f *inst/AUTHORS
 35ceb21d57a466bcd641d332339a31b2 *inst/CITATION
 ab2552793bb68fff3fc1447dad76543b *inst/COPYRIGHTS
-abf33bacedf5dfcb891a15af82627205 *inst/NEWS.Rd
+311899ec3d7babdec4e68c76443cf801 *inst/NEWS.Rd
 662c1aa30653a4d2667c81c1acd84c87 *inst/announce/ANNOUNCE-0.2.0.txt
 36775614f3fdb06c07121a96332741e6 *inst/doc/RcppArmadillo-intro.Rnw
-18a86cdb03cf0bc196cd4aea288ef187 *inst/doc/RcppArmadillo-intro.pdf
+9f3e2f7c80a51dfb4cf3633220d8d746 *inst/doc/RcppArmadillo-intro.pdf
 b7df93033cf8677a5bbd8870522ca9eb *inst/doc/RcppArmadillo-sparseMatrix.Rnw
-e0293f7aab5d1c06e90d7045a6e63107 *inst/doc/RcppArmadillo-sparseMatrix.pdf
+81ed0dd67e787a88a940f7743e43c03c *inst/doc/RcppArmadillo-sparseMatrix.pdf
 8c836d5a9edcff81a85060a33142f0f5 *inst/examples/fastLm.r
 93037baec9a906713b4ca11046a1b0fc *inst/examples/kalman/FirstKalmanR.R
 4a7b51922e6d94f6dc6075eb5c0bf09f *inst/examples/kalman/Kalman.cpp
@@ -709,7 +709,7 @@ e775ad36e9a1c0b67afee3e39e5fc43b *inst/tinytest/test_misc.R
 19842b532c4ba3ace953cd423c005214 *inst/tinytest/test_rmultinom.R
 a694bed443cb17316779d9da146b15bf *inst/tinytest/test_rng.R
 501cf848d1977214130193e353f68176 *inst/tinytest/test_sample.R
-5c76205653fb0a7a8bfcf49617e6067e *inst/tinytest/test_scipy2r.R
+923d99eb5ee14fed21ec5b3f0dc8df76 *inst/tinytest/test_scipy2r.R
 202d3d6abaf8f0b6b63348427f328be1 *inst/tinytest/test_sparse.R
 401c8d66027b041dc671f820a0d14c3d *inst/tinytest/test_sparseConversion.R
 3d7cdee3d57b48d3882844db1cfe5370 *man/RcppArmadillo-package.Rd
