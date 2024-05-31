@@ -2,8 +2,8 @@ Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra
         Library
-Version: 0.12.8.3.0
-Date: 2024-05-07
+Version: 0.12.8.4.0
+Date: 2024-05-30
 Author: Dirk Eddelbuettel, Romain Francois, Doug Bates, Binxiang Ni, and Conrad Sanderson
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
@@ -23,13 +23,13 @@ License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 3.3.0)
 LinkingTo: Rcpp
-Imports: Rcpp (>= 0.11.0), stats, utils, methods
+Imports: Rcpp (>= 1.0.8), stats, utils, methods
 Suggests: tinytest, Matrix (>= 1.3.0), pkgKitten, reticulate, slam
 URL: https://github.com/RcppCore/RcppArmadillo,
         https://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2024-05-07 10:47:36 UTC; edd
+Packaged: 2024-05-30 20:47:17 UTC; edd
 Repository: CRAN
-Date/Publication: 2024-05-08 07:50:02 UTC
+Date/Publication: 2024-05-31 13:30:25 UTC
