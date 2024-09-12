@@ -2,10 +2,17 @@ Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra
         Library
-Version: 14.0.0-1
-Date: 2024-07-05
-Author: Dirk Eddelbuettel, Romain Francois, Doug Bates, Binxiang Ni, and Conrad Sanderson
-Maintainer: Dirk Eddelbuettel <edd@debian.org>
+Version: 14.0.2-1
+Date: 2024-09-10
+Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
+                    comment = c(ORCID = "0000-0001-6419-907X")),
+             person("Romain", "Francois", role = "aut",
+                    comment = c(ORCID = "0000-0002-2444-4226")),
+             person("Doug", "Bates", role = "aut",
+                    comment = c(ORCID = "0000-0001-8316-9503")),
+             person("Binxiang", "Ni", role = "aut"),
+             person("Conrad", "Sanderson", role = "aut",
+                    comment = c(ORCID = "0000-0002-0049-4501")))
 Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
  Sanderson) that aims towards a good balance between speed and ease of
  use. Integer, floating point and complex numbers are supported, as
@@ -30,6 +37,12 @@ URL: https://github.com/RcppCore/RcppArmadillo,
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2024-07-05 07:17:47 UTC; edd
+Packaged: 2024-09-11 13:53:21 UTC; edd
+Author: Dirk Eddelbuettel [aut, cre] (<https://orcid.org/0000-0001-6419-907X>),
+  Romain Francois [aut] (<https://orcid.org/0000-0002-2444-4226>),
+  Doug Bates [aut] (<https://orcid.org/0000-0001-8316-9503>),
+  Binxiang Ni [aut],
+  Conrad Sanderson [aut] (<https://orcid.org/0000-0002-0049-4501>)
+Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Repository: CRAN
-Date/Publication: 2024-07-08 05:40:19 UTC
+Date/Publication: 2024-09-12 06:50:02 UTC
