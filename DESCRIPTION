@@ -2,8 +2,8 @@ Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra
         Library
-Version: 14.0.2-1
-Date: 2024-09-10
+Version: 14.2.0-1
+Date: 2024-11-16
 Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
                     comment = c(ORCID = "0000-0001-6419-907X")),
              person("Romain", "Francois", role = "aut",
@@ -30,14 +30,14 @@ License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 3.3.0)
 LinkingTo: Rcpp
-Imports: Rcpp (>= 1.0.8), stats, utils, methods
+Imports: Rcpp (>= 1.0.12), stats, utils, methods
 Suggests: tinytest, Matrix (>= 1.3.0), pkgKitten, reticulate, slam
 URL: https://github.com/RcppCore/RcppArmadillo,
         https://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2024-09-11 13:53:21 UTC; edd
+Packaged: 2024-11-16 12:42:46 UTC; edd
 Author: Dirk Eddelbuettel [aut, cre] (<https://orcid.org/0000-0001-6419-907X>),
   Romain Francois [aut] (<https://orcid.org/0000-0002-2444-4226>),
   Doug Bates [aut] (<https://orcid.org/0000-0001-8316-9503>),
@@ -45,4 +45,4 @@ Author: Dirk Eddelbuettel [aut, cre] (<https://orcid.org/0000-0001-6419-907X>),
   Conrad Sanderson [aut] (<https://orcid.org/0000-0002-0049-4501>)
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Repository: CRAN
-Date/Publication: 2024-09-12 06:50:02 UTC
+Date/Publication: 2024-11-18 07:00:02 UTC
