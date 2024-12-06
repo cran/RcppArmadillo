@@ -3,6 +3,26 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.2.2-1 (2024-12-05)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.2.2 (Smooth Caffeine)
+    \itemize{
+      \item Workarounds for regressions in pre-release versions of GCC 15
+      \item More selective detection of symmetric/hermitian matrices by various functions
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 14.2.1-1 (2024-11-24) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.2.1 (Smooth Caffeine)
+    \itemize{
+      \item Fix for \code{index_min()} and \code{index_max()} to ensure that the
+      first index of equal extremum values is found
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.2.0-1 (2024-11-16)}{
   \itemize{
     \item Upgraded to Armadillo release 14.2.0 (Smooth Caffeine)
