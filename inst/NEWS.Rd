@@ -3,6 +3,35 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.4.0-1 (2025-02-17)}{
+  \itemize{
+    \item CRAN release having given a few packages time to catch-up to small
+    upstream change as discussed and managed in \ghit{462}
+    \item Updated bibliography, and small edits to sparse matrix vignette
+    \item Switched continuous integration action to r-ci with implicit bootstrap
+  }
+}
+
+\section{Changes in RcppArmadillo version 14.4.0-0 (2025-02-17) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.4.0 (Filtered Espresso)
+    \itemize{
+      \item Faster handling of \code{pow()} and \code{square()} within
+      \code{accu()} and \code{sum()} expressions
+      \item Faster \code{sort()} and \code{sort_index()} for complex matrices
+      \item Expanded the field class with \code{.reshape()} and
+      \code{.resize()} member functions
+      \item More efficient handling of compound expressions by \code{sum()},
+      \code{reshape()}, \code{trans() }
+      \item Better detection of vector expressions by \code{pow()},
+      \code{imag()}, \code{conj()}
+    }
+    \item The package generator helper function now supports additional DESCRIPTIONs
+    \item This release revealead a need for very minor changes for a handful
+    reverse-dependency packages which will be organized via GitHub issue tracking
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.2.3-1 (2025-02-05)}{
   \itemize{
     \item Upgraded to Armadillo release 14.2.3 (Smooth Caffeine)
