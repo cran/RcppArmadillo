@@ -2,8 +2,8 @@ Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra
         Library
-Version: 14.4.0-1
-Date: 2025-02-17
+Version: 14.4.1-1
+Date: 2025-03-27
 Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
                     comment = c(ORCID = "0000-0001-6419-907X")),
              person("Romain", "Francois", role = "aut",
@@ -37,7 +37,7 @@ URL: https://github.com/RcppCore/RcppArmadillo,
 BugReports: https://github.com/RcppCore/RcppArmadillo/issues
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2025-03-17 16:05:38 UTC; edd
+Packaged: 2025-03-27 14:47:57 UTC; edd
 Author: Dirk Eddelbuettel [aut, cre] (<https://orcid.org/0000-0001-6419-907X>),
   Romain Francois [aut] (<https://orcid.org/0000-0002-2444-4226>),
   Doug Bates [aut] (<https://orcid.org/0000-0001-8316-9503>),
@@ -45,4 +45,4 @@ Author: Dirk Eddelbuettel [aut, cre] (<https://orcid.org/0000-0001-6419-907X>),
   Conrad Sanderson [aut] (<https://orcid.org/0000-0002-0049-4501>)
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Repository: CRAN
-Date/Publication: 2025-03-18 07:30:40 UTC
+Date/Publication: 2025-03-28 06:00:01 UTC
