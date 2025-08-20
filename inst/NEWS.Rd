@@ -3,6 +3,37 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.6.3-1 (2025-08-14)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.6.3 (Caffe Mocha)
+    \itemize{
+      \item Fix OpenMP related crashes in \code{Cube::slice()} on Arm64 CPUs
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 14.6.2-1 (2025-08-08) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.6.2 (Caffe Mocha)
+    \itemize{
+      \item Fix for corner-case speed regression in \code{sum()}
+      \item Better handling of OpenMP in \code{omit_nan()} and
+      \code{omit_nonfinite()}
+    }
+  }
+}
+
+\section{Changes in RcppArmadillo version 14.6.1-1 (2025-07-21) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.6.1 (Caffe Mocha)
+    \itemize{
+      \item Fix for speed regression in \code{mean()}
+      \item Fix for detection of compiler configuration
+      \item Use of \code{pow} optimization now optional
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.6.0-1 (2025-07-02)}{
   \itemize{
     \item Upgraded to Armadillo release 14.6.0 (Caffe Mocha)

@@ -27,20 +27,20 @@
 //// 2 = as per level 1, and warnings about poorly conditioned systems (low rcond) detected by solve(), spsolve(), etc
 //// 3 = as per level 2, and warnings about failed decompositions, failed saving/loading, etc
 
-// #define ARMA_USE_WRAPPER
+#cmakedefine ARMA_USE_WRAPPER
 //// Comment out the above line if you prefer to directly link with BLAS, LAPACK, etc
 //// instead of the Armadillo runtime library.
 //// You will need to link your programs directly with -lopenblas -llapack instead of -larmadillo
 
 #if !defined(ARMA_USE_LAPACK)
-#define ARMA_USE_LAPACK
+#cmakedefine ARMA_USE_LAPACK
 //// Comment out the above line if you don't have LAPACK or a high-speed replacement for LAPACK,
 //// such as OpenBLAS, Intel MKL, or the Accelerate framework.
 //// LAPACK is required for matrix decompositions (eg. SVD) and matrix inverse.
 #endif
 
 #if !defined(ARMA_USE_BLAS)
-#define ARMA_USE_BLAS
+#cmakedefine ARMA_USE_BLAS
 //// Comment out the above line if you don't have BLAS or a high-speed replacement for BLAS,
 //// such as OpenBLAS, Intel MKL, or the Accelerate framework.
 //// BLAS is used for matrix multiplication.
@@ -54,27 +54,27 @@
 #endif
 
 #if !defined(ARMA_USE_ARPACK)
-// #define ARMA_USE_ARPACK
+#cmakedefine ARMA_USE_ARPACK
 //// Uncomment the above line if you have ARPACK or a high-speed replacement for ARPACK.
 //// ARPACK is required for eigen decompositions of complex sparse matrices
 #endif
 
 #if !defined(ARMA_USE_SUPERLU)
-// #define ARMA_USE_SUPERLU
+#cmakedefine ARMA_USE_SUPERLU
 //// Uncomment the above line if you have SuperLU.
 //// SuperLU is used for solving sparse linear systems via spsolve()
 //// Caveat: only SuperLU version 5.2 can be used!
 #endif
 
 #if !defined(ARMA_SUPERLU_INCLUDE_DIR)
-// #define ARMA_SUPERLU_INCLUDE_DIR /usr/include/
+#define ARMA_SUPERLU_INCLUDE_DIR ${ARMA_SUPERLU_INCLUDE_DIR}/
 //// If you're using SuperLU and want to explicitly include the SuperLU headers,
 //// uncomment the above define and specify the appropriate include directory.
 //// Make sure the directory has a trailing /
 #endif
 
 #if !defined(ARMA_USE_ATLAS)
-// #define ARMA_USE_ATLAS
+#cmakedefine ARMA_USE_ATLAS
 //// NOTE: support for ATLAS is deprecated and will be removed.
 #endif
 
@@ -401,5 +401,5 @@
 // ARMA_AUX_LIBS lists the libraries required by Armadillo on this system, and
 // ARMA_AUX_INCDIRS lists the include directories required by Armadillo on this system.
 // Do not use these unless you know what you are doing.
-#define ARMA_AUX_LIBS
-#define ARMA_AUX_INCDIRS
+#define ARMA_AUX_LIBS ${ARMA_LIBS}
+#define ARMA_AUX_INCDIRS ${CMAKE_REQUIRED_INCLUDES}

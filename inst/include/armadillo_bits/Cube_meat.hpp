@@ -615,7 +615,7 @@ Cube<eT>::get_mat_ptr(const uword in_slice) const
   
   #if defined(ARMA_USE_OPENMP)
     {
-    #pragma omp atomic read
+    #pragma omp atomic read seq_cst
     mat_ptr = mat_ptrs[in_slice];
     }
   #elif defined(ARMA_USE_STD_MUTEX)
@@ -634,12 +634,12 @@ Cube<eT>::get_mat_ptr(const uword in_slice) const
       {
       #pragma omp critical (arma_Cube_mat_ptrs)
         {
-        #pragma omp atomic read
+        #pragma omp atomic read seq_cst
         mat_ptr = mat_ptrs[in_slice];
         
         if(mat_ptr == nullptr)  { mat_ptr = create_mat_ptr(in_slice); }
         
-        #pragma omp atomic write
+        #pragma omp atomic write seq_cst
         mat_ptrs[in_slice] = mat_ptr;
         }
       }
@@ -2872,7 +2872,7 @@ Cube<eT>::Cube(const eOpCube<T1, eop_type>& X)
   
   init_cold();
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -2902,7 +2902,7 @@ Cube<eT>::operator=(const eOpCube<T1, eop_type>& X)
   
   init_warm(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -2932,7 +2932,7 @@ Cube<eT>::operator+=(const eOpCube<T1, eop_type>& X)
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator+=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -2962,7 +2962,7 @@ Cube<eT>::operator-=(const eOpCube<T1, eop_type>& X)
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator-=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -2992,7 +2992,7 @@ Cube<eT>::operator%=(const eOpCube<T1, eop_type>& X)
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator%=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -3022,7 +3022,7 @@ Cube<eT>::operator/=(const eOpCube<T1, eop_type>& X)
   
   if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator/=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     

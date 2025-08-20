@@ -28,6 +28,92 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   {
   arma_debug_sigprint();
   
+  op_sum::apply_generic(out, in);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sum::apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_square>, op_sum >& in)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  typedef eOp<T1,eop_square> inner_expr_type;
+  
+  typedef typename inner_expr_type::proxy_type::stored_type inner_expr_P_stored_type;
+  
+  if(is_Mat<inner_expr_P_stored_type>::value)
+    {
+    const uword dim = in.aux_uword_a;
+    
+    arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
+    
+    const quasi_unwrap<inner_expr_P_stored_type> U(in.m.P.Q);
+    
+    if(U.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_sum::apply_mat_square_noalias(tmp, U.M, dim);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_sum::apply_mat_square_noalias(out, U.M, dim);
+      }
+    
+    return;
+    }
+  
+  op_sum::apply_generic(out, in);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sum::apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_pow>, op_sum >& in)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(arma_config::optimise_powexpr && (in.m.aux == eT(2)))
+    {
+    typedef Op< eOp<T1,eop_square>, op_sum > modified_whole_expr_type;
+    
+    op_sum::apply(out, reinterpret_cast<const modified_whole_expr_type& >(in) );
+    
+    return;
+    }
+  
+  if(arma_config::optimise_powexpr && (in.m.aux == eT(0.5)) && is_non_integral<eT>::value)
+    {
+    typedef Op< eOp<T1,eop_sqrt>, op_sum > modified_whole_expr_type;
+    
+    op_sum::apply(out, reinterpret_cast<const modified_whole_expr_type& >(in) );
+    
+    return;
+    }
+  
+  op_sum::apply_generic(out, in);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sum::apply_generic(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
+  {
+  arma_debug_sigprint();
+  
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
@@ -54,152 +140,6 @@ op_sum::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   else
     {
     const Proxy<T1> P(in.m);
-    
-    if(P.is_alias(out))
-      {
-      Mat<eT> tmp;
-      
-      op_sum::apply_proxy_noalias(tmp, P, dim);
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      op_sum::apply_proxy_noalias(out, P, dim);
-      }
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_sum::apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_square>, op_sum >& in)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  typedef eOp<T1,eop_square> inner_expr_type;
-  
-  typedef typename inner_expr_type::proxy_type::stored_type inner_expr_P_stored_type;
-  
-  const uword dim = in.aux_uword_a;
-  
-  arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
-  
-  if(is_Mat<inner_expr_P_stored_type>::value)
-    {
-    const quasi_unwrap<inner_expr_P_stored_type> U(in.m.P.Q);
-    
-    if(U.is_alias(out))
-      {
-      Mat<eT> tmp;
-      
-      op_sum::apply_mat_square_noalias(tmp, U.M, dim);
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      op_sum::apply_mat_square_noalias(out, U.M, dim);
-      }
-    }
-  else
-  if(arma_config::openmp && Proxy<inner_expr_type>::use_mp)
-    {
-    const quasi_unwrap<inner_expr_type> U(in.m);  // force evaluation of compound inner expression
-    
-    if(U.is_alias(out))
-      {
-      Mat<eT> tmp;
-      
-      op_sum::apply_mat_noalias(tmp, U.M, dim);
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      op_sum::apply_mat_noalias(out, U.M, dim);
-      }
-    }
-  else
-    {
-    const Proxy<inner_expr_type> P(in.m);
-    
-    if(P.is_alias(out))
-      {
-      Mat<eT> tmp;
-      
-      op_sum::apply_proxy_noalias(tmp, P, dim);
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      op_sum::apply_proxy_noalias(out, P, dim);
-      }
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_sum::apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_pow>, op_sum >& in)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  if(in.m.aux == eT(2))
-    {
-    typedef Op< eOp<T1,eop_square>, op_sum > modified_whole_expr_type;
-    
-    op_sum::apply(out, reinterpret_cast<const modified_whole_expr_type& >(in) );
-    
-    return;
-    }
-  
-  if((in.m.aux == eT(0.5)) && is_non_integral<eT>::value)
-    {
-    typedef Op< eOp<T1,eop_sqrt>, op_sum > modified_whole_expr_type;
-    
-    op_sum::apply(out, reinterpret_cast<const modified_whole_expr_type& >(in) );
-    
-    return;
-    }
-  
-  typedef eOp<T1,eop_pow> inner_expr_type;
-  
-  typedef typename inner_expr_type::proxy_type::stored_type inner_expr_P_stored_type;
-  
-  const uword dim = in.aux_uword_a;
-  
-  arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
-  
-  if( (is_Mat<inner_expr_P_stored_type>::value) || (arma_config::openmp && Proxy<inner_expr_type>::use_mp) )
-    {
-    const quasi_unwrap<inner_expr_type> U(in.m);  // force evaluation of eop_pow
-    
-    if(U.is_alias(out))
-      {
-      Mat<eT> tmp;
-      
-      op_sum::apply_mat_noalias(tmp, U.M, dim);
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      op_sum::apply_mat_noalias(out, U.M, dim);
-      }
-    }
-  else
-    {
-    const Proxy<inner_expr_type> P(in.m);
     
     if(P.is_alias(out))
       {
