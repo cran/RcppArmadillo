@@ -3,6 +3,41 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.0.1-1 (2025-09-01)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.0.1-1 (Medium Roast)
+    \itemize{
+      \item Workaround for GCC compiler bug involving misoptimisation of
+      complex number multiplication
+    }
+    \item This version contains both 'legacy' and 'current' version of
+    Armadillo (see also below). Package authors should set a '#define' to
+    select the 'current' version, or select the 'legacy' version (also chosen
+    as default) if they must. See 'GitHub issue #475' for more details.
+    \item Updated DESCRIPTION and README.md
+  }
+}
+
+\section{Changes in RcppArmadillo version 15.0.0-1 (2025-08-21) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.0.0-1 (Medium Roast)
+    \itemize{
+      \item C++14 is now the minimum required C++ standard
+      \item Aded preliminary support for matrices with half-precision fp16
+      element type
+      \item Added second form of \code{cond()} to allow detection of failures
+      \item Added \code{repcube()}
+      \item Added \code{.freeze()} and \code{.unfreeze()} member functions to
+      \code{wall_clock}
+      \item Extended \code{conv()} and \code{conv2()} to accept the "valid"
+      shape argument
+    }
+    \item Also includes Armadillo 14.6.3 as fallback for C++11 compilations
+    \item This new 'dual' setup had been rigorously tested with five interim
+    pre-releases of which several received full reverse-dependency checks
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.6.3-1 (2025-08-14)}{
   \itemize{
     \item Upgraded to Armadillo release 14.6.3 (Caffe Mocha)
@@ -12,7 +47,7 @@
   }
 }
 
-\section{Changes in RcppArmadillo version 14.6.2-1 (2025-08-08) (GitHub Only)}{
+\section{Changes in RcppArmadillo version 14.6.2-1 (2025-08-09) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 14.6.2 (Caffe Mocha)
     \itemize{

@@ -11,7 +11,7 @@
 AC_PREREQ([2.69])
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT([RcppArmadillo],[14.6.3-1],[edd@debian.org])
+AC_INIT([RcppArmadillo],[15.0.1-1],[edd@debian.org])
 
 ## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}
@@ -92,7 +92,7 @@ if test x"${openmp_already_works}" = x"no"; then
                  ## we know this one is bad
                  can_use_openmp="no"
             ;;
-            5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|10.*|11.*|12.*)
+            5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|1?.*)
                  AC_MSG_RESULT([yes, with OpenMP as version ${gxx_version}])
                  ## we know this one is good, yay
                  can_use_openmp="yes"
