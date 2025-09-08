@@ -3,6 +3,21 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.0.2-1 (2025-09-08)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.0.2-1 (Medium Roast)
+    \itemize{
+      \item Optionally use OpenMP parallelisation for fp16 matrix multiplication
+      \item Faster vectorisation of cube tubes
+    }
+    \item Provide a top-level include file \code{armadillo} as fallback
+    (\ghpr{480})
+    \item Retire the no-longer-needed check for insufficient LAPACK as R
+    now should supply a sufficient libRlapack (when used) (\ghpr{483})
+    \item Two potential narrowing warnings are avoided via cast
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.0.1-1 (2025-09-01)}{
   \itemize{
     \item Upgraded to Armadillo release 15.0.1-1 (Medium Roast)
