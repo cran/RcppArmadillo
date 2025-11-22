@@ -3,6 +3,44 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.2.2-1 (2025-11-21)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.2 (Medium Roast Deluxe)
+    \itemize{
+      \item Improved reproducibility of random number generation when using OpenMP
+    }
+    \item Skip a unit test file under macOS as complex algebra seems to fail
+    under newer macOS LAPACK setting
+    \item Further OpenMP detection rework for macOS (Dirk in \ghpr{497}, \ghpr{499})
+    \item Define ARMA_CRIPPLED_LAPACK on Windows only if 'LEGACY' Armadillo selected
+  }
+}
+
+\section{Changes in RcppArmadillo version 15.2.1-0 (2025-10-28) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.1 (Medium Roast Deluxe)
+    \itemize{
+      \item Faster handling of submatrices with one row
+    }
+    \item Improve OpenMP detection (Dirk in \ghpr{495} fixing \ghit{493})
+  }
+}
+
+\section{Changes in RcppArmadillo version 15.2.0-0 (2025-10-20) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.0 (Medium Roast Deluxe)
+    \itemize{
+      \item Added \code{rande()} for generating matrices with elements from
+      exponential distributions
+      \item \code{shift()} has been deprecated in favour of
+      \code{circshift()}, for consistency with Matlab/Octave
+      \item Reworked detection of aliasing, leading to more efficient
+      compiled code
+    }
+    \item OpenMP detection in \code{configure} has been simplified
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.0.2-2 (2025-09-18)}{
   \itemize{
     \item Minor update to skeleton \code{Makevars},\code{Makevars.win}

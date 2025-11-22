@@ -1,3 +1,81 @@
+2025-11-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.2-0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/current/: Sync with Armadillo 15.2.2
+
+	* inst/tinytest/test_Rlapack.R: Skip this test involving complex
+	algebra if on macOS as the LAPACK switch by R affects it
+
+        * configure.ac: Refine OpenMP detection once more
+        * configure: Idem
+
+2025-11-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/inline.R (inlineCxxPlugin): No longer special-case macOS for
+	OpenMP but rely on "$(SHLIB_OPENMP_CFLAGS)" as everywhere else
+
+	* inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h.in:
+	Refine macOS OpenMP detection, respect RCPPARMADILLO_MACOS_DISABLE_OPENMP
+
+	* inst/include/RcppArmadillo/config/RcppArmadilloConfig.h:
+	ARMA_CRIPPLED_LAPACK is only defined if 'LEGACY' Armadillo selected
+
+2025-11-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Minor edits
+
+2025-10-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.1-0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/current/: Sync with Armadillo 15.2.1
+
+2025-10-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/tinytest/test_misc.R: Tests for armadillo_version_typed()
+
+2025-10-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.0-0
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/current/: Sync with Armadillo 15.2
+
+2025-10-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Simplified OpenMP setup
+	* configure: Idem
+
+2025-10-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppArmadillo.cpp (armadillo_version_typed): Added
+	* man/armadillo_version.Rd: Documentation added
+	* src/RcppExports.cpp: Regenerated
+	* R/RcppExports.R: Idem
+	* NAMESPACE: Exported
+
+2025-10-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.1.99-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/current/: Sync with Armadillo 15.2-rc1
+
+2025-09-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/current/: Sync with Armadillo 15.0.3
+
 2025-09-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.0.2-2
