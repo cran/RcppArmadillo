@@ -3,6 +3,33 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.2.6-1 (2026-04-20)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.6 (Medium Roast Deluxe)
+    \itemize{
+      \item Ensure internally computed tolerances are not \code{NaN}
+    }
+    \item The \code{rmultinom} deploys 'Kahan summation' as R-devel does now.
+  }
+}
+
+\section{Changes in RcppArmadillo version 15.2.5-1 [github-only] (2026-04-18)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.5 (Medium Roast Deluxe)
+    \itemize{
+      \item Fix for handling NaN elements in \code{.is_zero()}
+      \item Fix for handling NaN in tolerance and conformance checks
+      \item Faster handling of diagonal views and submatrices with one row
+    }
+    \item Sunset the C++11 fallback of including Armadillo 14.6.3 (\ghpr{504}
+    closing \ghit{503})
+    \item The vignettes have refreshed bibliographies, and are now built using
+    the \code{Rcpp::asis} vignette builder (\ghpr{506})
+    \item One \code{rmultinom} test is skipped under R-devel which has
+  switched to a higher precisions calc
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.2.4-1 (2026-03-17)}{
   \itemize{
     \item Upgraded to Armadillo release 15.2.4 (Medium Roast Deluxe)

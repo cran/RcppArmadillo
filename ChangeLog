@@ -1,3 +1,70 @@
+2026-04-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.6-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+2026-04-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/armadillo_bits/: Sync with Armadillo 15.2.6
+
+	* inst/include/RcppArmadilloExtensions/rmultinom.h (rmultinom): Carry
+	'Kahan summation' improvement from R-devel over here
+	* inst/tinytest/test_rmultinom.R: Run one sub-test only under R-devel
+	as improved code here corresponds to the improved code there
+
+2026-04-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.5-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* vignettes/rmd/RcppArmadillo.bib: Refresh some URLs
+	* vignettes/rmd/RcppArmadillo-sparseMatrix.rmd: Idem
+	* vignettes/RcppArmadillo-intro.pdf: Regenerated
+	* vignettes/RcppArmadillo-sparseMatrix.pdf: Idem
+
+	* inst/tinytest/test_rmultinom.R: Do not run one sub-test under
+	R-devel which has switched to a more precise rmultinom()
+
+2026-04-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll micro version and date
+
+	* inst/include/armadillo_bits/: Sync with Armadillo 15.2.5
+
+2026-04-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md (Rcpp): Updated status section
+
+2026-03-26  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Roll micro version and date
+
+	* cleanup: No longer remove vignettes/*.pdf
+
+2026-03-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/rmd/RcppArmadillo-intro.Rnw: Updated some URLs
+	* vignettes/rmd/RcppArmadillo.bib: Updated references
+	* vignettes/rmd/elsarticle-harv.bst: Refreshed to current version
+	* vignettes/rmd/Makefile: Tweaks to ensure bibtex runs
+	* vignettes/RcppArmadillo-intro.pdf: Regenerated
+	* vignettes/RcppArmadillo-sparseMatrix.pdf: Idem
+	* vignettes/RcppArmadillo-intro.pdf.asis: Converted
+	* vignettes/RcppArmadillo-sparseMatrix.pdf.asis: Idem
+	* DESCRIPTION (VignetteBuilder): Added Rcpp
+
+2026-03-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo.h: No longer dispatch to version/arma.h
+	* inst/include/RcppArmadillo/version/arma.h: No longer differentiate
+	between use with C++14 or later for current version and fallback
+	* inst/include/legancy/*: Removed fallback Armadillo 14.6.3
+	* inst/include/current/*: Moved up to unconditional default
+
 2026-03-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.4-1
